@@ -1,7 +1,23 @@
 package backgammon.app;
 
+import backgammon.view.BackgammonViewSettings;
+import backgammon.app.GameSettings;
+import backgammon.controller.ControllerDelegate;
+
 public class GameAgent {
+	
 	public GameAgent() {
-		BackgammonSettingsView settings = new BackgammonSettingsView();
+		
+		startUpdateSettings();
+	}
+	
+	public void startUpdateSettings() {
+		
+		new BackgammonViewSettings(this);
+	}
+	
+	public void updateSettings(GameSettings newSettings) {
+		
+		new ControllerDelegate(this, newSettings);
 	}
 }
