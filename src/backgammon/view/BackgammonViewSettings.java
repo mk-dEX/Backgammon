@@ -184,8 +184,8 @@ public class BackgammonViewSettings extends JFrame {
 	}
 
 	private void closeAll() {
-		// TODO Auto-generated method stub
-		
+		this.setVisible(false);
+		this.dispose();
 	}
 
 	private void EndGame(ActionEvent e) {
