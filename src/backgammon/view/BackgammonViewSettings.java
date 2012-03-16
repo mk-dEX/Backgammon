@@ -23,6 +23,7 @@ public class BackgammonViewSettings extends JFrame {
 		this.controller = controller;
 		
 		initComponents();
+		setVisible(true);
 	}
 
 	private void GameStartActionPerformed(ActionEvent e) {
