@@ -10,8 +10,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import backgammon.app.GameAgent;
-import backgammon.app.GameSettings.gameMode;
-
 import com.jgoodies.forms.factories.*;
 
 /**
@@ -19,6 +17,11 @@ import com.jgoodies.forms.factories.*;
  */
 public class BackgammonViewSettings extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private GameAgent controller;
 	
 	public BackgammonViewSettings() {
