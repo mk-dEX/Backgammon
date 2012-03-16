@@ -25,23 +25,21 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 * @param controller The controller instance
 	 */
 	public BackgammonViewGUI(IControllerDelegate controller) {
+		
 		super();
 		
 		this.controller = controller;
-		
-		this.panel = this.initiateFrame("Backgammon v0.1");
-		
 	}
 	
 	
-	protected JFrame initiateFrame(String title)
+	public void initGUI(String title)
 	{
 		JFrame temp = new JFrame(title); 
 		temp.setSize(500,300);
 		temp.setVisible(true);
 		
-		return temp;
 	}
+	
 	
 	/**
 	 * Draws a Checker in the specific prime
