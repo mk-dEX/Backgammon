@@ -110,7 +110,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 * @param game Game Object that contains all information needed.
 	 * @return Boolean whether the draw was succeeded or not
 	 */
-	private boolean drawInformation(Object game)
+	private boolean drawInformation(Object gamemodel)
 	{
 		return false;
 	}
