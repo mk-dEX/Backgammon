@@ -1,5 +1,8 @@
 package backgammon.model;
 
-public interface IDataModel {
+import backgammon.listener.IModelEventListener;
 
+public interface IDataModel {
+	
+	public void addDataModelListener(IModelEventListener listener);
 }
