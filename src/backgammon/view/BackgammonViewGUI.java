@@ -1,5 +1,10 @@
 package backgammon.view;
 
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
 import backgammon.controller.IControllerDelegate;
 import backgammon.listener.IModelEventListener;
 
@@ -11,17 +16,32 @@ public class BackgammonViewGUI implements IModelEventListener{
 	private IControllerDelegate controller;
 	
 	/**
+	 * The Panel to draw on
+	 */
+	private JFrame panel;
+	/**
 	 * Normal Constructor
 	 * 
 	 * @param controller The controller instance
 	 */
 	public BackgammonViewGUI(IControllerDelegate controller) {
+		super();
 		
 		this.controller = controller;
-		//TODO: Register Listener on Model.
+		
+		this.panel = this.initiateFrame("Backgammon v0.1");
 		
 	}
 	
+	
+	protected JFrame initiateFrame(String title)
+	{
+		JFrame temp = new JFrame(title); 
+		temp.setSize(500,300);
+		temp.setVisible(true);
+		
+		return temp;
+	}
 	
 	/**
 	 * Draws a Checker in the specific prime
@@ -55,6 +75,8 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 */
 	private boolean drawBoard()
 	{
+		//BufferedImage image = ImageIO.read(newFile(this.controller.getSettings().boardImage));
+		
 		return false;
 	}
 	
