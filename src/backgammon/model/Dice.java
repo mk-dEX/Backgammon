@@ -1,10 +1,24 @@
 package backgammon.model;
 
+import java.util.Calendar;
+import java.util.Random;
+
 public class Dice {
 	
-	// Zufall noch einbauen
+	// Standard WŸrfel
+	private int min = 1;
+	private int max = 6;
+	
+	public void setRange(int min, int max) {
+		if (min < max && min > 0 && max > 0) {
+			this.min = min;
+			this.max = max;
+		}
+	}
+	
 	public int roll() {
-		int result = 1;
+		Random generator = new Random(Calendar.getInstance().getTimeInMillis());
+		int result = generator.nextInt(this.max) + this.min;
 		return result;
 	}
 	
