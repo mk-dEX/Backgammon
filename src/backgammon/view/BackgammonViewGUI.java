@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import backgammon.controller.IControllerDelegate;
 import backgammon.listener.IModelEventListener;
@@ -36,6 +37,8 @@ public class BackgammonViewGUI implements IModelEventListener{
 	{
 		JFrame temp = new JFrame(title); 
 		temp.setSize(500,300);
+		temp.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		temp.setResizable(false);
 		temp.setVisible(true);
 		
 	}
