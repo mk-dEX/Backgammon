@@ -1,8 +1,9 @@
 package backgammon.view;
 
 import backgammon.controller.IControllerDelegate;
+import backgammon.listener.IModelEventListener;
 
-public class BackgammonViewGUI {
+public class BackgammonViewGUI implements IModelEventListener{
 	
 	/**
 	 * Represents the controller
@@ -10,9 +11,9 @@ public class BackgammonViewGUI {
 	private IControllerDelegate controller;
 	
 	/**
-	 * Normal Constructor with specific style to use
+	 * Normal Constructor
 	 * 
-	 * @param style The Style for Board and Checkers
+	 * @param controller The controller instance
 	 */
 	public BackgammonViewGUI(IControllerDelegate controller) {
 		
