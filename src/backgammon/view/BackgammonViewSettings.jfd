@@ -540,53 +540,134 @@
           </void> 
           <void method="add"> 
            <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JPanel</string> 
+            <string>javax.swing.JLayeredPane</string> 
             <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>com.jformdesigner.runtime.NullLayout</class> 
-             <void method="setProperty"> 
-              <string>autoSize</string> 
-              <boolean>false</boolean> 
-             </void> 
+             <class>javax.swing.JLayeredPane</class> 
             </object> 
             <void method="setProperty"> 
              <string>border</string> 
              <object class="javax.swing.border.CompoundBorder"> 
               <object class="javax.swing.border.TitledBorder"> 
-               <string>Preview</string> 
+               <string>Doppelwürfelstyle</string> 
               </object> 
               <object class="com.jgoodies.forms.factories.Borders" field="DLU2_BORDER"/> 
              </object> 
             </void> 
+            <void method="setProperty"> 
+             <string>font</string> 
+             <object idref="Font0"/> 
+            </void> 
             <void property="name"> 
-             <string>board_preview_wrapper</string> 
+             <string>layeredPane9</string> 
             </void> 
             <void method="add"> 
-             <object class="com.jformdesigner.model.FormContainer"> 
-              <string>javax.swing.JPanel</string> 
-              <object class="com.jformdesigner.model.FormLayoutManager"> 
-               <class>com.jformdesigner.runtime.NullLayout</class> 
-              </object> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JRadioButton</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <string>Standard</string> 
+              </void> 
+              <void method="setProperty"> 
+               <string>selected</string> 
+               <boolean>true</boolean> 
+              </void> 
+              <void method="setProperty"> 
+               <string>$buttonGroup</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>doubleDice</string> 
+               </object> 
+              </void> 
               <void property="name"> 
-               <string>board_preview</string> 
+               <string>dd_style_standard</string> 
               </void> 
              </object> 
              <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-              <class>com.jformdesigner.runtime.NullConstraints</class> 
+              <null/> 
               <void method="setProperty"> 
                <string>x</string> 
-               <int>5</int> 
+               <int>10</int> 
               </void> 
               <void method="setProperty"> 
                <string>y</string> 
-               <int>15</int> 
+               <int>20</int> 
               </void> 
               <void method="setProperty"> 
                <string>width</string> 
-               <int>155</int> 
+               <int>95</int> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JRadioButton</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <string>Holz</string> 
+              </void> 
+              <void method="setProperty"> 
+               <string>$buttonGroup</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>doubleDice</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>dd_style_holz</string> 
+              </void> 
+             </object> 
+             <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+              <null/> 
+              <void method="setProperty"> 
+               <string>width</string> 
+               <int>85</int> 
               </void> 
               <void method="setProperty"> 
                <string>height</string> 
-               <int>80</int> 
+               <int>23</int> 
+              </void> 
+              <void method="setProperty"> 
+               <string>x</string> 
+               <int>10</int> 
+              </void> 
+              <void method="setProperty"> 
+               <string>y</string> 
+               <int>45</int> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JRadioButton</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <string>Stein</string> 
+              </void> 
+              <void method="setProperty"> 
+               <string>$buttonGroup</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>doubleDice</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>dd_style_stein</string> 
+              </void> 
+             </object> 
+             <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+              <null/> 
+              <void method="setProperty"> 
+               <string>width</string> 
+               <int>75</int> 
+              </void> 
+              <void method="setProperty"> 
+               <string>height</string> 
+               <int>23</int> 
+              </void> 
+              <void method="setProperty"> 
+               <string>x</string> 
+               <int>10</int> 
+              </void> 
+              <void method="setProperty"> 
+               <string>y</string> 
+               <int>70</int> 
               </void> 
              </object> 
             </void> 
@@ -594,20 +675,20 @@
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 
             <class>com.jformdesigner.runtime.NullConstraints</class> 
             <void method="setProperty"> 
-             <string>x</string> 
-             <int>180</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>y</string> 
-             <int>110</int> 
+             <string>width</string> 
+             <int>165</int> 
             </void> 
             <void method="setProperty"> 
              <string>height</string> 
              <int>100</int> 
             </void> 
             <void method="setProperty"> 
-             <string>width</string> 
-             <int>165</int> 
+             <string>x</string> 
+             <int>185</int> 
+            </void> 
+            <void method="setProperty"> 
+             <string>y</string> 
+             <int>110</int> 
             </void> 
            </object> 
           </void> 
@@ -1098,7 +1179,7 @@
                </object> 
               </void> 
               <void property="name"> 
-               <string>pla1_checker_style</string> 
+               <string>pl1_checker_style</string> 
               </void> 
              </object> 
              <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -1139,79 +1220,6 @@
             <void method="setProperty"> 
              <string>y</string> 
              <int>60</int> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JLayeredPane</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>javax.swing.JLayeredPane</class> 
-            </object> 
-            <void method="setProperty"> 
-             <string>border</string> 
-             <object id="CompoundBorder5" class="javax.swing.border.CompoundBorder"> 
-              <object class="javax.swing.border.TitledBorder"> 
-               <string>Preview</string> 
-              </object> 
-              <object class="com.jgoodies.forms.factories.Borders" field="DLU2_BORDER"/> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>font</string> 
-             <object idref="Font0"/> 
-            </void> 
-            <void property="name"> 
-             <string>layeredPane9</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormContainer"> 
-              <string>javax.swing.JPanel</string> 
-              <object class="com.jformdesigner.model.FormLayoutManager"> 
-               <class>com.jformdesigner.runtime.NullLayout</class> 
-              </object> 
-              <void property="name"> 
-               <string>pl1_preview</string> 
-              </void> 
-             </object> 
-             <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-              <null/> 
-              <void method="setProperty"> 
-               <string>x</string> 
-               <int>10</int> 
-              </void> 
-              <void method="setProperty"> 
-               <string>y</string> 
-               <int>15</int> 
-              </void> 
-              <void method="setProperty"> 
-               <string>width</string> 
-               <int>135</int> 
-              </void> 
-              <void method="setProperty"> 
-               <string>height</string> 
-               <int>75</int> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-            <class>com.jformdesigner.runtime.NullConstraints</class> 
-            <void method="setProperty"> 
-             <string>width</string> 
-             <int>155</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>height</string> 
-             <int>100</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>x</string> 
-             <int>190</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>y</string> 
-             <int>115</int> 
             </void> 
            </object> 
           </void> 
@@ -1681,7 +1689,7 @@
                </object> 
               </void> 
               <void property="name"> 
-               <string>pla2_checker_style</string> 
+               <string>pl2_checker_style</string> 
               </void> 
              </object> 
              <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -1722,74 +1730,6 @@
             <void method="setProperty"> 
              <string>y</string> 
              <int>60</int> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JLayeredPane</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>javax.swing.JLayeredPane</class> 
-            </object> 
-            <void method="setProperty"> 
-             <string>border</string> 
-             <object idref="CompoundBorder5"/> 
-            </void> 
-            <void method="setProperty"> 
-             <string>font</string> 
-             <object idref="Font0"/> 
-            </void> 
-            <void property="name"> 
-             <string>layeredPane15</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormContainer"> 
-              <string>javax.swing.JPanel</string> 
-              <object class="com.jformdesigner.model.FormLayoutManager"> 
-               <class>com.jformdesigner.runtime.NullLayout</class> 
-              </object> 
-              <void property="name"> 
-               <string>pl2_preview</string> 
-              </void> 
-             </object> 
-             <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-              <null/> 
-              <void method="setProperty"> 
-               <string>x</string> 
-               <int>10</int> 
-              </void> 
-              <void method="setProperty"> 
-               <string>y</string> 
-               <int>15</int> 
-              </void> 
-              <void method="setProperty"> 
-               <string>width</string> 
-               <int>135</int> 
-              </void> 
-              <void method="setProperty"> 
-               <string>height</string> 
-               <int>75</int> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-            <class>com.jformdesigner.runtime.NullConstraints</class> 
-            <void method="setProperty"> 
-             <string>width</string> 
-             <int>155</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>height</string> 
-             <int>100</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>x</string> 
-             <int>190</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>y</string> 
-             <int>115</int> 
             </void> 
            </object> 
           </void> 
@@ -2084,6 +2024,24 @@
        <object class="java.awt.Point"> 
         <int>55</int> 
         <int>475</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormNonVisual"> 
+      <string>javax.swing.ButtonGroup</string> 
+      <void property="name"> 
+       <string>doubleDice</string> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>0</int> 
+        <int>527</int> 
        </object> 
       </void> 
      </object> 

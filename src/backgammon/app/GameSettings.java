@@ -25,7 +25,9 @@ public class GameSettings {
 	private String pathDiceDouble;
 	
 	private gameMode selectedGameMode;
-	private KIMode selectedKIMode;
+	
+	private KIMode selectedKIModePlayer1;
+	private KIMode selectedKIModePlayer2;
 	
 	
 	public String getNamePlayer1() {
@@ -82,10 +84,16 @@ public class GameSettings {
 	public void setSelectedGameMode(gameMode selectedGameMode) {
 		this.selectedGameMode = selectedGameMode;
 	}
-	public KIMode getSelectedKIMode() {
-		return selectedKIMode;
+	public KIMode getSelectedKIModePlayer1() {
+		return selectedKIModePlayer1;
 	}
-	public void setSelectedKIMode(KIMode selectedMode) {
-		this.selectedKIMode = selectedMode;
+	public void setSelectedKIModePlayer1(KIMode selectedMode) {
+		this.selectedKIModePlayer1 = selectedMode;
+	}
+	public KIMode getSelectedKIModePlayer2() {
+		return selectedKIModePlayer2;
+	}
+	public void setSelectedKIModePlayer2(KIMode selectedMode) {
+		this.selectedKIModePlayer2 = selectedMode;
 	}
 }
