@@ -27,10 +27,12 @@ public class BackgammonViewSettings extends JFrame {
 
 	private void GameStartActionPerformed(ActionEvent e) {
 		// TODO add your code here
+		//load Config and start game
 	}
 
 	private void GameEndActionPerformed(ActionEvent e) {
 		// TODO add your code here
+		//End Application
 	}
 
 	private void initComponents() {
