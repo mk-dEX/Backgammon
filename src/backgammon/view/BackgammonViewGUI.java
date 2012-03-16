@@ -41,7 +41,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 * 
 	 * @param from The starting prime as integer.
 	 * @param to The prime the checker should be moved to.
-	 * @return Boolean Inidcates whether the move has been drawn successfully or not
+	 * @return Boolean Indicates whether the move has been drawn successfully or not
 	 */
 	private boolean moveChecker(int from, int to)
 	{
