@@ -11,23 +11,26 @@ public class ControllerDelegate implements IControllerDelegate {
 	private final String workingTitle = "Backgammon v0.1";
 	
 	private GameAgent rootController;
-	private GameSettings currentGameSettings;
+	private GameSettings gameSettings;
 	private IDataModel model;
 	
 	public ControllerDelegate(GameAgent aRootController, GameSettings currentSettings) {
 		
 		this.rootController = aRootController;
+		this.gameSettings = currentSettings;
 		
-		model = new DefaultDataModel();
-		BackgammonViewGUI game = new BackgammonViewGUI(this);
+		model = new DefaultDataModel(this.gameSettings);
+		BackgammonViewGUI gameView = new BackgammonViewGUI(this);
 		
-		model.addDataModelListener(game);
-		game.initGUI(this.workingTitle);
+		model.addDataModelListener(gameView);
+		gameView.initGUI(this.workingTitle);
+		
+		model.startGame();
 	}
 	
 	public GameSettings getCurrentGameSettings() {
 		
-		return this.currentGameSettings;
+		return this.gameSettings;
 	}
 	
 	public void exitGame() {
