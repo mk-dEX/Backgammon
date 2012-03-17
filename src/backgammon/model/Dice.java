@@ -10,7 +10,7 @@ public class Dice {
 	private int max = 6;
 	
 	public void setRange(int min, int max) {
-		if (min < max && min > 0 && max > 0) {
+		if (min < max && min >= 0 && max >= 0) {
 			this.min = min;
 			this.max = max;
 		}
