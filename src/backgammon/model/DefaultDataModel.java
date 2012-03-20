@@ -20,7 +20,7 @@ public class DefaultDataModel implements IDataController {
 	
 	public DefaultDataModel(GameSettings currentSettings) {
 		this.settings = currentSettings;
-		this.gameBoard = new DefaultBackgammonBoard(this);
+		this.gameBoard = new DefaultBackgammonBoard();
 		initPlayer(player1, this.settings.getNamePlayer1(), this.settings.getSelectedKIModePlayer1());
 		initPlayer(player2, this.settings.getNamePlayer2(), this.settings.getSelectedKIModePlayer2());
 	}
