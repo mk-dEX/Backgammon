@@ -3,7 +3,7 @@ package backgammon.controller;
 import backgammon.app.GameAgent;
 import backgammon.app.GameSettings;
 import backgammon.model.DefaultDataModel;
-import backgammon.model.IDataModel;
+import backgammon.model.interfaces.IDataModel;
 import backgammon.view.BackgammonViewGUI;
 
 public class ControllerDelegate implements IControllerDelegate {
