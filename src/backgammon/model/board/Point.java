@@ -1,7 +1,6 @@
 package backgammon.model.board;
 
 import java.util.Vector;
-
 import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IPlayer;
 
