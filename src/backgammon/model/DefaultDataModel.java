@@ -31,7 +31,6 @@ public class DefaultDataModel implements IDataController {
 		} else {
 			player = new ComputerPlayer(name, this, mode);
 		}
-		player.init();
 	}
 		
 	public void addDataModelListener(IModelEventListener listener) {
@@ -40,7 +39,8 @@ public class DefaultDataModel implements IDataController {
 	}
 	
 	public void startGame() {
-		
+		player1.init();
+		player2.init();
 		
 	}
 
