@@ -2,7 +2,6 @@ package backgammon.model.board;
 
 import backgammon.model.interfaces.IBackgammonBoard;
 import backgammon.model.interfaces.ICheckerList;
-import backgammon.model.interfaces.IDataController;
 
 public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
@@ -13,7 +12,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 	private ICheckerList outPlayer1 = new Out();
 	private ICheckerList outPlayer2 = new Out();
 	
-	public DefaultBackgammonBoard(IDataController rootDataController) {
+	public DefaultBackgammonBoard() {
 		for (int i = 0; i < this.numberOfPoints; i++) {
 			this.points[i] = new Point();
 		}
