@@ -4,6 +4,6 @@ public interface IBackgammonBoard {
 
 	public ICheckerList getPointAtIndex(int index);
 	public ICheckerList getBar();
-	public ICheckerList getOut(IPlayer player);
+	public ICheckerList getOut(int playerID);
 	
 }
