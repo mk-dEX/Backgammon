@@ -24,7 +24,7 @@ public class GameAgent {
 	
 	/**
 	 * Creates new ControllerDelegate instance to start a new game.
-	 * @param newSettings The {@link GameSettings} initialized by the {@link BackgammonViewSettings}Settings class
+	 * @param newSettings The {@link GameSettings} initialized by the {@link BackgammonViewSettings} UI
 	 */
 	public void updateSettings(GameSettings newSettings) {
 		
