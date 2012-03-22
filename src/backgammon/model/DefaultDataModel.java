@@ -8,6 +8,7 @@ import backgammon.model.interfaces.IDataController;
 import backgammon.model.interfaces.IPlayer;
 import backgammon.model.player.ComputerPlayer;
 import backgammon.model.player.HumanPlayer;
+import backgammon.model.player.Move;
 
 public class DefaultDataModel implements IDataController {
 	
@@ -39,19 +40,40 @@ public class DefaultDataModel implements IDataController {
 	}
 	
 	public void startGame() {
+		
 		player1.init();
 		player2.init();
 		
-	}
-
-	public IPlayer getPlayer(int playerID) {
-		if (playerID == 1)
-			return this.player1;
-		return this.player2;
+		// EVENT 
+		
+/*		int beginnerResult;
+		do {
+			beginnerResult = player1.rollDice(1, 6) - player2.rollDice(1, 6);
+			
+			// EVENT RESULT EVEN
+			
+		} while (beginnerResult == 0);
+		
+		IPlayer firstPlayer = (beginnerResult > 0) ? (player1) : (player2);
+		
+		// EVENT RESULT BEGINNER FIRSTPLAYER(int playerID)
+		
+		
+		while (firstPlayer.move() < 0) {
+			
+			// EVENT MOVE ILLEGAL(int playerID)
+			
+		}*/
+		
+		
 	}
 
 	public IBackgammonBoard getBackgammonBoard() {
 		return this.gameBoard;
+	}
+	
+	public int registerMove(Move newMove) {
+		return 0;
 	}
 
 }
