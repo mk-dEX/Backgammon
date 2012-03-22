@@ -10,9 +10,9 @@ public class Point implements ICheckerList {
 	
 	protected Vector<Checker> checkers = new Vector<Checker>();
 	
-	public boolean addChecker(IPlayer player, IPlayer otherPlayer) {
+	public boolean addChecker(IPlayer player) {
 		
-		if (this.isFull() == true || this.isBlockedByPlayer(otherPlayer)) {
+		if (this.isFull() || this.isBlockedForPlayer(player)) {
 			return false;
 		}
 		
@@ -92,8 +92,14 @@ public class Point implements ICheckerList {
 		return (this.checkers.size() >= this.maxNumberOfCheckers);
 	}
 
-	public boolean isBlockedByPlayer(IPlayer player) {
-		return (this.getCheckersForPlayer(player).size() > 1);
+	public boolean isBlockedForPlayer(IPlayer player) {
+		
+		if (this.isEmpty()) {
+			return false;
+		}
+		
+		int diff = this.checkers.size() - this.getCheckersForPlayer(player).size();
+		return (diff > 1);
 	}
 	
 }

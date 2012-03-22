@@ -8,7 +8,7 @@ public class Bar extends Point {
 		return false;
 	}
 	
-	public boolean isBlockedByPlayer(IPlayer player) {
+	public boolean isBlockedForPlayer(IPlayer player) {
 		return false;
 	}
 	
