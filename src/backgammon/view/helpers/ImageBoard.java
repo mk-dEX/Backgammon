@@ -34,7 +34,7 @@ public class ImageBoard extends JPanel {
 	  this.PositionMatrix = initPoisitionMatrix();
 	  
 	    //DEBUG
-	    this.addChecker(1, 3, 0);
+/*	    this.addChecker(1, 3, 0);
 	    this.addChecker(1, 3, 1);
 	    this.addChecker(1, 3, 2);
 	    this.addChecker(1, 3, 3);
@@ -43,28 +43,23 @@ public class ImageBoard extends JPanel {
 	    this.addChecker(1, 3, 6);
 	    this.addChecker(1, 3, 7);
 	    
-	    this.addChecker(1, 5, 2);
-	    
-	    
-	    
-	  
-	  
+	    this.addChecker(1, 5, 2);*/
 	  
 	}
 
-  public ImageBoard(Image img) {
-    this.img = img;
-    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
-    setPreferredSize(size);
-    setMinimumSize(size);
-    setMaximumSize(size);
-    setSize(size);
-    setLayout(null);
-  }
-  public void addChecker(int player, int point, int index)
-  {
-	  this.checker.add(new BChecker(player, point, index));
-  }
+	  public ImageBoard(Image img) {
+	    this.img = img;
+	    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
+	    setPreferredSize(size);
+	    setMinimumSize(size);
+	    setMaximumSize(size);
+	    setSize(size);
+	    setLayout(null);
+	  }
+	  public void addChecker(int player, int point, int index)
+	  {
+		  this.checker.add(new BChecker(player, point, index));
+	  }
   
   
   public void paintComponent(Graphics g) {

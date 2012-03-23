@@ -25,6 +25,7 @@ import backgammon.event.DiceEvent;
 import backgammon.event.InfoEvent;
 import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
+import backgammon.model.player.Move;
 import backgammon.view.helpers.ImageBoard;
 
 public class BackgammonViewGUI implements IModelEventListener{
@@ -48,7 +49,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	
 	private Image pl1_checker;
 
-	private JPanel imageBoard;
+	private ImageBoard imageBoard;
 	/**
 	 * Normal Constructor
 	 * 
@@ -131,7 +132,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 * 
 	 * @return Boolean whether the Board has been drawn successfully or not
 	 */
-	private JPanel drawBoard()
+	private ImageBoard drawBoard()
 	{
 		ImageBoard panel = new ImageBoard(this, "img/bg.png");
 		
@@ -268,7 +269,9 @@ public class BackgammonViewGUI implements IModelEventListener{
 	
 	@Override
 	public int handleCheckerMoveEvent(CheckerMoveEvent event) {
-		// TODO Auto-generated method stub
+		
+		if(event.getMove().isSetMove())
+			this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getIndexPointFrom(), event.getMove().getIndexPointFrom());
 		return 0;
 	}
 
@@ -288,9 +291,9 @@ public class BackgammonViewGUI implements IModelEventListener{
 
 
 	@Override
-	public int handlePlayerMoveRequest(PlayerMoveRequest request) {
+	public Move handlePlayerMoveRequest(PlayerMoveRequest request) {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 }
