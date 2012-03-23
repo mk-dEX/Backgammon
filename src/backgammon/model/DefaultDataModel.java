@@ -76,11 +76,12 @@ public class DefaultDataModel implements IDataController {
 	
 	public void handleMove(Move registeredMove) {
 		
-		// Player ID beachten wg index
-		
-		if (registeredMove.getID() == 1) {
-			this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(registeredMove));
+		if (registeredMove.getId() == 2) {
+			registeredMove.setFromPoint(23 - registeredMove.getFromPoint());
+			registeredMove.setToPoint(23 - registeredMove.getToPoint());
 		}
+		
+		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(registeredMove));
 		
 	}
 

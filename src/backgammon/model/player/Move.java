@@ -17,6 +17,14 @@ public class Move {
 		this.toIndex = toY;
 	}
 	
+	public void setFromPoint(int newFromPoint) {
+		this.fromPoint = newFromPoint;
+	}
+	
+	public void setToPoint(int newToPoint) {
+		this.toPoint = newToPoint;
+	}
+	
 	public boolean isSetMove() {
 		return (this.fromPoint == this.toPoint);
 	}
