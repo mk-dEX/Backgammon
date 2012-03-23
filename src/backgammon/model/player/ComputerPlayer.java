@@ -13,12 +13,11 @@ public class ComputerPlayer extends HumanPlayer implements IPlayer {
 		this.mode = mode;
 	}
 	
-	public Move move() {
+	public void move() {
 		
 		// KI
 		//
 		
-		return null;
 	}
 	
 }

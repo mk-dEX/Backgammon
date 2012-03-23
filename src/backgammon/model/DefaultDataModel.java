@@ -1,6 +1,8 @@
 package backgammon.model;
 
 import backgammon.app.GameSettings;
+import backgammon.event.CheckerMoveEvent;
+import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.DefaultBackgammonBoard;
 import backgammon.model.interfaces.IBackgammonBoard;
@@ -48,29 +50,8 @@ public class DefaultDataModel implements IDataController {
 	
 	public void startGame() {
 		
-		player1.init();
-		player2.init();
-		
-		// EVENT 
-		
-/*		int beginnerResult;
-		do {
-			beginnerResult = player1.rollDice(1, 6) - player2.rollDice(1, 6);
-			
-			// EVENT RESULT EVEN
-			
-		} while (beginnerResult == 0);
-		
-		IPlayer firstPlayer = (beginnerResult > 0) ? (player1) : (player2);
-		
-		// EVENT RESULT BEGINNER FIRSTPLAYER(int playerID)
-		
-		
-		while (firstPlayer.move() < 0) {
-			
-			// EVENT MOVE ILLEGAL(int playerID)
-			
-		}*/
+		player1.init(1);
+		player2.init(2);
 		
 		
 	}
@@ -79,8 +60,28 @@ public class DefaultDataModel implements IDataController {
 		return this.gameBoard;
 	}
 	
-	public int registerMove(Move newMove) {
+	public Move requestMove(IPlayer player) {
+		
+		int playerID = (player.equals(player1)) ? (1) : (2);
+		PlayerMoveRequest request = new PlayerMoveRequest(playerID);
+		
+		Move resultingMove = this.listener.handlePlayerMoveRequest(request);
+		
+		return resultingMove;
+	}
+	
+	public int testMove(Move newMove) {
 		return 0;
+	}
+	
+	public void handleMove(Move registeredMove) {
+		
+		// Player ID beachten wg index
+		
+		if (registeredMove.getID() == 1) {
+			this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(registeredMove));
+		}
+		
 	}
 
 }

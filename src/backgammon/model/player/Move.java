@@ -1,41 +1,46 @@
 package backgammon.model.player;
 
-import backgammon.model.interfaces.IPlayer;
-
 public class Move {
 
 	private int id;
-	private IPlayer player;
+	private Index from = new Index();
+	private Index to = new Index();
 	
-	private int indexFrom;
-	private int indexTo;
-	
-	public Move(int id, int from, int to) {
+	public Move(int id, int fromX, int fromY ,int toX, int toY) {
 		this.id = id;
-		this.indexFrom = from;
-		this.indexTo = to;
+		this.from.indexPoint = fromX;
+		this.from.indexPosition = fromY;
+		this.to.indexPoint = toX;
+		this.to.indexPosition = toY;
 	}
 	
-	public Move(IPlayer player, int from, int to) {
-		this.player = player;
-		this.indexFrom = from;
-		this.indexTo = to;
+	public boolean isSetMove() {
+		return (this.from.indexPoint == this.to.indexPoint);
 	}
 	
 	public int getID() {
 		return this.id;
 	}
 	
-	public IPlayer getPlayer() {
-		return this.player;
+	public int getIndexPointFrom() {
+		return this.from.indexPoint;
 	}
 	
-	public int getIndexFrom() {
-		return this.indexFrom;
+	public int getIndexPointTo() {
+		return this.from.indexPosition;
 	}
 	
-	public int getIndexTo() {
-		return this.indexTo;
+	public int getIndexPositionFrom() {
+		return this.to.indexPoint;
+	}
+	
+	public int getIndexPositionTo() {
+		return this.to.indexPosition;
+	}
+	
+	private class Index {
+		int indexPoint;
+		int indexPosition;
 	}
 	
 }

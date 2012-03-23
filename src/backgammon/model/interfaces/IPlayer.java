@@ -1,11 +1,9 @@
 package backgammon.model.interfaces;
 
-import backgammon.model.player.Move;
-
 public interface IPlayer {
 
-	public void init();
+	public void init(int playerID);
 	public int rollDice(int min, int max);
-	public Move move();
+	public void move();
 	
 }
