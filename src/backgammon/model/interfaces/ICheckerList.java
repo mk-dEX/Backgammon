@@ -11,7 +11,6 @@ public interface ICheckerList {
 	public Vector<Checker> getCheckersForPlayer(IPlayer player);
 	public boolean hasCheckersOfPlayer(IPlayer player);
 	public boolean isEmpty();
-	public boolean isFull();
 	public boolean isBlockedForPlayer(IPlayer player);
 	
 }

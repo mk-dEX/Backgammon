@@ -5,14 +5,12 @@ import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IPlayer;
 
 public class Point implements ICheckerList {
-
-	private final int maxNumberOfCheckers = 5;
 	
 	protected Vector<Checker> checkers = new Vector<Checker>();
 	
 	public boolean addChecker(IPlayer player) {
 		
-		if (this.isFull() || this.isBlockedForPlayer(player)) {
+		if (this.isBlockedForPlayer(player)) {
 			return false;
 		}
 		
@@ -86,10 +84,6 @@ public class Point implements ICheckerList {
 
 	public boolean isEmpty() {
 		return (this.checkers.isEmpty());
-	}
-
-	public boolean isFull() {
-		return (this.checkers.size() >= this.maxNumberOfCheckers);
 	}
 
 	public boolean isBlockedForPlayer(IPlayer player) {
