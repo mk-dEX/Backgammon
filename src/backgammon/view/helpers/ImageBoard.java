@@ -62,7 +62,7 @@ public class ImageBoard extends JPanel {
 		  
 		  System.out.println(Integer.toString(point) + " "+ Integer.toString(index));
 		  
-		  this.repaint();
+		  //this.repaint();
 	  }
   
   
@@ -76,8 +76,9 @@ public class ImageBoard extends JPanel {
 		
 		for(BChecker lol : this.checker)
 		{
-			BPosition tmp = this.PositionMatrix.get(lol.getPoint());
-			g.drawImage(this.view.getPl1_checker(), tmp.getX()-25,tmp.getY()+this.getIndex(lol.getPoint(), lol.getIndex(),false)-25,null);
+			BPosition tmp = this.PositionMatrix.get(lol.getPoint());	
+
+			g.drawImage(this.view.getChecker(lol.getPlayer()), tmp.getX()-25,tmp.getY()+this.getIndex(lol.getPoint(), lol.getIndex(),false)-25,null);
 		}
 		
 		
@@ -91,7 +92,7 @@ public class ImageBoard extends JPanel {
 		tmp.add(new BPosition(735,554));
 		tmp.add(new BPosition(670,554));
 		tmp.add(new BPosition(605,554));
-		tmp.add(new BPosition(735,554));
+		tmp.add(new BPosition(539,554));
 		tmp.add(new BPosition(431,554));
 		tmp.add(new BPosition(366,554));
 		tmp.add(new BPosition(301,554));
@@ -131,14 +132,14 @@ public class ImageBoard extends JPanel {
 			if(fold)
 				return index*30;
 			else
-				return index*50;
+				return index*49;
 		}	
 		else
 		{
 			if(fold)
 				return -(index*30);
 			else
-				return -(index*50); 
+				return -(index*49); 
 		}
 	}
 	private BPosition getBarPosition(int player)

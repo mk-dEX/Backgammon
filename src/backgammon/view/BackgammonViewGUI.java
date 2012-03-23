@@ -48,6 +48,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	private Graphics boardGraphic;
 	
 	private Image pl1_checker;
+	private Image pl2_checker;
 
 	private ImageBoard imageBoard;
 	/**
@@ -66,7 +67,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	private void loadChecker() {
 		
 		this.pl1_checker = new ImageIcon("img/greenchecker.png").getImage();
-		
+		this.pl2_checker = new ImageIcon("img/bluechecker.png").getImage();
 	}
 
 
@@ -263,15 +264,19 @@ public class BackgammonViewGUI implements IModelEventListener{
 		return false;
 	}
 	
-	public Image getPl1_checker() {
-		return pl1_checker;
+	public Image getChecker(int pl) {
+		
+		if(pl == 1)
+			return pl1_checker;
+		else
+			return pl2_checker;
 	}
 	
 	@Override
 	public int handleCheckerMoveEvent(CheckerMoveEvent event) {
 		
 		if(event.getMove().isSetMove())
-		this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getIndexPointFrom(), event.getMove().getIndexPositionFrom());
+		this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getFromPoint(), event.getMove().getFromIndex());
 		return 0;
 	}
 
