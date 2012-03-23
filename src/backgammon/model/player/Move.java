@@ -27,11 +27,11 @@ public class Move {
 	}
 	
 	public int getIndexPointTo() {
-		return this.from.indexPosition;
+		return this.to.indexPoint;
 	}
 	
 	public int getIndexPositionFrom() {
-		return this.to.indexPoint;
+		return this.from.indexPosition;
 	}
 	
 	public int getIndexPositionTo() {
