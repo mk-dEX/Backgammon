@@ -1,13 +1,31 @@
 package backgammon.view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import javax.swing.border.EtchedBorder;
+
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 import backgammon.controller.IControllerDelegate;
+import backgammon.event.CheckerMoveEvent;
+import backgammon.event.DiceEvent;
+import backgammon.event.InfoEvent;
+import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
+import backgammon.view.helpers.ImageBoard;
 
 public class BackgammonViewGUI implements IModelEventListener{
 	
@@ -17,39 +35,78 @@ public class BackgammonViewGUI implements IModelEventListener{
 	private IControllerDelegate controller;
 	
 	/**
-	 * The Panel to draw on
+	 * The JFram to draw on
 	 */
-	private JFrame panel;
+	private JFrame board;
+	
+	/**
+	 * The JFrame for the history
+	 */
+	private JFrame hist;
+	
+	private Graphics boardGraphic;
+	
+	private Image pl1_checker;
+
+	private JPanel imageBoard;
 	/**
 	 * Normal Constructor
 	 * 
 	 * @param controller The controller instance
 	 */
 	public BackgammonViewGUI(IControllerDelegate controller) {
-		
 		super();
-		
 		this.controller = controller;
+		
+		this.loadChecker();
 	}
 	
 	
+	private void loadChecker() {
+		
+		this.pl1_checker = new ImageIcon("img/greenchecker.png").getImage();
+		
+	}
+
+
 	public void initGUI(String title)
 	{
-		JFrame temp = new JFrame(title); 
-		temp.setSize(500,300);
-		temp.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		temp.setResizable(false);
-		temp.setVisible(true);
+		//Init MainFrame
+		JFrame temp = new JFrame(title);
+		this.board = temp;
 		
+		//Get Board
+		this.imageBoard = this.drawBoard();
+		
+		this.board.getContentPane().setLayout(new BorderLayout());
+		this.board.setResizable(false);
+		//Add Board
+		this.board.add(this.imageBoard,BorderLayout.CENTER);
+		
+		//Add TOP menu bar
+		this.board.add(this.drawTopBar(),BorderLayout.NORTH);
+		
+		//Make all visible
+		this.board.pack();
+		this.board.setVisible(true);
+		
+		JFrame hist = new JFrame("History"); 
+		
+		hist.setSize(300,600);
+		hist.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		hist.setResizable(false);
+		hist.setLocationRelativeTo(null); 
+		hist.setVisible(false);
+		this.hist = hist;
 	}
 	
 	
 	/**
-	 * Draws a Checker in the specific prime
-	 * @param prime Represents the prime as integer.
+	 * Draws a Checker in the specific point
+	 * @param prime Represents the point as integer.
 	 * @return Boolean Indicates whether the drawing was successful or not.
 	 */
-	private boolean drawChecker(int prime)
+	private boolean drawChecker(int point, int index, int player)
 	{
 		return false;
 	}
@@ -70,15 +127,94 @@ public class BackgammonViewGUI implements IModelEventListener{
 	}
 	
 	/**
-	 * This function will render ONLY the Board on the internal Panel
+	 * This function will render ONLY the Board on the internal Frame
 	 * 
 	 * @return Boolean whether the Board has been drawn successfully or not
 	 */
-	private boolean drawBoard()
+	private JPanel drawBoard()
 	{
-		//BufferedImage image = ImageIO.read(newFile(this.controller.getSettings().boardImage));
+		ImageBoard panel = new ImageBoard(this, "img/bg.png");
 		
-		return false;
+		return panel;
+	}
+	
+	private JPanel drawTopBar()
+	{
+		JPanel bar = new JPanel();
+		JPanel pl1_bar = this.drawPl1Bar();
+		JPanel pl2_bar = this.drawPl2Bar();
+		JPanel button_bar  = this.drawButtonBar();
+		
+		//Set Border
+		pl1_bar.setBorder(new EtchedBorder());
+		pl2_bar.setBorder(new EtchedBorder());
+		button_bar.setBorder(new EtchedBorder());
+		
+		//Set dimensions
+		Dimension pl_bars = new Dimension();
+		pl_bars.height = 70;
+		pl_bars.width = 385;
+		
+		Dimension m_bars = new Dimension();
+		m_bars.height = 70;
+		m_bars.width = 185;
+		
+		//Add Dimensions
+		pl1_bar.setPreferredSize(pl_bars);
+		pl2_bar.setPreferredSize(pl_bars);
+		button_bar.setPreferredSize(m_bars);
+		
+		//Set Color
+		//pl1_bar.setBackground(Color.BLUE);
+		//pl2_bar.setBackground(Color.RED);
+		//button_bar.setBackground(Color.YELLOW);
+		
+		//Add to bar
+		bar.add(pl1_bar, BorderLayout.WEST);
+		bar.add(pl2_bar,BorderLayout.CENTER);
+		bar.add(button_bar, BorderLayout.EAST);
+		
+		
+		return bar;
+	}
+	
+	private JPanel drawPl1Bar()
+	{
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
+		
+		JPanel tmp = new JPanel();
+		JComponent seperator = compFactory.createSeparator(this.controller.getCurrentGameSettings().getNamePlayer1());
+		//Add
+		tmp.add(seperator,BorderLayout.NORTH);
+		
+		return tmp;
+	}
+	private JPanel drawPl2Bar()
+	{
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
+		
+		JPanel tmp = new JPanel();
+		JComponent seperator = compFactory.createSeparator(this.controller.getCurrentGameSettings().getNamePlayer2());
+		
+		//Add
+		tmp.add(seperator,BorderLayout.NORTH);
+		
+		return tmp;
+	}
+	private JPanel drawButtonBar()
+	{
+		JPanel tmp = new JPanel();
+		
+		JButton newGame = new JButton("Spiel");
+		tmp.add(newGame,BorderLayout.WEST);
+		
+		JButton showHistory = new JButton("History");
+		tmp.add(showHistory,BorderLayout.EAST);
+		
+		JButton exitProgram = new JButton("Spiel Beenden");
+		tmp.add(exitProgram,BorderLayout.SOUTH);
+		
+		return tmp;
 	}
 	
 	/**
@@ -124,6 +260,37 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 */
 	public boolean makeTestDraw() {
 		return false;
+	}
+	
+	public Image getPl1_checker() {
+		return pl1_checker;
+	}
+	
+	@Override
+	public int handleCheckerMoveEvent(CheckerMoveEvent event) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int handleDiceEvent(DiceEvent event) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int handleInfoEvent(InfoEvent event) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int handlePlayerMoveRequest(PlayerMoveRequest request) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

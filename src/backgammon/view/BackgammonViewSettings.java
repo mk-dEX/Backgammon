@@ -23,7 +23,6 @@ public class BackgammonViewSettings extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@SuppressWarnings("unused")
 	private GameAgent controller;
 	
 	public BackgammonViewSettings() {
@@ -63,8 +62,8 @@ public class BackgammonViewSettings extends JFrame {
 		GameSettings c = new GameSettings();
 		
 		//set names
-		String pl1_name = this.pl1_name.getText().isEmpty() ? this.pl1_name.getText() : "Hans";
-		String pl2_name = this.pl2_name.getText().isEmpty() ? this.pl2_name.getText() : "Wurst";
+		String pl1_name = !this.pl1_name.getText().isEmpty() ? this.pl1_name.getText() : "Hans";
+		String pl2_name = !this.pl2_name.getText().isEmpty() ? this.pl2_name.getText() : "Wurst";
 
 		c.setNamePlayer1(pl1_name);
 		c.setNamePlayer2(pl2_name);
