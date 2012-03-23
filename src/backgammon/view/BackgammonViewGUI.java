@@ -91,14 +91,14 @@ public class BackgammonViewGUI implements IModelEventListener{
 		this.board.pack();
 		this.board.setVisible(true);
 		
-		JFrame hist = new JFrame("History"); 
+		/*JFrame hist = new JFrame("History"); 
 		
 		hist.setSize(300,600);
 		hist.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		hist.setResizable(false);
 		hist.setLocationRelativeTo(null); 
 		hist.setVisible(false);
-		this.hist = hist;
+		this.hist = hist;*/
 	}
 	
 	
@@ -271,7 +271,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	public int handleCheckerMoveEvent(CheckerMoveEvent event) {
 		
 		if(event.getMove().isSetMove())
-			this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getIndexPointFrom(), event.getMove().getIndexPointFrom());
+		this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getIndexPointFrom(), event.getMove().getIndexPositionFrom());
 		return 0;
 	}
 
