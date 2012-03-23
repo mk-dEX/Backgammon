@@ -34,14 +34,14 @@ public class ImageBoard extends JPanel {
 	  this.PositionMatrix = initPoisitionMatrix();
 	  
 	    //DEBUG
-/*	    this.addChecker(1, 3, 0);
-	    this.addChecker(1, 3, 1);
-	    this.addChecker(1, 3, 2);
+	   /* this.addChecker(1, 3, 0);
+	    this.addChecker(1, 12, 1);
+	    this.addChecker(1, 13, 2);
 	    this.addChecker(1, 3, 3);
-	    this.addChecker(1, 3, 4);
+	    this.addChecker(1, 12, 4);
 	    this.addChecker(1, 3, 5);
 	    this.addChecker(1, 3, 6);
-	    this.addChecker(1, 3, 7);
+	    this.addChecker(1, 13, 7);
 	    
 	    this.addChecker(1, 5, 2);*/
 	  
@@ -59,6 +59,10 @@ public class ImageBoard extends JPanel {
 	  public void addChecker(int player, int point, int index)
 	  {
 		  this.checker.add(new BChecker(player, point, index));
+		  
+		  System.out.println(Integer.toString(point) + " "+ Integer.toString(index));
+		  
+		  this.repaint();
 	  }
   
   
@@ -73,7 +77,7 @@ public class ImageBoard extends JPanel {
 		for(BChecker lol : this.checker)
 		{
 			BPosition tmp = this.PositionMatrix.get(lol.getPoint());
-			g.drawImage(this.view.getPl1_checker(), tmp.getX()-25,tmp.getY()+this.getIndex(lol.getPlayer(), lol.getIndex(),true)-25,null);
+			g.drawImage(this.view.getPl1_checker(), tmp.getX()-25,tmp.getY()+this.getIndex(lol.getPoint(), lol.getIndex(),false)-25,null);
 		}
 		
 		
@@ -112,17 +116,17 @@ public class ImageBoard extends JPanel {
 		//endtest
 		return tmp;
 	}
-	private int getOBIndex(int player, int index)
+	private int getOBIndex(int point, int index)
 	{
-		if(player == 2)
+		if(point >= 12)
 			return index*15;
 		else
 			return -(index*15);
 	}
-	private int getIndex(int player, int index,boolean fold)
+	private int getIndex(int point, int index, boolean fold)
 	{
 		
-		if(player == 2)
+		if(point >= 12)
 		{
 			if(fold)
 				return index*30;
