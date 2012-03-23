@@ -4,15 +4,17 @@ import backgammon.model.interfaces.IPlayer;
 
 public class Out extends Bar {
 
-	public boolean removeChecker(IPlayer player) {
+	public int removeChecker(IPlayer player) {
 		
 		if (this.isEmpty()) {
-			return false;
+			return -1;
 		}
 		
-		this.checkers.remove(this.checkers.size() - 1);
+		int index = this.checkers.size() - 1;
 		
-		return true;
+		this.checkers.remove(index);
+		
+		return index;
 	}
 	
 }

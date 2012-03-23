@@ -5,8 +5,8 @@ import backgammon.model.board.Checker;
 
 public interface ICheckerList {
 	
-	public boolean addChecker(IPlayer player);
-	public boolean removeChecker(IPlayer player);
+	public int addChecker(IPlayer player);
+	public int removeChecker(IPlayer player);
 	public Vector<Checker> getCheckers();
 	public Vector<Checker> getCheckersForPlayer(IPlayer player);
 	public boolean hasCheckersOfPlayer(IPlayer player);

@@ -8,28 +8,27 @@ public class Point implements ICheckerList {
 	
 	protected Vector<Checker> checkers = new Vector<Checker>();
 	
-	public boolean addChecker(IPlayer player) {
+	public int addChecker(IPlayer player) {
 		
 		if (this.isBlockedForPlayer(player)) {
-			return false;
+			return -1;
 		}
 		
 		Checker newChecker = new Checker(player);
 		this.checkers.add(newChecker);
 		
-		return true;
+		return this.checkers.size() - 1;
 	}
 
-	public boolean removeChecker(IPlayer player) {
+	public int removeChecker(IPlayer player) {
 		
 		int index = this.getTopCheckerIndexForPlayer(player);
 		
-		if (index < 0) {
-			return false;
+		if (index >= 0) {
+			this.checkers.remove(index);
 		}
 		
-		this.checkers.remove(index);
-		return true;
+		return index;
 	}
 
 	public Vector<Checker> getCheckers() {
