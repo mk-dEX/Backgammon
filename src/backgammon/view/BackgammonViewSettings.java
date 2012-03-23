@@ -79,21 +79,21 @@ public class BackgammonViewSettings extends JFrame {
 		//set boardImage
 		String boardImage = "";
 		
-		if(this.color_blackred.isSelected())
-			boardImage = "BlackRed";
-		if(this.color_bluewhite.isSelected())
-			boardImage = "BlueWhite";
-		if(this.color_redwhite.isSelected())
-			boardImage = "RedWhite";
-		
 		if(this.style_standard.isSelected())
-			boardImage += "Standard";
+			boardImage += "standard";
 		if(this.style_holz.isSelected())
-			boardImage += "Holz";
+			boardImage += "wood";
 		if(this.style_stein.isSelected())
-			boardImage += "Stein";
+			boardImage += "stone";
 		
-		boardImage += ".png";
+		if(this.color_blackred.isSelected())
+			boardImage += "blackred";
+		if(this.color_bluewhite.isSelected())
+			boardImage += "bluewhite";
+		if(this.color_redwhite.isSelected())
+			boardImage += "redwhite";
+		
+		boardImage += "board.png";
 		
 		c.setPathBoard(boardImage);
 		
@@ -126,46 +126,35 @@ public class BackgammonViewSettings extends JFrame {
 		//Checker 
 		switch (this.pl1_checker_color.getSelectedIndex()) 
 		{
-			case 0: checker1 = "weiss";break;
-			case 1:	checker1 = "schwarz";break;
-			case 2:	checker1 = "blau";break;
-			case 3:	checker1 = "rot";break;
-			case 4:	checker1 = "gruen";break;
-			default: checker1 = "weiss";break;
+			case 0: checker1 = "standardblue";break;
+			case 1:	checker1 = "standardblack";break;
+			case 2:	checker1 = "standardwhite";break;
+			case 3:	checker1 = "standardred";break;
+			case 4:	checker1 = "standardgreen";break;
+			default: checker1 = "standardblue";break;
 		}
 		
 		c.setPathDicePlayer1(checker1 + "Dice.png");
 		
-		switch (this.pl1_checker_style.getSelectedIndex()) 
-		{
-			case 0: checker1 += "Holz";break;
-			case 1:	checker1 += "Stein";break;
-			default: checker1 += "Holz";break;
-		}
 		
 		String checker2 = "";
 		//Checker 
 		switch (this.pl2_checker_color.getSelectedIndex()) 
 		{
-			case 0: checker2 = "weiss";break;
-			case 1:	checker2 = "schwarz";break;
-			case 2:	checker2 = "blau";break;
-			case 3:	checker2 = "rot";break;
-			case 4:	checker2 = "gruen";break;
-			default: checker2 = "schwarz";break;
+			case 0: checker2 = "standardgreen";break;
+			case 1:	checker2 = "standardwhite";break;
+			case 2:	checker2 = "standardblue";break;
+			case 3:	checker2 = "standardred";break;
+			case 4:	checker2 = "standardblack";break;
+			default: checker2 = "standardgreen";break;
 		}
 		
 		c.setPathDicePlayer2(checker2 + "Dice.png");
 		
-		switch (this.pl2_checker_style.getSelectedIndex()) 
-		{
-			case 0: checker2 += "Holz";break;
-			case 1:	checker2 += "Stein";break;
-			default: checker2 += "Stein";break;
-		}
 		
-		c.setPathCheckerPlayer1(checker1 + "Checker.png");
-		c.setPathCheckerPlayer2(checker2 + "Checker.png");
+		
+		c.setPathCheckerPlayer1(checker1 + "checker.png");
+		c.setPathCheckerPlayer2(checker2 + "checker.png");
 		
 		String dd = "";
 		
@@ -212,7 +201,6 @@ public class BackgammonViewSettings extends JFrame {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Nils Plaschke
 		tabbedPane1 = new JTabbedPane();
 		panel1 = new JPanel();
 		layeredPane1 = new JLayeredPane();
@@ -242,8 +230,6 @@ public class BackgammonViewSettings extends JFrame {
 		layeredPane7 = new JLayeredPane();
 		pl1_computer_passive = new JRadioButton();
 		pl1_computer_agressive = new JRadioButton();
-		layeredPane8 = new JLayeredPane();
-		pl1_checker_style = new JComboBox();
 		panel4 = new JPanel();
 		layeredPane10 = new JLayeredPane();
 		pl2_name = new JTextField();
@@ -255,8 +241,6 @@ public class BackgammonViewSettings extends JFrame {
 		layeredPane13 = new JLayeredPane();
 		pl2_computer_passive = new JRadioButton();
 		pl2_computer_agressive = new JRadioButton();
-		layeredPane14 = new JLayeredPane();
-		pl2_checker_style = new JComboBox();
 		button1 = new JButton();
 		button2 = new JButton();
 		button3 = new JButton();
@@ -275,14 +259,6 @@ public class BackgammonViewSettings extends JFrame {
 
 			//======== panel1 ========
 			{
-
-				// JFormDesigner evaluation mark
-				panel1.setBorder(new javax.swing.border.CompoundBorder(
-					new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-						"", javax.swing.border.TitledBorder.CENTER,
-						javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-						java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
-
 				panel1.setLayout(null);
 
 				//======== layeredPane1 ========
@@ -320,12 +296,12 @@ public class BackgammonViewSettings extends JFrame {
 
 					//---- style_standard ----
 					style_standard.setText("Standard");
-					style_standard.setSelected(true);
 					layeredPane2.add(style_standard, JLayeredPane.DEFAULT_LAYER);
 					style_standard.setBounds(10, 20, 95, style_standard.getPreferredSize().height);
 
 					//---- style_holz ----
 					style_holz.setText("Holz");
+					style_holz.setSelected(true);
 					layeredPane2.add(style_holz, JLayeredPane.DEFAULT_LAYER);
 					style_holz.setBounds(10, 45, 85, 23);
 
@@ -346,7 +322,6 @@ public class BackgammonViewSettings extends JFrame {
 
 					//---- color_blackred ----
 					color_blackred.setText("Schwarz + Rot");
-					color_blackred.setSelected(true);
 					layeredPane3.add(color_blackred, JLayeredPane.DEFAULT_LAYER);
 					color_blackred.setBounds(10, 20, 130, color_blackred.getPreferredSize().height);
 
@@ -357,11 +332,12 @@ public class BackgammonViewSettings extends JFrame {
 
 					//---- color_redwhite ----
 					color_redwhite.setText("Rot + Wei\u00df");
+					color_redwhite.setSelected(true);
 					layeredPane3.add(color_redwhite, JLayeredPane.DEFAULT_LAYER);
 					color_redwhite.setBounds(10, 70, 135, 23);
 				}
 				panel1.add(layeredPane3);
-				layeredPane3.setBounds(10, 110, 155, 100);
+				layeredPane3.setBounds(10, 120, 155, 100);
 
 				//======== layeredPane9 ========
 				{
@@ -387,7 +363,7 @@ public class BackgammonViewSettings extends JFrame {
 					dd_style_stein.setBounds(10, 70, 75, 23);
 				}
 				panel1.add(layeredPane9);
-				layeredPane9.setBounds(185, 110, 165, 100);
+				layeredPane9.setBounds(185, 120, 165, 100);
 			}
 			tabbedPane1.addTab("Allgemeine Einstellungen", panel1);
 
@@ -404,7 +380,7 @@ public class BackgammonViewSettings extends JFrame {
 					layeredPane4.setFont(new Font("Tahoma", Font.PLAIN, 10));
 
 					//---- pl1_name ----
-					pl1_name.setText("Hans");
+					pl1_name.setText("Christoph Riewerts");
 					layeredPane4.add(pl1_name, JLayeredPane.DEFAULT_LAYER);
 					pl1_name.setBounds(15, 20, 125, pl1_name.getPreferredSize().height);
 				}
@@ -458,9 +434,9 @@ public class BackgammonViewSettings extends JFrame {
 
 					//---- pl1_checker_color ----
 					pl1_checker_color.setModel(new DefaultComboBoxModel(new String[] {
-						"Wei\u00df",
-						"Schwarz",
 						"Blau",
+						"Schwarz",
+						"Wei\u00df",
 						"Rot",
 						"Gr\u00fcn"
 					}));
@@ -490,25 +466,7 @@ public class BackgammonViewSettings extends JFrame {
 					pl1_computer_agressive.setBounds(15, 20, 90, pl1_computer_agressive.getPreferredSize().height);
 				}
 				panel3.add(layeredPane7);
-				layeredPane7.setBounds(10, 140, 155, 75);
-
-				//======== layeredPane8 ========
-				{
-					layeredPane8.setBorder(new CompoundBorder(
-						new TitledBorder("Checkerstyle"),
-						Borders.DLU2_BORDER));
-					layeredPane8.setFont(new Font("Tahoma", Font.PLAIN, 10));
-
-					//---- pl1_checker_style ----
-					pl1_checker_style.setModel(new DefaultComboBoxModel(new String[] {
-						"Stein",
-						"Holz"
-					}));
-					layeredPane8.add(pl1_checker_style, JLayeredPane.DEFAULT_LAYER);
-					pl1_checker_style.setBounds(15, 20, 130, 20);
-				}
-				panel3.add(layeredPane8);
-				layeredPane8.setBounds(190, 60, 155, 50);
+				layeredPane7.setBounds(190, 70, 155, 75);
 			}
 			tabbedPane1.addTab("Spieler 1", panel3);
 
@@ -525,7 +483,7 @@ public class BackgammonViewSettings extends JFrame {
 					layeredPane10.setFont(new Font("Tahoma", Font.PLAIN, 10));
 
 					//---- pl2_name ----
-					pl2_name.setText("Wurst");
+					pl2_name.setText("Bernd Schwinn");
 					layeredPane10.add(pl2_name, JLayeredPane.DEFAULT_LAYER);
 					pl2_name.setBounds(15, 20, 125, pl2_name.getPreferredSize().height);
 				}
@@ -580,11 +538,11 @@ public class BackgammonViewSettings extends JFrame {
 
 					//---- pl2_checker_color ----
 					pl2_checker_color.setModel(new DefaultComboBoxModel(new String[] {
-						"Schwarz",
+						"Gr\u00fcn",
 						"Wei\u00df",
 						"Blau",
 						"Rot",
-						"Gr\u00fcn"
+						"Schwarz"
 					}));
 					layeredPane12.add(pl2_checker_color, JLayeredPane.DEFAULT_LAYER);
 					pl2_checker_color.setBounds(15, 20, 130, pl2_checker_color.getPreferredSize().height);
@@ -612,31 +570,13 @@ public class BackgammonViewSettings extends JFrame {
 					pl2_computer_agressive.setBounds(15, 20, 90, pl2_computer_agressive.getPreferredSize().height);
 				}
 				panel4.add(layeredPane13);
-				layeredPane13.setBounds(10, 140, 155, 75);
-
-				//======== layeredPane14 ========
-				{
-					layeredPane14.setBorder(new CompoundBorder(
-						new TitledBorder("Checkerstyle"),
-						Borders.DLU2_BORDER));
-					layeredPane14.setFont(new Font("Tahoma", Font.PLAIN, 10));
-
-					//---- pl2_checker_style ----
-					pl2_checker_style.setModel(new DefaultComboBoxModel(new String[] {
-						"Holz",
-						"Stein"
-					}));
-					layeredPane14.add(pl2_checker_style, JLayeredPane.DEFAULT_LAYER);
-					pl2_checker_style.setBounds(15, 20, 130, 20);
-				}
-				panel4.add(layeredPane14);
-				layeredPane14.setBounds(190, 60, 155, 50);
+				layeredPane13.setBounds(190, 70, 155, 75);
 			}
 			tabbedPane1.addTab("Spieler 2", panel4);
 
 		}
 		contentPane.add(tabbedPane1);
-		tabbedPane1.setBounds(15, 15, 365, 245);
+		tabbedPane1.setBounds(15, 15, 365, 270);
 
 		//---- button1 ----
 		button1.setText("Spiel Starten");
@@ -647,7 +587,7 @@ public class BackgammonViewSettings extends JFrame {
 			}
 		});
 		contentPane.add(button1);
-		button1.setBounds(25, 270, 130, 30);
+		button1.setBounds(25, 295, 130, 30);
 
 		//---- button2 ----
 		button2.setText("Spiel Beenden");
@@ -658,7 +598,7 @@ public class BackgammonViewSettings extends JFrame {
 			}
 		});
 		contentPane.add(button2);
-		button2.setBounds(235, 270, 130, 30);
+		button2.setBounds(235, 295, 130, 30);
 
 		//---- button3 ----
 		button3.setText("?");
@@ -669,9 +609,9 @@ public class BackgammonViewSettings extends JFrame {
 			}
 		});
 		contentPane.add(button3);
-		button3.setBounds(165, 270, 60, 30);
+		button3.setBounds(165, 295, 60, 30);
 
-		contentPane.setPreferredSize(new Dimension(400, 330));
+		contentPane.setPreferredSize(new Dimension(400, 380));
 		pack();
 		setLocationRelativeTo(getOwner());
 
@@ -722,7 +662,6 @@ public class BackgammonViewSettings extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Nils Plaschke
 	private JTabbedPane tabbedPane1;
 	private JPanel panel1;
 	private JLayeredPane layeredPane1;
@@ -752,8 +691,6 @@ public class BackgammonViewSettings extends JFrame {
 	private JLayeredPane layeredPane7;
 	private JRadioButton pl1_computer_passive;
 	private JRadioButton pl1_computer_agressive;
-	private JLayeredPane layeredPane8;
-	private JComboBox pl1_checker_style;
 	private JPanel panel4;
 	private JLayeredPane layeredPane10;
 	private JTextField pl2_name;
@@ -765,8 +702,6 @@ public class BackgammonViewSettings extends JFrame {
 	private JLayeredPane layeredPane13;
 	private JRadioButton pl2_computer_passive;
 	private JRadioButton pl2_computer_agressive;
-	private JLayeredPane layeredPane14;
-	private JComboBox pl2_checker_style;
 	private JButton button1;
 	private JButton button2;
 	private JButton button3;

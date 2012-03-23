@@ -66,8 +66,8 @@ public class BackgammonViewGUI implements IModelEventListener{
 	
 	private void loadChecker() {
 		
-		this.pl1_checker = new ImageIcon("img/greenchecker.png").getImage();
-		this.pl2_checker = new ImageIcon("img/bluechecker.png").getImage();
+		this.pl1_checker = new ImageIcon("img/" + this.controller.getCurrentGameSettings().getPathCheckerPlayer1()).getImage();
+		this.pl2_checker = new ImageIcon("img/" + this.controller.getCurrentGameSettings().getPathCheckerPlayer2()).getImage();
 	}
 
 
@@ -135,7 +135,8 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 */
 	private ImageBoard drawBoard()
 	{
-		ImageBoard panel = new ImageBoard(this, "img/bg.png");
+		System.out.println("img/"+this.controller.getCurrentGameSettings().getPathBoard());
+		ImageBoard panel = new ImageBoard(this, "img/"+this.controller.getCurrentGameSettings().getPathBoard());
 		
 		return panel;
 	}

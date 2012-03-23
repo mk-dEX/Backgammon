@@ -12,6 +12,7 @@ import javax.swing.text.Position;
 import com.sun.xml.internal.bind.v2.runtime.Coordinator;
 
 import backgammon.view.BackgammonViewGUI;
+import backgammon.view.helpers.ImageBoard.BChecker.Place;
 
 public class ImageBoard extends JPanel {
 
@@ -33,6 +34,7 @@ public class ImageBoard extends JPanel {
 	  this.checker = new ArrayList<BChecker>();
 	  this.PositionMatrix = initPoisitionMatrix();
 	  
+	  this.setStartPosition();
 	    //DEBUG
 	   /* this.addChecker(1, 3, 0);
 	    this.addChecker(1, 12, 1);
@@ -47,7 +49,18 @@ public class ImageBoard extends JPanel {
 	  
 	}
 
-	  public ImageBoard(Image img) {
+	  private void setStartPosition() {
+		int i = 0;
+		for(i = 0; i < 15; i++)
+		{
+			//set for each site
+			this.addChecker(1, 25, i);
+			this.addChecker(2, 25, i);
+		}
+		
+	}
+
+	public ImageBoard(Image img) {
 	    this.img = img;
 	    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
 	    setPreferredSize(size);
@@ -58,11 +71,13 @@ public class ImageBoard extends JPanel {
 	  }
 	  public void addChecker(int player, int point, int index)
 	  {
-		  this.checker.add(new BChecker(player, point, index));
 		  
-		  System.out.println(Integer.toString(point) + " "+ Integer.toString(index));
-		  
-		  //this.repaint();
+		  if(point <= 23)
+			  this.checker.add(new BChecker(BChecker.Place.BOARD, player, point, index));
+		  else if(point == 24)
+			  this.checker.add(new BChecker(BChecker.Place.BAR, player, point, index));
+		  else
+			  this.checker.add(new BChecker(BChecker.Place.OUT, player, point, index));
 	  }
   
   
@@ -74,11 +89,26 @@ public class ImageBoard extends JPanel {
 
 	private void drawChecker(Graphics g) {
 		
-		for(BChecker lol : this.checker)
+		for(BChecker checker : this.checker)
 		{
-			BPosition tmp = this.PositionMatrix.get(lol.getPoint());	
-
-			g.drawImage(this.view.getChecker(lol.getPlayer()), tmp.getX()-25,tmp.getY()+this.getIndex(lol.getPoint(), lol.getIndex(),false)-25,null);
+			if(checker.position == BChecker.Place.BOARD)
+			{
+				BPosition tmp = this.PositionMatrix.get(checker.getPoint());	
+				
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getIndex(checker.getPoint(), checker.getIndex(),false)-25,null);
+			}
+			else if(checker.position == BChecker.Place.BAR)
+			{
+				BPosition tmp = this.getBarPosition(checker.getPlayer());
+				
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getOBIndex(checker.getPoint(), checker.getIndex())-25,null);
+			}
+			else
+			{
+				BPosition tmp = this.getOutPosition(checker.getPlayer());
+				
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
+			}	
 		}
 		
 		
@@ -87,39 +117,39 @@ public class ImageBoard extends JPanel {
 	{
 		ArrayList<BPosition> tmp = new ArrayList<BPosition>();
 		//unten
-		tmp.add(new BPosition(865,554));
-		tmp.add(new BPosition(800,554));
-		tmp.add(new BPosition(735,554));
-		tmp.add(new BPosition(670,554));
-		tmp.add(new BPosition(605,554));
-		tmp.add(new BPosition(539,554));
-		tmp.add(new BPosition(431,554));
-		tmp.add(new BPosition(366,554));
-		tmp.add(new BPosition(301,554));
-		tmp.add(new BPosition(235,554));
-		tmp.add(new BPosition(170,554));
-		tmp.add(new BPosition(105,554));
+		tmp.add(new BPosition(867,554));
+		tmp.add(new BPosition(802,554));
+		tmp.add(new BPosition(737,554));
+		tmp.add(new BPosition(672,554));
+		tmp.add(new BPosition(607,554));
+		tmp.add(new BPosition(541,554));
+		tmp.add(new BPosition(433,554));
+		tmp.add(new BPosition(368,554));
+		tmp.add(new BPosition(303,554));
+		tmp.add(new BPosition(237,554));
+		tmp.add(new BPosition(172,554));
+		tmp.add(new BPosition(107,554));
 		//oben
-		tmp.add(new BPosition(105,46));
-		tmp.add(new BPosition(170,46));
-		tmp.add(new BPosition(236,46));
-		tmp.add(new BPosition(301,46));
-		tmp.add(new BPosition(366,46));
-		tmp.add(new BPosition(431,46));
-		tmp.add(new BPosition(540,46));
-		tmp.add(new BPosition(605,46));
-		tmp.add(new BPosition(670,46));
-		tmp.add(new BPosition(735,46));
-		tmp.add(new BPosition(800,46));
-		tmp.add(new BPosition(865,46));
+		tmp.add(new BPosition(107,46));
+		tmp.add(new BPosition(172,46));
+		tmp.add(new BPosition(238,46));
+		tmp.add(new BPosition(303,46));
+		tmp.add(new BPosition(368,46));
+		tmp.add(new BPosition(433,46));
+		tmp.add(new BPosition(542,46));
+		tmp.add(new BPosition(607,46));
+		tmp.add(new BPosition(672,46));
+		tmp.add(new BPosition(737,46));
+		tmp.add(new BPosition(802,46));
+		tmp.add(new BPosition(867,46));
 		//test
 		
 		//endtest
 		return tmp;
 	}
-	private int getOBIndex(int point, int index)
+	private int getOBIndex(int player, int index)
 	{
-		if(point >= 12)
+		if(player == 2)
 			return index*15;
 		else
 			return -(index*15);
@@ -132,14 +162,14 @@ public class ImageBoard extends JPanel {
 			if(fold)
 				return index*30;
 			else
-				return index*49;
+				return index*43;
 		}	
 		else
 		{
 			if(fold)
 				return -(index*30);
 			else
-				return -(index*49); 
+				return -(index*43); 
 		}
 	}
 	private BPosition getBarPosition(int player)
@@ -173,17 +203,25 @@ public class ImageBoard extends JPanel {
 			return y;
 		}
 	}
-	class BChecker
+	static class BChecker
 	{
 		private int point;
 		private int index;
 		private int player;
+		private Place position;
 		
-		BChecker(int player, int point, int index)
+		public static enum Place {
+			BOARD,
+			BAR,
+			OUT
+		}
+		
+		BChecker(Place field, int player, int point, int index)
 		{
 			this.point = point;
 			this.index = index;
 			this.player = player;
+			this.position = field;
 		}
 		
 		protected int getPoint() {
