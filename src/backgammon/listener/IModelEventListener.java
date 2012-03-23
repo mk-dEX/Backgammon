@@ -32,7 +32,7 @@ public interface IModelEventListener {
 	/**
 	 * Checkers of one player have to be moved using the GUI. 
 	 * @param request The corresponding {@link PlayerMoveRequest}
-	 * @return >=0 if the event has been handled correctly
+	 * @return The {@link Move} object which results from UI events
 	 */
 	public Move handlePlayerMoveRequest(PlayerMoveRequest request);
 	
