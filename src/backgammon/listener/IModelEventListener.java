@@ -4,6 +4,7 @@ import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.InfoEvent;
 import backgammon.event.PlayerMoveRequest;
+import backgammon.model.player.Move;
 
 public interface IModelEventListener {
 
@@ -33,6 +34,6 @@ public interface IModelEventListener {
 	 * @param request The corresponding {@link PlayerMoveRequest}
 	 * @return >=0 if the event has been handled correctly
 	 */
-	public int handlePlayerMoveRequest(PlayerMoveRequest request);
+	public Move handlePlayerMoveRequest(PlayerMoveRequest request);
 	
 }
