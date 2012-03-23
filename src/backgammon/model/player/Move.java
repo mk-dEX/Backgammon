@@ -3,44 +3,45 @@ package backgammon.model.player;
 public class Move {
 
 	private int id;
-	private Index from = new Index();
-	private Index to = new Index();
+	
+	private int fromPoint;
+	private int toPoint;
+	private int fromIndex;
+	private int toIndex;
 	
 	public Move(int id, int fromX, int fromY ,int toX, int toY) {
 		this.id = id;
-		this.from.indexPoint = fromX;
-		this.from.indexPosition = fromY;
-		this.to.indexPoint = toX;
-		this.to.indexPosition = toY;
+		this.fromPoint = fromX;
+		this.fromIndex = fromY;
+		this.toPoint = toX;
+		this.toIndex = toY;
 	}
 	
 	public boolean isSetMove() {
-		return (this.from.indexPoint == this.to.indexPoint);
+		return (this.fromPoint == this.toPoint);
 	}
 	
 	public int getID() {
 		return this.id;
 	}
-	
-	public int getIndexPointFrom() {
-		return this.from.indexPoint;
+
+	public int getId() {
+		return id;
 	}
-	
-	public int getIndexPointTo() {
-		return this.to.indexPoint;
+
+	public int getFromPoint() {
+		return fromPoint;
 	}
-	
-	public int getIndexPositionFrom() {
-		return this.from.indexPosition;
+
+	public int getToPoint() {
+		return toPoint;
 	}
-	
-	public int getIndexPositionTo() {
-		return this.to.indexPosition;
+
+	public int getFromIndex() {
+		return fromIndex;
 	}
-	
-	private class Index {
-		int indexPoint;
-		int indexPosition;
+
+	public int getToIndex() {
+		return toIndex;
 	}
-	
 }
