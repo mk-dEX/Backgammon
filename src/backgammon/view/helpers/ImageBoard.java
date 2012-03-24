@@ -48,15 +48,19 @@ public class ImageBoard extends JPanel {
 	    setSize(size);
 	    setLayout(null);
 	  }
-	  public void addChecker(int player, int point, int index)
+	  public BChecker addChecker(int player, int point, int index)
 	  {
+		  BChecker tmp = null;
 		  
 		  if(point <= 23)
-			  this.checker.add(new BChecker(BChecker.Place.BOARD, player, point, index));
+			  tmp = new BChecker(BChecker.Place.BOARD, player, point, index);
 		  else if(point == 24)
-			  this.checker.add(new BChecker(BChecker.Place.BAR, player, point, index));
+			  tmp = new BChecker(BChecker.Place.BAR, player, point, index);
 		  else
-			  this.checker.add(new BChecker(BChecker.Place.OUT, player, point, index));
+			  tmp = new BChecker(BChecker.Place.OUT, player, point, index);
+		  
+		  this.checker.add(tmp);
+		  return tmp;
 	  }
   
   
@@ -86,20 +90,19 @@ public class ImageBoard extends JPanel {
 			this.addChecker(2, 25, i);
 		}
 		
-		this.moveChecker(new Move(2, 25, 3, 12, 3));
-		
-		
 	}
 	public void moveChecker(Move move) {
 		//BChecker bChecker, int toPoint, int toIndex)
-		BChecker tmp = null;
+		BChecker tmp = findChecker(move.getFromPoint(), move.getFromIndex());
 		
-		if(move.getFromPoint() <= 23)
-			tmp = new BChecker(Place.BOARD, move.getID(), move.getFromPoint(), move.getFromIndex());
-		else if(move.getFromPoint() == 24)
-			tmp = new BChecker(Place.BAR, move.getID(), move.getFromPoint(), move.getFromIndex());
-		else
-			tmp = new BChecker(Place.OUT, move.getID(), move.getFromPoint(), move.getFromIndex());
+		if(tmp == null)
+		{
+			tmp = this.addChecker(move.getID(), move.getFromPoint(), move.getFromIndex());
+		}
+		
+		//Reihenfolge herstellen, damit der gerade gezeichnete Checker immer oben ist.
+		this.checker.remove(tmp);
+		this.checker.add(tmp);
 		
 		new MoveAnimation(this, tmp, move.getToPoint(), move.getToIndex());
 		
@@ -112,6 +115,7 @@ public class ImageBoard extends JPanel {
 			if(checker.getPosition() == BChecker.Place.BOARD)
 			{
 				BPosition tmp = null;
+			
 				
 				if(checker.getPoint() == 99 && checker.getIndex() == 99)
 				{

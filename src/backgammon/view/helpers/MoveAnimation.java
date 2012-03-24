@@ -2,19 +2,20 @@ package backgammon.view.helpers;
 
 import backgammon.view.helpers.BChecker.Place;
 
-public class MoveAnimation implements Runnable {
+public class  MoveAnimation implements Runnable {
 
   private ImageBoard board;
 	private BChecker checker;
 	private int toIndex;
 	private int toPoint;
-	private final int duration = 1000;
+	private final int duration = 500;
 	private int currentX;
 	private int currentY;
 	private int finalX;
 	private int finalY;
 	private Thread thread;
 	private long startTime;
+	private final int speed = 5;
   
 	MoveAnimation(ImageBoard board, BChecker checker, int toPoint, int toIndex)
 	{
@@ -26,7 +27,6 @@ public class MoveAnimation implements Runnable {
 		
 		this.calculatePositions();
 		
-		this.startTime = System.currentTimeMillis();
 		this.start();
 		
 	}
@@ -100,27 +100,33 @@ public class MoveAnimation implements Runnable {
 	}
 	public void start()
 	{
+		
 		this.thread.start();
 	}
 
 	@Override
 	public void run() 
 	{	
-		
-		
+		this.startTime = System.currentTimeMillis();
 		
 		while(System.currentTimeMillis() - this.startTime <= this.duration){
 			
 			int deltaX = (finalX - currentX);
 			int deltaY = (finalY - currentY);
 			
-			currentX += deltaX/5;
-			currentY += deltaY/5;
+			//if(deltaX >= speed)
+				deltaX = deltaX /speed;
+			
+			//if(deltaY >= speed)
+				deltaY = deltaY /speed;
+			
+			currentX += deltaX;
+			currentY += deltaY;
             
 			this.checker.setCoords(currentX, currentY);
 			
             try {
-                Thread.sleep(50);
+                Thread.sleep(20);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -133,13 +139,14 @@ public class MoveAnimation implements Runnable {
 	}
 	private void stop() {
 
+		
 		if(this.thread != null)
 			this.thread = null;
 		
-		System.out.println(Integer.toString(finalX));
+		/*System.out.println(Integer.toString(finalX));
 		System.out.println(Integer.toString(finalY));
 		System.out.println(Integer.toString(currentX));
-		System.out.println(Integer.toString(currentY));
+		System.out.println(Integer.toString(currentY));*/
 		
 		this.checker.setCoords(finalX, finalY);
 		this.checker.setPoint(this.toPoint);

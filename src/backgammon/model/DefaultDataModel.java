@@ -80,6 +80,9 @@ public class DefaultDataModel implements IDataController {
 			if(registeredMove.getFromPoint() <= 23)
 			{
 				registeredMove.setFromPoint(23 - registeredMove.getFromPoint());
+			}
+			if(registeredMove.getToPoint() <= 23)
+			{
 				registeredMove.setToPoint(23 - registeredMove.getToPoint());
 			}
 			

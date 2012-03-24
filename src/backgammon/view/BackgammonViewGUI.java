@@ -258,12 +258,12 @@ public class BackgammonViewGUI implements IModelEventListener{
 	@Override
 	public int handleCheckerMoveEvent(CheckerMoveEvent event) {
 		
-		/*if(event.getMove().isSetMove())
+		if(event.getMove().isSetMove())
 			this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getFromPoint(), event.getMove().getFromIndex());
 		else {
-			this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getFromPoint(), event.getMove().getFromIndex());
-			//this.moveChecker(event.getMove());
-		}*/
+			//this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getFromPoint(), event.getMove().getFromIndex());
+			this.moveChecker(event.getMove());
+		}
 		return 0;
 	}
 
