@@ -23,28 +23,36 @@ public class HumanPlayer implements IPlayer {
 		
 		Move tempRegisteredMove;
 		
+		int j = 14;
+		
 		// IndexPoint 0
 		for (int i = 0; i < 2; i++) {
 			
-			tempRegisteredMove = new Move(playerID, 0, i, 0, i);
+			tempRegisteredMove = new Move(playerID, 25, j, 0, i);
 			this.rootDataController.handleMove(tempRegisteredMove);
+			
+			j--;
 		}
 		
 		// IndexPoint 11 & 18
 		for (int i = 0; i < 5; i++) {
 			
-			tempRegisteredMove = new Move(playerID, 11, i, 11, i);
+			tempRegisteredMove = new Move(playerID, 25, j, 11, i);
 			this.rootDataController.handleMove(tempRegisteredMove);
-			
-			tempRegisteredMove = new Move(playerID, 18, i, 18, i);
+			j--;
+			tempRegisteredMove = new Move(playerID, 25, j, 18, i);
 			this.rootDataController.handleMove(tempRegisteredMove);
+		
+			j--;
 		}
 		
 		// IndexPoint 16
 		for (int i = 0; i < 3; i++) {
 			
-			tempRegisteredMove = new Move(playerID, 16, i, 16, i);
+			tempRegisteredMove = new Move(playerID, 25, j, 16, i);
 			this.rootDataController.handleMove(tempRegisteredMove);
+			
+			j--;
 		}
 
 	}

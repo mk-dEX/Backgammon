@@ -27,6 +27,7 @@ import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.player.Move;
 import backgammon.view.helpers.ImageBoard;
+import backgammon.view.helpers.TopPanel;
 
 public class BackgammonViewGUI implements IModelEventListener{
 	
@@ -88,6 +89,9 @@ public class BackgammonViewGUI implements IModelEventListener{
 		//Add TOP menu bar
 		this.board.add(this.drawTopBar(),BorderLayout.NORTH);
 		
+		//Set Frame
+		//this.board.setLocationRelativeTo(null);
+		
 		//Make all visible
 		this.board.pack();
 		this.board.setVisible(true);
@@ -123,8 +127,9 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 * @param to The prime the checker should be moved to.
 	 * @return Boolean Indicates whether the move has been drawn successfully or not
 	 */
-	private boolean moveChecker(int from, int to)
+	private boolean moveChecker(Move move)
 	{
+		this.imageBoard.moveChecker(move);
 		return false;
 	}
 	
@@ -135,7 +140,7 @@ public class BackgammonViewGUI implements IModelEventListener{
 	 */
 	private ImageBoard drawBoard()
 	{
-		System.out.println("img/"+this.controller.getCurrentGameSettings().getPathBoard());
+		
 		ImageBoard panel = new ImageBoard(this, "img/"+this.controller.getCurrentGameSettings().getPathBoard());
 		
 		return panel;
@@ -149,28 +154,15 @@ public class BackgammonViewGUI implements IModelEventListener{
 		JPanel button_bar  = this.drawButtonBar();
 		
 		//Set Border
-		pl1_bar.setBorder(new EtchedBorder());
-		pl2_bar.setBorder(new EtchedBorder());
 		button_bar.setBorder(new EtchedBorder());
 		
 		//Set dimensions
-		Dimension pl_bars = new Dimension();
-		pl_bars.height = 70;
-		pl_bars.width = 385;
-		
 		Dimension m_bars = new Dimension();
 		m_bars.height = 70;
 		m_bars.width = 185;
 		
 		//Add Dimensions
-		pl1_bar.setPreferredSize(pl_bars);
-		pl2_bar.setPreferredSize(pl_bars);
 		button_bar.setPreferredSize(m_bars);
-		
-		//Set Color
-		//pl1_bar.setBackground(Color.BLUE);
-		//pl2_bar.setBackground(Color.RED);
-		//button_bar.setBackground(Color.YELLOW);
 		
 		//Add to bar
 		bar.add(pl1_bar, BorderLayout.WEST);
@@ -183,26 +175,11 @@ public class BackgammonViewGUI implements IModelEventListener{
 	
 	private JPanel drawPl1Bar()
 	{
-		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
-		
-		JPanel tmp = new JPanel();
-		JComponent seperator = compFactory.createSeparator(this.controller.getCurrentGameSettings().getNamePlayer1());
-		//Add
-		tmp.add(seperator,BorderLayout.NORTH);
-		
-		return tmp;
+		return new TopPanel(this.controller.getCurrentGameSettings().getPathCheckerPlayer1(), this.controller.getCurrentGameSettings().getNamePlayer1());
 	}
 	private JPanel drawPl2Bar()
 	{
-		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
-		
-		JPanel tmp = new JPanel();
-		JComponent seperator = compFactory.createSeparator(this.controller.getCurrentGameSettings().getNamePlayer2());
-		
-		//Add
-		tmp.add(seperator,BorderLayout.NORTH);
-		
-		return tmp;
+		return new TopPanel(this.controller.getCurrentGameSettings().getPathCheckerPlayer2(), this.controller.getCurrentGameSettings().getNamePlayer2());
 	}
 	private JPanel drawButtonBar()
 	{
@@ -273,11 +250,20 @@ public class BackgammonViewGUI implements IModelEventListener{
 			return pl2_checker;
 	}
 	
+	public IControllerDelegate getController()
+	{
+		return this.controller;
+	}
+	
 	@Override
 	public int handleCheckerMoveEvent(CheckerMoveEvent event) {
 		
-		if(event.getMove().isSetMove())
-		this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getFromPoint(), event.getMove().getFromIndex());
+		/*if(event.getMove().isSetMove())
+			this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getFromPoint(), event.getMove().getFromIndex());
+		else {
+			this.imageBoard.addChecker(event.getMove().getID(), event.getMove().getFromPoint(), event.getMove().getFromIndex());
+			//this.moveChecker(event.getMove());
+		}*/
 		return 0;
 	}
 

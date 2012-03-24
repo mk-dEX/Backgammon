@@ -11,8 +11,10 @@ import javax.swing.text.Position;
 
 import com.sun.xml.internal.bind.v2.runtime.Coordinator;
 
+import backgammon.model.player.Move;
+import backgammon.view.helpers.BChecker;
+import backgammon.view.helpers.BChecker.Place;
 import backgammon.view.BackgammonViewGUI;
-import backgammon.view.helpers.ImageBoard.BChecker.Place;
 
 public class ImageBoard extends JPanel {
 
@@ -35,31 +37,8 @@ public class ImageBoard extends JPanel {
 	  this.PositionMatrix = initPoisitionMatrix();
 	  
 	  this.setStartPosition();
-	    //DEBUG
-	   /* this.addChecker(1, 3, 0);
-	    this.addChecker(1, 12, 1);
-	    this.addChecker(1, 13, 2);
-	    this.addChecker(1, 3, 3);
-	    this.addChecker(1, 12, 4);
-	    this.addChecker(1, 3, 5);
-	    this.addChecker(1, 3, 6);
-	    this.addChecker(1, 13, 7);
-	    
-	    this.addChecker(1, 5, 2);*/
-	  
 	}
-
-	  private void setStartPosition() {
-		int i = 0;
-		for(i = 0; i < 15; i++)
-		{
-			//set for each site
-			this.addChecker(1, 25, i);
-			this.addChecker(2, 25, i);
-		}
-		
-	}
-
+	
 	public ImageBoard(Image img) {
 	    this.img = img;
 	    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
@@ -87,32 +66,96 @@ public class ImageBoard extends JPanel {
     this.drawChecker(g);
   }
 
+  	private BChecker findChecker(int point, int index)
+	{
+		for(BChecker checker : this.checker)
+		{
+			if(checker.getPoint() == point &&
+			   checker.getIndex() == index)
+				return checker;
+		}
+		return null;
+	}
+
+	private void setStartPosition() 
+	{
+		for(int i = 0; i < 15; i++)
+		{
+			//set for each site
+			this.addChecker(1, 25, i);
+			this.addChecker(2, 25, i);
+		}
+		
+		this.moveChecker(new Move(2, 25, 3, 12, 3));
+		
+		
+	}
+	public void moveChecker(Move move) {
+		//BChecker bChecker, int toPoint, int toIndex)
+		BChecker tmp = null;
+		
+		if(move.getFromPoint() <= 23)
+			tmp = new BChecker(Place.BOARD, move.getID(), move.getFromPoint(), move.getFromIndex());
+		else if(move.getFromPoint() == 24)
+			tmp = new BChecker(Place.BAR, move.getID(), move.getFromPoint(), move.getFromIndex());
+		else
+			tmp = new BChecker(Place.OUT, move.getID(), move.getFromPoint(), move.getFromIndex());
+		
+		new MoveAnimation(this, tmp, move.getToPoint(), move.getToIndex());
+		
+	}
+
 	private void drawChecker(Graphics g) {
 		
 		for(BChecker checker : this.checker)
 		{
-			if(checker.position == BChecker.Place.BOARD)
+			if(checker.getPosition() == BChecker.Place.BOARD)
 			{
-				BPosition tmp = this.PositionMatrix.get(checker.getPoint());	
+				BPosition tmp = null;
 				
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getIndex(checker.getPoint(), checker.getIndex(),false)-25,null);
+				if(checker.getPoint() == 99 && checker.getIndex() == 99)
+				{
+					tmp = checker.getCoords();
+					g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()-25,null);
+					continue;
+				}
+				
+				tmp = this.PositionMatrix.get(checker.getPoint());	
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getIndex(checker.getPoint(), checker.getIndex())-25,null);
 			}
-			else if(checker.position == BChecker.Place.BAR)
+			else if(checker.getPosition() == BChecker.Place.BAR)
 			{
-				BPosition tmp = this.getBarPosition(checker.getPlayer());
+				BPosition tmp = null;
 				
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getOBIndex(checker.getPoint(), checker.getIndex())-25,null);
+				if(checker.getPoint() == 99 && checker.getIndex() == 99)
+				{
+					tmp = checker.getCoords();
+					g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()-25,null);
+					continue;
+				}
+				
+				tmp = this.getBarPosition(checker.getPlayer());
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
 			}
 			else
 			{
-				BPosition tmp = this.getOutPosition(checker.getPlayer());
+				BPosition tmp = null;
 				
+				if(checker.getPoint() == 99 && checker.getIndex() == 99)
+				{
+					tmp = checker.getCoords();
+					g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()-25,null);
+					continue;
+				}
+				
+				tmp = this.getOutPosition(checker.getPlayer());
 				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
 			}	
 		}
 		
 		
 	}
+	
 	private ArrayList<BPosition> initPoisitionMatrix()
 	{
 		ArrayList<BPosition> tmp = new ArrayList<BPosition>();
@@ -147,97 +190,41 @@ public class ImageBoard extends JPanel {
 		//endtest
 		return tmp;
 	}
-	private int getOBIndex(int player, int index)
+	int getOBIndex(int player, int index)
 	{
 		if(player == 2)
 			return index*15;
 		else
 			return -(index*15);
 	}
-	private int getIndex(int point, int index, boolean fold)
+	int getIndex(int point, int index)
 	{
 		
 		if(point >= 12)
 		{
-			if(fold)
-				return index*30;
-			else
-				return index*43;
+			return index*20;
 		}	
 		else
 		{
-			if(fold)
-				return -(index*30);
-			else
-				return -(index*43); 
+			return -(index*20); 
 		}
 	}
-	private BPosition getBarPosition(int player)
+	BPosition getBarPosition(int player)
 	{
 		if(player == 1)
-			return new BPosition(485,420);
+			return new BPosition(485,440);
 		else
-			return new BPosition(485,180);
+			return new BPosition(485,160);
 	}
-	private BPosition getOutPosition(int player)
+	BPosition getOutPosition(int player)
 	{
 		if(player == 1)
 			return new BPosition(935,554);
 		else
 			return new BPosition(935,46);
 	}
-	class BPosition
-	{
-		private int x;
-		private int y;
+	public ArrayList<BPosition> getPositionMatrix() {
 		
-		BPosition(int x, int y)
-		{
-			this.x = x;
-			this.y = y;
-		}
-		protected int getX() {
-			return x;
-		}
-		protected int getY() {
-			return y;
-		}
-	}
-	static class BChecker
-	{
-		private int point;
-		private int index;
-		private int player;
-		private Place position;
-		
-		public static enum Place {
-			BOARD,
-			BAR,
-			OUT
-		}
-		
-		BChecker(Place field, int player, int point, int index)
-		{
-			this.point = point;
-			this.index = index;
-			this.player = player;
-			this.position = field;
-		}
-		
-		protected int getPoint() {
-			return point;
-		}
-		protected void setPoint(int point) {
-			this.point = point;
-		}
-		protected int getIndex() {
-			return index;
-		}
-		protected int getPlayer() {
-			return player;
-		}
-		protected void setIndex(int index) {
-			this.index = index;
-		}
+		return PositionMatrix;
 	}
 }

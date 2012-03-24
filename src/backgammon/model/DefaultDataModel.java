@@ -77,8 +77,12 @@ public class DefaultDataModel implements IDataController {
 	public void handleMove(Move registeredMove) {
 		
 		if (registeredMove.getId() == 2) {
-			registeredMove.setFromPoint(23 - registeredMove.getFromPoint());
-			registeredMove.setToPoint(23 - registeredMove.getToPoint());
+			if(registeredMove.getFromPoint() <= 23)
+			{
+				registeredMove.setFromPoint(23 - registeredMove.getFromPoint());
+				registeredMove.setToPoint(23 - registeredMove.getToPoint());
+			}
+			
 		}
 		
 		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(registeredMove));
