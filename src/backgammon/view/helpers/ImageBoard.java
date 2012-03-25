@@ -25,8 +25,8 @@ public class ImageBoard extends JPanel {
 	private Image img;
 	private BackgammonViewGUI view;
 	private ArrayList<BPosition> PositionMatrix;
-	private ArrayList<Position> IndexMatrix;
 	private ArrayList<BChecker> checker;
+	private MoveAnimationManager animation;
 
 	public ImageBoard(BackgammonViewGUI backgammonViewGUI, String img) {
     
@@ -35,6 +35,7 @@ public class ImageBoard extends JPanel {
 	  this.view = backgammonViewGUI;
 	  this.checker = new ArrayList<BChecker>();
 	  this.PositionMatrix = initPoisitionMatrix();
+	  this.animation = new MoveAnimationManager(this);
 	  
 	  this.setStartPosition();
 	}
@@ -104,8 +105,7 @@ public class ImageBoard extends JPanel {
 		this.checker.remove(tmp);
 		this.checker.add(tmp);
 		
-		new MoveAnimation(this, tmp, move.getToPoint(), move.getToIndex());
-		
+		this.animation.addMoveAnimation(tmp,move.getToPoint(), move.getToIndex());
 	}
 
 	private void drawChecker(Graphics g) {
