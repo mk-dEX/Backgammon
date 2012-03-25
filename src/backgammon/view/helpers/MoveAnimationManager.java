@@ -17,8 +17,6 @@ public class  MoveAnimationManager implements Runnable {
 	private int currentY;
 	private int finalX;
 	private int finalY;
-	private int startDeltaX;
-	private int startDeltaY;
 	private Thread thread;
 	private long startTime;
 	private ArrayList<AnimationEntry> animationqueue;
@@ -58,6 +56,7 @@ public class  MoveAnimationManager implements Runnable {
 		this.calculatePositions();
 		
 		this.thread = new Thread(this);
+		
 		this.thread.start();
 	}
 	
@@ -81,14 +80,11 @@ public class  MoveAnimationManager implements Runnable {
 		//Animation done, check queue
 		if(!this.animationqueue.isEmpty())
 		{
+			System.out.println(Integer.toString(this.animationqueue.size()));
 			//Not empty, so start next animation
-			if(this.animationqueue.size() >= 10)
-				this.duration = 200;
-			
 			this.startAnimation();
 		}
 		this.isAnimating = false;
-		this.duration = 500;
 	}
 	private void calculatePositions() {
 		
@@ -150,8 +146,6 @@ public class  MoveAnimationManager implements Runnable {
 			  this.checker.setPosition(Place.OUT);
 		  }
 		
-		int startDeltaX = (finalX - currentX);
-		int startDeltaY = (finalY - currentY);
 /*		System.out.println(Integer.toString(finalX));
 		System.out.println(Integer.toString(finalY));
 		System.out.println(Integer.toString(currentX));
@@ -165,6 +159,9 @@ public class  MoveAnimationManager implements Runnable {
 	public void run() 
 	{	
 		this.startTime = System.currentTimeMillis();
+		
+		if(this.animationqueue.size() >= 3)
+			this.duration = 200;
 		
 		while(System.currentTimeMillis() - this.startTime <= this.duration){
 			
@@ -192,6 +189,8 @@ public class  MoveAnimationManager implements Runnable {
     		this.board.repaint();
 		}
 		
+		if(this.animationqueue.size() <= 1)
+			this.duration = 500;
 		this.endAnimation();
 	}
 	
