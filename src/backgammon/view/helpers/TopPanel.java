@@ -40,7 +40,7 @@ public class TopPanel extends JPanel{
 		this.setBorder(new EtchedBorder());
 		
 		//Add Checkerimage
-		this.img = new ImageIcon("img/"+checkerpfad).getImage();
+		this.img = new ImageIcon(getClass().getResource("/img/"+checkerpfad)).getImage();
 		
 	}
 	

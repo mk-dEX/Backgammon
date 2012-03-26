@@ -161,7 +161,7 @@ public class  MoveAnimationManager implements Runnable {
 		this.startTime = System.currentTimeMillis();
 		
 		if(this.animationqueue.size() >= 3)
-			this.duration = 200;
+			this.duration = 150;
 		
 		while(System.currentTimeMillis() - this.startTime <= this.duration){
 			

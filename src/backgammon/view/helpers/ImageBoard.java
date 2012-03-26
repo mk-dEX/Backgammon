@@ -30,7 +30,7 @@ public class ImageBoard extends JPanel {
 
 	public ImageBoard(BackgammonViewGUI backgammonViewGUI, String img) {
     
-	  this(new ImageIcon(img).getImage());
+	  this(img);
 	  
 	  this.view = backgammonViewGUI;
 	  this.checker = new ArrayList<BChecker>();
@@ -40,9 +40,11 @@ public class ImageBoard extends JPanel {
 	  this.setStartPosition();
 	}
 	
-	public ImageBoard(Image img) {
-	    this.img = img;
-	    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
+	public ImageBoard(String img) {
+		Image iimg = new ImageIcon(getClass().getResource(img)).getImage();
+		
+	    this.img = iimg;
+	    Dimension size = new Dimension(iimg.getWidth(null), iimg.getHeight(null));
 	    setPreferredSize(size);
 	    setMinimumSize(size);
 	    setMaximumSize(size);
