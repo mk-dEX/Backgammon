@@ -25,10 +25,8 @@ public class DefaultDataModel implements IDataController {
 		this.settings = currentSettings;
 		this.gameBoard = new DefaultBackgammonBoard();
 
-		GameSettings.KIMode KIModePlayer1 = this.settings
-				.getSelectedKIModePlayer1();
-		GameSettings.KIMode KIModePlayer2 = this.settings
-				.getSelectedKIModePlayer2();
+		GameSettings.KIMode KIModePlayer1 = this.settings.getSelectedKIModePlayer1();
+		GameSettings.KIMode KIModePlayer2 = this.settings.getSelectedKIModePlayer2();
 		String namePlayer1 = this.settings.getNamePlayer1();
 		String namePlayer2 = this.settings.getNamePlayer2();
 
@@ -58,7 +56,7 @@ public class DefaultDataModel implements IDataController {
 		for (int i = 0; i < 2; i++) {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 0, i);
-			handleMove(tempRegisteredMove);
+			this.handleMove(tempRegisteredMove);
 			j--;
 			
 		}
@@ -67,11 +65,11 @@ public class DefaultDataModel implements IDataController {
 		for (int i = 0; i < 5; i++) {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 11, i);
-			handleMove(tempRegisteredMove);
+			this.handleMove(tempRegisteredMove);
 			j--;
 			
 			tempRegisteredMove = new Move(playerID, 25, j, 18, i);
-			handleMove(tempRegisteredMove);
+			this.handleMove(tempRegisteredMove);
 			j--;
 		}
 
@@ -79,7 +77,7 @@ public class DefaultDataModel implements IDataController {
 		for (int i = 0; i < 3; i++) {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 16, i);
-			handleMove(tempRegisteredMove);
+			this.handleMove(tempRegisteredMove);
 			j--;
 			
 		}
@@ -88,8 +86,8 @@ public class DefaultDataModel implements IDataController {
 	public void startGame() {
 
 		// Player initialization
-		initCheckersOfPlayer(1);
-		initCheckersOfPlayer(2);
+		this.initCheckersOfPlayer(1);
+		this.initCheckersOfPlayer(2);
 	}
 
 	public IBackgammonBoard getBackgammonBoard() {
@@ -123,8 +121,7 @@ public class DefaultDataModel implements IDataController {
 
 		}
 
-		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(
-				registeredMove));
+		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(registeredMove));
 
 	}
 
