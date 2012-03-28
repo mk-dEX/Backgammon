@@ -18,45 +18,7 @@ public class HumanPlayer implements IPlayer {
 	public int rollDice(int min, int max) {
 		return this.dice.roll(min, max);
 	}
-	
-	public void init(int playerID) {
-		
-		Move tempRegisteredMove;
-		
-		int j = 14;
-		
-		// IndexPoint 0
-		for (int i = 0; i < 2; i++) {
-			
-			tempRegisteredMove = new Move(playerID, 25, j, 0, i);
-			this.rootDataController.handleMove(tempRegisteredMove);
-			
-			j--;
-		}
-		
-		// IndexPoint 11 & 18
-		for (int i = 0; i < 5; i++) {
-			
-			tempRegisteredMove = new Move(playerID, 25, j, 11, i);
-			this.rootDataController.handleMove(tempRegisteredMove);
-			j--;
-			tempRegisteredMove = new Move(playerID, 25, j, 18, i);
-			this.rootDataController.handleMove(tempRegisteredMove);
-		
-			j--;
-		}
-		
-		// IndexPoint 16
-		for (int i = 0; i < 3; i++) {
-			
-			tempRegisteredMove = new Move(playerID, 25, j, 16, i);
-			this.rootDataController.handleMove(tempRegisteredMove);
-			
-			j--;
-		}
 
-	}
-	
 	public void move() {
 		
 		Move resultingUIMove;
