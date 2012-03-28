@@ -12,13 +12,14 @@ import javax.swing.border.EtchedBorder;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
-import backgammon.view.BackgammonViewGUI;
-
 public class TopPanel extends JPanel{
 
-	private Image img;
-	private BackgammonViewGUI view;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
+	private Image img;
 	public TopPanel(String checkerpfad, String name)
 	{
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();

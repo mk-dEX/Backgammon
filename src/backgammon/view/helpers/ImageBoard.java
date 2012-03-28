@@ -7,13 +7,9 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.text.Position;
-
-import com.sun.xml.internal.bind.v2.runtime.Coordinator;
-
+import backgammon.listener.ImageBoardMouseListener;
 import backgammon.model.player.Move;
 import backgammon.view.helpers.BChecker;
-import backgammon.view.helpers.BChecker.Place;
 import backgammon.view.BackgammonViewGUI;
 
 public class ImageBoard extends JPanel {
@@ -34,14 +30,18 @@ public class ImageBoard extends JPanel {
 	  
 	  this.view = backgammonViewGUI;
 	  this.checker = new ArrayList<BChecker>();
-	  this.PositionMatrix = initPoisitionMatrix();
+	  this.PositionMatrix = getPoisitionMatrix();
 	  this.animation = new MoveAnimationManager(this);
 	  
 	  this.setStartPosition();
 	}
 	
 	public ImageBoard(String img) {
-		Image iimg = new ImageIcon(getClass().getResource(img)).getImage();
+		
+	    this.addMouseListener(new ImageBoardMouseListener(this));
+	    this.addMouseMotionListener(new ImageBoardMouseListener(this));
+		
+	    Image iimg = new ImageIcon(getClass().getResource(img)).getImage();
 		
 	    this.img = iimg;
 	    Dimension size = new Dimension(iimg.getWidth(null), iimg.getHeight(null));
@@ -50,6 +50,7 @@ public class ImageBoard extends JPanel {
 	    setMaximumSize(size);
 	    setSize(size);
 	    setLayout(null);
+	    
 	  }
 	  public BChecker addChecker(int player, int point, int index)
 	  {
@@ -72,7 +73,10 @@ public class ImageBoard extends JPanel {
     
     this.drawChecker(g);
   }
-
+  	public ArrayList<BChecker> getChecker()
+  	{
+  		return this.checker;
+  	}
   	private BChecker findChecker(int point, int index)
 	{
 		for(BChecker checker : this.checker)
@@ -127,7 +131,7 @@ public class ImageBoard extends JPanel {
 				}
 				
 				tmp = this.PositionMatrix.get(checker.getPoint());	
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getIndex(checker.getPoint(), checker.getIndex())-25,null);
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+ImageBoard.getIndex(checker.getPoint(), checker.getIndex())-25,null);
 			}
 			else if(checker.getPosition() == BChecker.Place.BAR)
 			{
@@ -140,8 +144,8 @@ public class ImageBoard extends JPanel {
 					continue;
 				}
 				
-				tmp = this.getBarPosition(checker.getPlayer());
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
+				tmp = ImageBoard.getBarPosition(checker.getPlayer());
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+ImageBoard.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
 			}
 			else
 			{
@@ -154,15 +158,15 @@ public class ImageBoard extends JPanel {
 					continue;
 				}
 				
-				tmp = this.getOutPosition(checker.getPlayer());
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+this.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
+				tmp = ImageBoard.getOutPosition(checker.getPlayer());
+				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+ImageBoard.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
 			}	
 		}
 		
 		
 	}
 	
-	private ArrayList<BPosition> initPoisitionMatrix()
+	public static ArrayList<BPosition> getPoisitionMatrix()
 	{
 		ArrayList<BPosition> tmp = new ArrayList<BPosition>();
 		//unten
@@ -196,14 +200,14 @@ public class ImageBoard extends JPanel {
 		//endtest
 		return tmp;
 	}
-	int getOBIndex(int player, int index)
+	public static int getOBIndex(int player, int index)
 	{
 		if(player == 2)
 			return index*15;
 		else
 			return -(index*15);
 	}
-	int getIndex(int point, int index)
+	public static int getIndex(int point, int index)
 	{
 		
 		if(point >= 12)
@@ -215,14 +219,14 @@ public class ImageBoard extends JPanel {
 			return -(index*20); 
 		}
 	}
-	BPosition getBarPosition(int player)
+	public static BPosition getBarPosition(int player)
 	{
 		if(player == 1)
 			return new BPosition(485,440);
 		else
 			return new BPosition(485,160);
 	}
-	BPosition getOutPosition(int player)
+	public static BPosition getOutPosition(int player)
 	{
 		if(player == 1)
 			return new BPosition(935,554);
@@ -232,5 +236,29 @@ public class ImageBoard extends JPanel {
 	public ArrayList<BPosition> getPositionMatrix() {
 		
 		return PositionMatrix;
+	}
+	public Integer getHighestIndex(int point)
+	{
+		int result = -1;
+		
+		for(BChecker c : this.checker)
+		{
+			if(c.getPoint() == point && c.getIndex() > result)
+				result = c.getIndex();
+		}
+		return result;	
+	}
+	public BChecker getHighestChecker(int point)
+	{
+		BChecker result = null;
+		
+		for(BChecker c : this.checker)
+		{
+			if(result == null)
+				result = c;
+			if(c.getPoint() == point && c.getIndex() > result.getIndex())
+				result = c;
+		}
+		return result;	
 	}
 }

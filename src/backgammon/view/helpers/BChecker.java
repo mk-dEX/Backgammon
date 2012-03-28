@@ -1,6 +1,8 @@
 package backgammon.view.helpers;
 
-class BChecker
+import java.util.ArrayList;
+
+public class BChecker
 	{
 		private int point;
 		private int index;
@@ -20,19 +22,55 @@ class BChecker
 			this.index = index;
 			this.player = player;
 			this.position = field;
+			
+			this.setCorrectCoords();
 		}
 		
-		protected int getPoint() {
+		private void setCorrectCoords() {
+
+			if(this.point == 99 || this.index == 99)
+				return;
+			
+			ArrayList<BPosition> tmp = ImageBoard.getPoisitionMatrix();
+			
+			int x,y = 0;
+			
+			if(this.position == Place.BOARD)
+			{
+				x = tmp.get(point).getX();
+				y = tmp.get(point).getY() + ImageBoard.getIndex(point, index);
+			}
+			else if(this.position == Place.BAR)
+			{
+				x = ImageBoard.getBarPosition(player).getX();
+				y = ImageBoard.getBarPosition(player).getY() + ImageBoard.getOBIndex(player, index);
+			}
+			else
+			{
+				x = ImageBoard.getOutPosition(player).getX();
+				y = ImageBoard.getOutPosition(player).getY() + ImageBoard.getOBIndex(player, index); 
+			}
+			
+			this.coords = new BPosition(x, y);
+			
+		}
+
+		public int getPoint() {
 			return point;
 		}
-		protected void setPoint(int point) {
+		public void setPoint(int point) {
 			this.point = point;
+			
+			this.setCorrectCoords();
+			
 		}
 		protected Place getPosition() {
 			return position;
 		}
 		protected void setPosition(Place position) {
 			this.position = position;
+			
+			this.setCorrectCoords();
 		}
 		protected int getIndex() {
 			return index;
@@ -40,13 +78,15 @@ class BChecker
 		protected int getPlayer() {
 			return player;
 		}
-		protected void setIndex(int index) {
+		public void setIndex(int index) {
 			this.index = index;
+			
+			this.setCorrectCoords();
 		}
-		protected void setCoords(int x, int y) {
+		public void setCoords(int x, int y) {
 			this.coords = new BPosition(x, y);
 		}
-		protected BPosition getCoords() {
+		public BPosition getCoords() {
 			return this.coords;
 		}
 	}

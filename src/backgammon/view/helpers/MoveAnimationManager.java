@@ -80,7 +80,6 @@ public class  MoveAnimationManager implements Runnable {
 		//Animation done, check queue
 		if(!this.animationqueue.isEmpty())
 		{
-			System.out.println(Integer.toString(this.animationqueue.size()));
 			//Not empty, so start next animation
 			this.startAnimation();
 		}

@@ -1,6 +1,6 @@
 package backgammon.view.helpers;
 
-class BPosition
+public class BPosition
 	{
 		private int x;
 		private int y;
@@ -10,10 +10,10 @@ class BPosition
 			this.x = x;
 			this.y = y;
 		}
-		protected int getX() {
+		public int getX() {
 			return x;
 		}
-		protected int getY() {
+		public int getY() {
 			return y;
 		}
 	}
