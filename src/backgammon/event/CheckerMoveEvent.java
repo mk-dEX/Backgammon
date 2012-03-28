@@ -4,7 +4,7 @@ import backgammon.model.player.Move;
 
 public class CheckerMoveEvent {
 
-	private Move move;
+	protected Move move;
 	
 	public CheckerMoveEvent(Move move) {
 		this.move = move;
