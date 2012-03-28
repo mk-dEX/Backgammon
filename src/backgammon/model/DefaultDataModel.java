@@ -57,8 +57,7 @@ public class DefaultDataModel implements IDataController {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 0, i);
 			this.handleMove(tempRegisteredMove);
-			j--;
-			
+			j--;		
 		}
 
 		// IndexPoint 11 & 18
@@ -78,8 +77,7 @@ public class DefaultDataModel implements IDataController {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 16, i);
 			this.handleMove(tempRegisteredMove);
-			j--;
-			
+			j--;	
 		}
 	}
 
