@@ -15,6 +15,7 @@ import javax.swing.border.EtchedBorder;
 import backgammon.controller.IControllerDelegate;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
+import backgammon.event.DiceEvent.diceType;
 import backgammon.event.InfoEvent;
 import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
@@ -194,28 +195,12 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 				System.exit(0);
 			}
 		});
-		
+
 		this.startGame = new JButton("Spiel starten");
 		tmp.add(startGame, BorderLayout.SOUTH);
-		startGame.setVisible(false);
+		startGame.addActionListener(this);
 
 		return tmp;
-	}
-
-	/**
-	 * This function will draw the normal dices on the board.
-	 * 
-	 * @param first
-	 *            The value of the first dice
-	 * @param second
-	 *            The value of the second dice
-	 * @param player
-	 *            indicates the player side, if Zero (0) it will draw the first
-	 *            on the one and the second on the other side.
-	 * @return Boolean whether the draw was succeeded or not
-	 */
-	private boolean drawDices(int first, int second, int player) {
-		return false;
 	}
 
 	/**
@@ -262,6 +247,26 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			return pl2_checker;
 	}
 
+	public Image getDice(int pl, int i) {
+
+		System.out.println("/img/"
+				+ this.controller.getCurrentGameSettings().getPathDicePlayer1()
+				+ i + ".png");
+
+		if (pl == 1)
+			return new ImageIcon(getClass().getResource(
+					"/img/"
+							+ this.controller.getCurrentGameSettings()
+									.getPathDicePlayer1() + i + ".png"))
+					.getImage();
+		else
+			return new ImageIcon(getClass().getResource(
+					"/img/"
+							+ this.controller.getCurrentGameSettings()
+									.getPathDicePlayer1() + i + ".png"))
+					.getImage();
+	}
+
 	public IControllerDelegate getController() {
 		return this.controller;
 	}
@@ -282,7 +287,17 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	@Override
 	public int handleDiceEvent(DiceEvent event) {
-		// TODO Auto-generated method stub
+		if (event.getDiceType() == diceType.DICE) {
+			System.out.println("Ich würfel");
+			if (event.getPlayerID() == 0) {
+				this.imageBoard.addDice(1, event.getDiceResult().get(0));
+				this.imageBoard.addDice(2, event.getDiceResult().get(1));
+			} else {
+				for (int i : event.getDiceResult()) {
+					this.imageBoard.addDice(event.getPlayerID(), i);
+				}
+			}
+		}
 		return 0;
 	}
 
@@ -300,15 +315,18 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		System.out.println("Test1");
-		
-		if(e.getSource() == this.newGame)
-		{
+
+		if (e.getSource() == this.newGame) {
 			this.board.dispose();
 			this.controller.exitGame();
 		}
-		
+		if (e.getSource() == this.startGame) {
+			this.startGame.setVisible(false);
+			this.controller.initGame();
+		}
+
 	}
 
 }

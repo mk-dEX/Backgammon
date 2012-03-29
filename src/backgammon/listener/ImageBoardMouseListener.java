@@ -37,7 +37,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	@Override
 	public void mousePressed(MouseEvent e) {
 		
-		System.out.println("Press");
+		//System.out.println("Press");
 		if(!this.setCheckerFromEvent(e))
 			return;
 		
@@ -52,7 +52,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 		// gucken, ob neuer Point, ansonsten zurückanimieren.
 		ImageBoardMouseListener.dragging = false;
 		
-		System.out.println("Mouse released");
+		//System.out.println("Mouse released");
 		
 		if(ImageBoardMouseListener.checker == null)
 			return;
