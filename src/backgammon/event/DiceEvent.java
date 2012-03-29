@@ -1,6 +1,6 @@
 package backgammon.event;
 
-import java.util.Vector;
+import backgammon.model.player.DiceResult;
 
 public class DiceEvent {
 
@@ -11,12 +11,12 @@ public class DiceEvent {
 	
 	private diceType type;
 	private int playerID;
-	private Vector<Integer> diceResults;
+	private DiceResult diceResult;
 	
-	public DiceEvent(diceType type, int playerID, Vector<Integer> diceResults) {
+	public DiceEvent(diceType type, int playerID, DiceResult diceResult) {
 		this.type = type;
 		this.playerID = playerID;
-		this.diceResults = diceResults;
+		this.diceResult = diceResult;
 	}
 	
 	public diceType getDiceType() {
@@ -27,8 +27,8 @@ public class DiceEvent {
 		return this.playerID;
 	}
 	
-	public Vector<Integer> getDiceResult() {
-		return this.diceResults;
+	public DiceResult getDiceResult() {
+		return this.diceResult;
 	}
 	
 }
