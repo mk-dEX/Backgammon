@@ -19,13 +19,13 @@ public class ControllerDelegate implements IControllerDelegate {
 		this.rootController = aRootController;
 		this.gameSettings = currentSettings;
 		
-		model = new DefaultDataModel(this.gameSettings);
+		this.model = new DefaultDataModel(this.gameSettings);
 		BackgammonViewGUI gameView = new BackgammonViewGUI(this);
 		
-		model.addDataModelListener(gameView);
+		this.model.addDataModelListener(gameView);
 		gameView.initGUI(this.workingTitle);
 		
-		model.startGame();
+		this.model.initGameCheckers();
 	}
 	
 	public GameSettings getCurrentGameSettings() {
@@ -33,8 +33,13 @@ public class ControllerDelegate implements IControllerDelegate {
 		return this.gameSettings;
 	}
 	
+	public void initGame() {
+		
+		this.model.initGame();
+	}
+	
 	public void exitGame() {
 		
-		rootController.startUpdateSettings();
+		this.rootController.startUpdateSettings();
 	}
 }

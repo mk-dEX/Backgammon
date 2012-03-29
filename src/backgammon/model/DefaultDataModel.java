@@ -1,7 +1,10 @@
 package backgammon.model;
 
+import java.util.Vector;
+
 import backgammon.app.GameSettings;
 import backgammon.event.CheckerMoveEvent;
+import backgammon.event.DiceEvent;
 import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.DefaultBackgammonBoard;
@@ -42,13 +45,8 @@ public class DefaultDataModel implements IDataController {
 			player2 = new ComputerPlayer(namePlayer2, this, KIModePlayer2);
 		}
 	}
-
-	public void addDataModelListener(IModelEventListener listener) {
-
-		this.listener = listener;
-	}
 	
-	private void initCheckersOfPlayer(int playerID) {
+	protected void initCheckersOfPlayer(int playerID) {
 		Move tempRegisteredMove;
 		int j = 14;
 
@@ -80,12 +78,48 @@ public class DefaultDataModel implements IDataController {
 			j--;	
 		}
 	}
+	
+	protected void controlPlayerMove(IPlayer currentPlayer, Vector<Integer> diceResultsForPlayer) {
+		
+		
+	}
+	
+	public void addDataModelListener(IModelEventListener listener) {
 
-	public void startGame() {
+		this.listener = listener;
+	}
+	
+	public void initGameCheckers() {
 
 		// Player initialization
+		// checkers are placed
 		this.initCheckersOfPlayer(1);
 		this.initCheckersOfPlayer(2);
+	}
+	
+	public void initGame() {
+		
+		// Players roll dice
+		Integer diceResultPlayer1;
+		Integer diceResultPlayer2;
+		
+		do {
+			diceResultPlayer1 = new Integer(player1.rollDice(1, 6));
+			diceResultPlayer2 = new Integer(player2.rollDice(1, 6));
+			
+		} while(diceResultPlayer1.equals(diceResultPlayer2));
+		
+		Vector<Integer> diceResults = new Vector<Integer>();
+		diceResults.add(diceResultPlayer1);
+		diceResults.add(diceResultPlayer2);
+		
+		DiceEvent initialDiceEvent = new DiceEvent(DiceEvent.diceType.DICE, 0, diceResults);
+		this.listener.handleDiceEvent(initialDiceEvent);
+		
+		// Player who wins the start roll begins the game with a move
+		IPlayer startPlayer = (diceResultPlayer1.intValue() > diceResultPlayer2.intValue()) ? (this.player1) : (this.player2);
+		this.controlPlayerMove(startPlayer, diceResults);
+		
 	}
 
 	public IBackgammonBoard getBackgammonBoard() {
@@ -102,7 +136,7 @@ public class DefaultDataModel implements IDataController {
 		return resultingMove;
 	}
 
-	public int testMove(Move newMove) {
+	public int testMove(Move newMove, Vector<Integer> numbers) {
 		return 0;
 	}
 
@@ -118,6 +152,8 @@ public class DefaultDataModel implements IDataController {
 			}
 
 		}
+		
+		//TODO add Checker to gameBoard
 
 		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(registeredMove));
 

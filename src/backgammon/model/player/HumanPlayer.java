@@ -1,5 +1,7 @@
 package backgammon.model.player;
 
+import java.util.Vector;
+
 import backgammon.model.interfaces.IDataController;
 import backgammon.model.interfaces.IPlayer;
 
@@ -19,7 +21,7 @@ public class HumanPlayer implements IPlayer {
 		return this.dice.roll(min, max);
 	}
 
-	public void move() {
+	public void move(Vector<Integer> numbers) {
 		
 		Move resultingUIMove;
 		
@@ -27,7 +29,7 @@ public class HumanPlayer implements IPlayer {
 			
 			resultingUIMove = this.rootDataController.requestMove(this);
 		
-		} while (this.rootDataController.testMove(resultingUIMove) < 0);
+		} while (this.rootDataController.testMove(resultingUIMove, numbers) < 0);
 		
 		this.rootDataController.handleMove(resultingUIMove);	
 	}

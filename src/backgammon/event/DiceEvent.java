@@ -1,5 +1,7 @@
 package backgammon.event;
 
+import java.util.Vector;
+
 public class DiceEvent {
 
 	public static enum diceType {
@@ -9,12 +11,12 @@ public class DiceEvent {
 	
 	private diceType type;
 	private int playerID;
-	private int diceResult;
+	private Vector<Integer> diceResults;
 	
-	public DiceEvent(diceType type, int playerID, int diceResult) {
+	public DiceEvent(diceType type, int playerID, Vector<Integer> diceResults) {
 		this.type = type;
 		this.playerID = playerID;
-		this.diceResult = diceResult;
+		this.diceResults = diceResults;
 	}
 	
 	public diceType getDiceType() {
@@ -25,8 +27,8 @@ public class DiceEvent {
 		return this.playerID;
 	}
 	
-	public int getDiceResult() {
-		return this.diceResult;
+	public Vector<Integer> getDiceResult() {
+		return this.diceResults;
 	}
 	
 }
