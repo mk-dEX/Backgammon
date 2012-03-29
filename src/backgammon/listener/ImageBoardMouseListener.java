@@ -107,7 +107,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 		if(Point != 50)
 		{
 			//Kontroller Bescheid sagen.
-			System.out.println("Point: " + Integer.toString(Point));
+			//System.out.println("Point: " + Integer.toString(Point));
 			ImageBoardMouseListener.checker = this.parent.getHighestChecker(Point);
 			
 			if(ImageBoardMouseListener.checker != null)
@@ -135,7 +135,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 			{
 				//Hitbox gefunden, also point und Index setzen.
 				found = true;
-				System.out.println("Hitbox gefunden");
+				//System.out.println("Hitbox gefunden");
 				int index = this.parent.getHighestIndex(i);
 				if(ImageBoardMouseListener.checker.getPoint() != i)
 					//ImageBoardMouseListener.checker.setPointIndex(i, index+1);

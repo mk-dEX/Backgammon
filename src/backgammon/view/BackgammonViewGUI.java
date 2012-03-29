@@ -305,6 +305,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		
 		if(e.getSource() == this.newGame)
 		{
+			this.board.dispose();
 			this.controller.exitGame();
 		}
 		

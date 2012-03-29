@@ -64,8 +64,8 @@ public class MoveAnimationManager implements Runnable {
 
 		// System.out.println(Integer.toString(finalX));
 		// System.out.println(Integer.toString(finalY));
-		System.out.println(Integer.toString(toPoint));
-		System.out.println(Integer.toString(toIndex));
+		//System.out.println(Integer.toString(toPoint));
+		//System.out.println(Integer.toString(toIndex));
 
 		this.checker.setPointIndex(this.toPoint, this.toIndex);
 		this.board.repaint();
