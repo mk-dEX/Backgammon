@@ -29,9 +29,7 @@ public class HumanPlayer implements IPlayer {
 			
 			resultingUIMove = this.rootDataController.requestMove(this);
 		
-		} while (this.rootDataController.testMove(resultingUIMove, numbers) < 0);
-		
-		this.rootDataController.handleMove(resultingUIMove);	
+		} while (this.rootDataController.handleMove(resultingUIMove, numbers) < 0);
 	}
 	
 	

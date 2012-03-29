@@ -33,20 +33,16 @@ public class Move {
 		return this.id;
 	}
 
-	public int getId() {
-		return id;
-	}
-
 	public int getFromPoint() {
-		return fromPoint;
+		return this.fromPoint;
 	}
 
 	public int getToPoint() {
-		return toPoint;
+		return this.toPoint;
 	}
 
 	public int getFromIndex() {
-		return fromIndex;
+		return this.fromIndex;
 	}
 
 	public int getToIndex() {

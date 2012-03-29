@@ -9,6 +9,7 @@ import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.DefaultBackgammonBoard;
 import backgammon.model.interfaces.IBackgammonBoard;
+import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IDataController;
 import backgammon.model.interfaces.IPlayer;
 import backgammon.model.player.ComputerPlayer;
@@ -24,6 +25,7 @@ public class DefaultDataModel implements IDataController {
 	private IPlayer player2;
 	private IBackgammonBoard gameBoard;
 
+	
 	public DefaultDataModel(GameSettings currentSettings) {
 		this.settings = currentSettings;
 		this.gameBoard = new DefaultBackgammonBoard();
@@ -46,6 +48,7 @@ public class DefaultDataModel implements IDataController {
 		}
 	}
 	
+	
 	protected void initCheckersOfPlayer(int playerID) {
 		Move tempRegisteredMove;
 		int j = 14;
@@ -54,7 +57,7 @@ public class DefaultDataModel implements IDataController {
 		for (int i = 0; i < 2; i++) {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 0, i);
-			this.handleMove(tempRegisteredMove);
+			this.pushCheckerMoveEvent(tempRegisteredMove);
 			j--;		
 		}
 
@@ -62,11 +65,11 @@ public class DefaultDataModel implements IDataController {
 		for (int i = 0; i < 5; i++) {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 11, i);
-			this.handleMove(tempRegisteredMove);
+			this.pushCheckerMoveEvent(tempRegisteredMove);
 			j--;
 			
 			tempRegisteredMove = new Move(playerID, 25, j, 18, i);
-			this.handleMove(tempRegisteredMove);
+			this.pushCheckerMoveEvent(tempRegisteredMove);
 			j--;
 		}
 
@@ -74,21 +77,10 @@ public class DefaultDataModel implements IDataController {
 		for (int i = 0; i < 3; i++) {
 
 			tempRegisteredMove = new Move(playerID, 25, j, 16, i);
-			this.handleMove(tempRegisteredMove);
+			this.pushCheckerMoveEvent(tempRegisteredMove);
 			j--;	
 		}
 	}
-	
-	protected void controlPlayerMove(IPlayer currentPlayer, Vector<Integer> diceResultsForPlayer) {
-		
-		
-	}
-	
-	public void addDataModelListener(IModelEventListener listener) {
-
-		this.listener = listener;
-	}
-	
 	public void initGameCheckers() {
 
 		// Player initialization
@@ -97,6 +89,11 @@ public class DefaultDataModel implements IDataController {
 		this.initCheckersOfPlayer(2);
 	}
 	
+	
+	protected void controlPlayerMove(IPlayer currentPlayer, Vector<Integer> diceResultsForPlayer) {
+		
+		
+	}
 	public void initGame() {
 		
 		// Players roll dice
@@ -122,10 +119,7 @@ public class DefaultDataModel implements IDataController {
 		
 	}
 
-	public IBackgammonBoard getBackgammonBoard() {
-		return this.gameBoard;
-	}
-
+	
 	public Move requestMove(IPlayer player) {
 
 		int playerID = (player.equals(player1)) ? (1) : (2);
@@ -136,27 +130,71 @@ public class DefaultDataModel implements IDataController {
 		return resultingMove;
 	}
 
-	public int testMove(Move newMove, Vector<Integer> numbers) {
-		return 0;
-	}
-
-	public void handleMove(Move registeredMove) {
-
-		if (registeredMove.getId() == 2) {
+	
+	protected void pushCheckerMoveEvent(Move move) {
+		
+		if (move.getID() == 2) {
 			
-			if (registeredMove.getFromPoint() <= 23) {
-				registeredMove.setFromPoint(23 - registeredMove.getFromPoint());
+			if (move.getFromPoint() < IBackgammonBoard.BAR_INDEX) {
+				move.setFromPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getFromPoint());
 			}
-			if (registeredMove.getToPoint() <= 23) {
-				registeredMove.setToPoint(23 - registeredMove.getToPoint());
+			if (move.getToPoint() < IBackgammonBoard.BAR_INDEX) {
+				move.setToPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getToPoint());
 			}
 
 		}
-		
-		//TODO add Checker to gameBoard
 
-		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(registeredMove));
+		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(move));
+	}
+	protected ICheckerList getCheckerListForIndex(int index) throws Exception{
+		
+		if (index < IBackgammonBoard.BAR_INDEX) {
+			return this.gameBoard.getPointAtIndex(index);
+		
+		} else if (index == IBackgammonBoard.BAR_INDEX) {
+			return this.gameBoard.getBar();
+					
+		} else if (index == IBackgammonBoard.OUT_PLAYER1_INDEX) {
+			return this.gameBoard.getOut(1);
+			
+		} else if (index == IBackgammonBoard.OUT_PLAYER2_INDEX) {
+			return this.gameBoard.getOut(2);
+		
+		} else {
+			throw new Exception();
+			
+		}
+	}
+	public int handleMove(Move registeredMove, Vector<Integer> numbers) {
+
+		int srcIndex = registeredMove.getFromIndex();
+		int dstIndex = registeredMove.getToIndex();
+		ICheckerList src;
+		ICheckerList dst;
+		IPlayer currentPlayer = (registeredMove.getID() == 1) ? (this.player1) : (this.player2);
+		
+		try {
+			src = this.getCheckerListForIndex(srcIndex);
+			dst = this.getCheckerListForIndex(dstIndex);
+		
+		} catch(Exception e) { return -1; }
+		
+		if (!dst.isBlockedForPlayer(currentPlayer)) {
+			return 0;
+		}
+		
+		
+		this.pushCheckerMoveEvent(registeredMove);
+		return 0;
 
 	}
+	
+	
+	public void addDataModelListener(IModelEventListener listener) {
 
+		this.listener = listener;
+	}
+	public IBackgammonBoard getBackgammonBoard() {
+		return this.gameBoard;
+	}
 }
