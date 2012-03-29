@@ -23,10 +23,10 @@ public class BChecker
 			this.player = player;
 			this.position = field;
 			
-			this.setCorrectCoords();
+			this.setCoordsFromPointAndIndex();
 		}
 		
-		private void setCorrectCoords() {
+		public void setCoordsFromPointAndIndex() {
 
 			if(this.point == 99 || this.index == 99)
 				return;
@@ -61,7 +61,7 @@ public class BChecker
 		public void setPoint(int point) {
 			this.point = point;
 			
-			this.setCorrectCoords();
+			this.setCoordsFromPointAndIndex();
 			
 		}
 		protected Place getPosition() {
@@ -70,7 +70,7 @@ public class BChecker
 		protected void setPosition(Place position) {
 			this.position = position;
 			
-			this.setCorrectCoords();
+			this.setCoordsFromPointAndIndex();
 		}
 		protected int getIndex() {
 			return index;
@@ -81,12 +81,19 @@ public class BChecker
 		public void setIndex(int index) {
 			this.index = index;
 			
-			this.setCorrectCoords();
+			this.setCoordsFromPointAndIndex();
 		}
 		public void setCoords(int x, int y) {
 			this.coords = new BPosition(x, y);
 		}
 		public BPosition getCoords() {
 			return this.coords;
+		}
+		public void setPointIndex(int point, int index)
+		{
+			this.point = point;
+			this.index = index;
+			
+			this.setCoordsFromPointAndIndex();
 		}
 	}

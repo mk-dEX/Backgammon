@@ -3,9 +3,11 @@ package backgammon.listener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 
 import backgammon.view.helpers.BChecker;
 import backgammon.view.helpers.ImageBoard;
+import backgammon.view.helpers.PHitBox;
 
 public class ImageBoardMouseListener extends MouseMotionAdapter implements MouseListener {
 
@@ -18,7 +20,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	@Override
 	public void mouseClicked(MouseEvent f) {
 		
-		this.setCheckerFromEvent(f);
+		//this.setCheckerFromEvent(f);
 		
 		//do stuff
 		
@@ -44,25 +46,33 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent f) {
 		// gucken, ob neuer Point, ansonsten zurückanimieren.
-		this.checker.setPoint(1);
-		this.checker.setIndex(0);
-		//this.checker = null;
+		if(!this.setCheckerFromEvent(f))
+			return;
+		
+		this.setPointFromEvent(f);
+		
+		System.out.println("Mouse released");
+		this.checker = null;
 
 	}
 	public void mouseDragged(MouseEvent e) {
 		// Drag aktivieren
-				if(this.checker == null)
-					this.setCheckerFromEvent(e);
-				
-				this.checker.setCoords(e.getX(), e.getY());
-				
-				
-			    this.parent.repaint();
+		if(!this.setCheckerFromEvent(e))
+			return;
+		
+		this.checker.setCoords(e.getX(), e.getY());
+		
+		
+	    this.parent.repaint();
 	}
-	private void setCheckerFromEvent(MouseEvent f)
+	private Boolean setCheckerFromEvent(MouseEvent f)
 	{
+		
+		if(this.checker != null)
+			return true;
+		
 		Integer Point = 50;
 		
 		Integer x = f.getPoint().x;// - e.getLocationOnScreen().x;
@@ -93,9 +103,32 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 			//Kontroller Bescheid sagen.
 			System.out.println("Point: " + Integer.toString(Point));
 			this.checker = this.parent.getHighestChecker(Point);
-			this.checker.setPoint(99);
-			this.checker.setIndex(99);
+			return true;
 		}
+		else
+		{
+			this.checker = null;
+		}
+		return false;
+	}
+	private void setPointFromEvent(MouseEvent f) {
+		ArrayList<PHitBox> tmp = ImageBoard.getPointHitBox();
+				
+		//gucken ob wir auf einem Point landen, falls ja, dann holen wir uns den höchsten Index
+		//und platzieren den Checker dort.
+		int i = 0;
+		for(PHitBox h : tmp)
+		{
+			if(f.getX() >= h.getX1() && f.getX() <= h.getX2() && f.getY() >= h.getY1() && f.getY() <= h.getY2())
+			{
+				//Hitbox gefunden, also point und Index setzen.
+				int index = this.parent.getHighestIndex(i);
+				this.checker.setPointIndex(i, index);
+			}
+			i++;
+		}
+		//keine Hitbox getroffen, also zurücksetzen.
+		this.checker.setCoordsFromPointAndIndex();
 	}
 
 }
