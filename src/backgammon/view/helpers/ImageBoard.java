@@ -164,31 +164,33 @@ public class ImageBoard extends JPanel {
 	{
 		ArrayList<PHitBox> tmp = new ArrayList<PHitBox>();
 		//unten
-		tmp.add(new PHitBox(834, 340, 895, 578));
-		/*tmp.add(new BPosition(802,554));
-		tmp.add(new BPosition(737,554));
-		tmp.add(new BPosition(672,554));
-		tmp.add(new BPosition(607,554));
-		tmp.add(new BPosition(541,554));
-		tmp.add(new BPosition(433,554));
-		tmp.add(new BPosition(368,554));
-		tmp.add(new BPosition(303,554));
-		tmp.add(new BPosition(237,554));
-		tmp.add(new BPosition(172,554));
-		tmp.add(new BPosition(107,554));
+		tmp.add(new PHitBox(834, 895, 340,578));
+		tmp.add(new PHitBox(765, 833, 340,578));
+		tmp.add(new PHitBox(704, 764, 340,578));
+		tmp.add(new PHitBox(635, 703, 340,578));
+		tmp.add(new PHitBox(574, 634, 340,578));
+		tmp.add(new PHitBox(505, 573, 340,578));
+		
+		tmp.add(new PHitBox(400, 465, 340,578));
+		tmp.add(new PHitBox(333, 399, 340,578));
+		tmp.add(new PHitBox(270, 332, 340,578));
+		tmp.add(new PHitBox(200, 269, 340,578));
+		tmp.add(new PHitBox(140, 199, 340,578));
+		tmp.add(new PHitBox(74, 139, 340,578));
 		//oben
-		tmp.add(new BPosition(107,46));
-		tmp.add(new BPosition(172,46));
-		tmp.add(new BPosition(238,46));
-		tmp.add(new BPosition(303,46));
-		tmp.add(new BPosition(368,46));
-		tmp.add(new BPosition(433,46));
-		tmp.add(new BPosition(542,46));
-		tmp.add(new BPosition(607,46));
-		tmp.add(new BPosition(672,46));
-		tmp.add(new BPosition(737,46));
-		tmp.add(new BPosition(802,46));
-		tmp.add(new BPosition(867,46));*/
+		tmp.add(new PHitBox(74, 139, 22,265));
+		tmp.add(new PHitBox(140, 199, 22,265));
+		tmp.add(new PHitBox(200, 269, 22,265));
+		tmp.add(new PHitBox(270, 332, 22,265));
+		tmp.add(new PHitBox(333, 399, 22,265));
+		tmp.add(new PHitBox(400, 465, 22,265));
+		
+		tmp.add(new PHitBox(505, 573, 22,265));
+		tmp.add(new PHitBox(574, 634, 22,265));
+		tmp.add(new PHitBox(635, 703, 22,265));
+		tmp.add(new PHitBox(704, 764, 22,265));
+		tmp.add(new PHitBox(765, 833, 22,265));
+		tmp.add(new PHitBox(834, 895, 22,265));
 		//test
 		
 		//endtest
@@ -250,9 +252,18 @@ public class ImageBoard extends JPanel {
 		{
 			if(result == null)
 				result = c;
-			if(c.getPoint() == point && c.getIndex() > result.getIndex())
+			if(c.getPoint() == point && c.getIndex() >= result.getIndex())
 				result = c;
 		}
 		return result;	
+	}
+	public void setFocus(BChecker tmp)
+	{
+		this.checker.remove(tmp);
+		this.checker.add(tmp);
+	}
+	public MoveAnimationManager getAnimation()
+	{
+		return this.animation;
 	}
 }

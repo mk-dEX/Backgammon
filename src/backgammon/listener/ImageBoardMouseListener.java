@@ -12,65 +12,73 @@ import backgammon.view.helpers.PHitBox;
 public class ImageBoardMouseListener extends MouseMotionAdapter implements MouseListener {
 
 	private ImageBoard parent;
-	private BChecker checker = null;
+	private static BChecker checker = null;
+	private static boolean dragging = false;
 
 	public ImageBoardMouseListener(ImageBoard parent) {
 		this.parent = parent;
 	}
 	@Override
 	public void mouseClicked(MouseEvent f) {
-		
-		//this.setCheckerFromEvent(f);
-		
-		//do stuff
-		
-		//this.checker = null;
-
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-
+		
+		System.out.println("Press");
+		if(!this.setCheckerFromEvent(e))
+			return;
+		
+		//System.out.println("Start dragging");
+		ImageBoardMouseListener.dragging = true;
+		this.parent.setFocus(ImageBoardMouseListener.checker);
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent f) {
 		// gucken, ob neuer Point, ansonsten zurückanimieren.
-		if(!this.setCheckerFromEvent(f))
+		ImageBoardMouseListener.dragging = false;
+		
+		System.out.println("Mouse released");
+		
+		if(ImageBoardMouseListener.checker == null)
 			return;
 		
 		this.setPointFromEvent(f);
 		
-		System.out.println("Mouse released");
-		this.checker = null;
+		ImageBoardMouseListener.checker = null;
+		
 
 	}
 	public void mouseDragged(MouseEvent e) {
-		// Drag aktivieren
-		if(!this.setCheckerFromEvent(e))
+
+		if(!ImageBoardMouseListener.dragging)
+		{
 			return;
+		}
 		
-		this.checker.setCoords(e.getX(), e.getY());
-		
+		//System.out.println("Drag");
+		ImageBoardMouseListener.checker.setCoords(e.getX(), e.getY());
 		
 	    this.parent.repaint();
 	}
 	private Boolean setCheckerFromEvent(MouseEvent f)
 	{
 		
-		if(this.checker != null)
+		if(ImageBoardMouseListener.checker != null)
 			return true;
 		
 		Integer Point = 50;
@@ -90,8 +98,6 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 					//innerhalb, also Point ausgeben
 					//System.out.println("Point: " + Integer.toString(c.getPoint()));
 					Point = c.getPoint();
-					
-					
 				}
 			}
 			i++;
@@ -102,33 +108,47 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 		{
 			//Kontroller Bescheid sagen.
 			System.out.println("Point: " + Integer.toString(Point));
-			this.checker = this.parent.getHighestChecker(Point);
-			return true;
+			ImageBoardMouseListener.checker = this.parent.getHighestChecker(Point);
+			
+			if(ImageBoardMouseListener.checker != null)
+				return true;
+			else
+				return false;
 		}
 		else
 		{
-			this.checker = null;
+			//System.out.println("Test1");
+			ImageBoardMouseListener.checker = null;
+			return false;
 		}
-		return false;
 	}
 	private void setPointFromEvent(MouseEvent f) {
 		ArrayList<PHitBox> tmp = ImageBoard.getPointHitBox();
 				
 		//gucken ob wir auf einem Point landen, falls ja, dann holen wir uns den höchsten Index
 		//und platzieren den Checker dort.
+		boolean found = false;
 		int i = 0;
 		for(PHitBox h : tmp)
 		{
 			if(f.getX() >= h.getX1() && f.getX() <= h.getX2() && f.getY() >= h.getY1() && f.getY() <= h.getY2())
 			{
 				//Hitbox gefunden, also point und Index setzen.
+				found = true;
+				System.out.println("Hitbox gefunden");
 				int index = this.parent.getHighestIndex(i);
-				this.checker.setPointIndex(i, index);
+				if(ImageBoardMouseListener.checker.getPoint() != i)
+					//ImageBoardMouseListener.checker.setPointIndex(i, index+1);
+					this.parent.getAnimation().addMoveAnimation(ImageBoardMouseListener.checker, i, index+1);
+				
 			}
 			i++;
 		}
 		//keine Hitbox getroffen, also zurücksetzen.
-		this.checker.setCoordsFromPointAndIndex();
+		if(!found)
+			this.parent.getAnimation().addMoveAnimation(ImageBoardMouseListener.checker, ImageBoardMouseListener.checker.getPoint(), ImageBoardMouseListener.checker.getIndex());
+		//ImageBoardMouseListener.checker.setCoordsFromPointAndIndex();
+		this.parent.repaint();
 	}
 
 }

@@ -65,15 +65,12 @@ public class  MoveAnimationManager implements Runnable {
 		if(this.thread != null)
 			this.thread = null;
 		
-		/*System.out.println(Integer.toString(finalX));
-		System.out.println(Integer.toString(finalY));
-		System.out.println(Integer.toString(currentX));
-		System.out.println(Integer.toString(currentY));*/
+		//System.out.println(Integer.toString(finalX));
+		//System.out.println(Integer.toString(finalY));
+		System.out.println(Integer.toString(toPoint));
+		System.out.println(Integer.toString(toIndex));
 		
-		this.checker.setCoords(finalX, finalY);
-		this.checker.setPoint(this.toPoint);
-		this.checker.setIndex(this.toIndex);
-		
+		this.checker.setPointIndex(this.toPoint, this.toIndex);
 		this.board.repaint();
 		
 		
@@ -89,24 +86,8 @@ public class  MoveAnimationManager implements Runnable {
 		
 		BPosition tmp = null;
 		
-		if(this.checker.getPosition() == BChecker.Place.BOARD)
-		{
-			tmp = this.board.getPositionMatrix().get(this.checker.getPoint());	
-			this.currentY = tmp.getY()+this.board.getIndex(this.checker.getPoint(), this.checker.getIndex());
-		}
-		else if(checker.getPosition() == BChecker.Place.BAR)
-		{
-			tmp = this.board.getBarPosition(checker.getPlayer());
-			this.currentY = tmp.getY()+this.board.getOBIndex(this.checker.getPlayer(), this.checker.getIndex());
-		}
-		else
-		{
-			tmp = this.board.getOutPosition(checker.getPlayer());
-			this.currentY = tmp.getY()+this.board.getOBIndex(this.checker.getPlayer(), this.checker.getIndex());
-		}	
-		
-		
-		this.currentX = tmp.getX();
+		this.currentX = this.checker.getCoords().getX();
+		this.currentY = this.checker.getCoords().getY();
 		
 		this.checker.setCoords(currentX, currentY);
 		
@@ -114,33 +95,24 @@ public class  MoveAnimationManager implements Runnable {
 		{
 			tmp = this.board.getPositionMatrix().get(toPoint);
 			finalX = tmp.getX();
-			finalY = tmp.getY()+this.board.getIndex(toPoint, toIndex);
-			
-			this.checker.setPoint(99);
-			this.checker.setIndex(99);
+			finalY = tmp.getY()+ImageBoard.getIndex(toPoint, toIndex);
 			
 			this.checker.setPosition(Place.BOARD);
 			
 		}
 		  else if(toPoint == 24)
 		  {
-			  tmp = this.board.getBarPosition(this.checker.getPlayer());
+			  tmp = ImageBoard.getBarPosition(this.checker.getPlayer());
 			  finalX = tmp.getX();
-			  finalY = tmp.getY()+this.board.getOBIndex(this.checker.getPlayer(), toIndex);
-			 
-			  this.checker.setPoint(99);
-			  this.checker.setIndex(99);
+			  finalY = tmp.getY()+ImageBoard.getOBIndex(this.checker.getPlayer(), toIndex);
 				
 			  this.checker.setPosition(Place.BAR);
 		  }
 		  else
 		  {
-			  tmp = this.board.getOutPosition(this.checker.getPlayer());
+			  tmp = ImageBoard.getOutPosition(this.checker.getPlayer());
 			  finalX = tmp.getX();
-			  finalY = tmp.getY()+this.board.getOBIndex(this.checker.getPlayer(), toIndex);
-			  
-			  this.checker.setPoint(99);
-			  this.checker.setIndex(99);
+			  finalY = tmp.getY()+ImageBoard.getOBIndex(this.checker.getPlayer(), toIndex);
 				
 			  this.checker.setPosition(Place.OUT);
 		  }
@@ -167,10 +139,10 @@ public class  MoveAnimationManager implements Runnable {
 			int deltaX = (finalX - currentX);
 			int deltaY = (finalY - currentY);
 			
-			if(deltaX >= speed || deltaY >= speed || -deltaX >= speed || -deltaY >= speed)
+			if((deltaX >= speed || deltaY >= speed) || (-deltaX >= speed || -deltaY >= speed))
 			{
-				deltaX = deltaX /speed;
-				deltaY = deltaY /speed;
+				deltaX = (int) Math.ceil(deltaX /speed);
+				deltaY = (int) Math.ceil(deltaY /speed);
 			}
 			
 			currentX += deltaX;

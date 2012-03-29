@@ -28,9 +28,6 @@ public class BChecker
 		
 		public void setCoordsFromPointAndIndex() {
 
-			if(this.point == 99 || this.index == 99)
-				return;
-			
 			ArrayList<BPosition> tmp = ImageBoard.getPoisitionMatrix();
 			
 			int x,y = 0;
@@ -70,9 +67,9 @@ public class BChecker
 		protected void setPosition(Place position) {
 			this.position = position;
 			
-			this.setCoordsFromPointAndIndex();
+			//this.setCoordsFromPointAndIndex();
 		}
-		protected int getIndex() {
+		public int getIndex() {
 			return index;
 		}
 		protected int getPlayer() {
