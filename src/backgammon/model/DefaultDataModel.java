@@ -1,7 +1,5 @@
 package backgammon.model;
 
-import java.util.Vector;
-
 import backgammon.app.GameSettings;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
@@ -13,6 +11,7 @@ import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IDataController;
 import backgammon.model.interfaces.IPlayer;
 import backgammon.model.player.ComputerPlayer;
+import backgammon.model.player.DiceResult;
 import backgammon.model.player.HumanPlayer;
 import backgammon.model.player.Move;
 
@@ -23,6 +22,7 @@ public class DefaultDataModel implements IDataController {
 
 	private IPlayer player1;
 	private IPlayer player2;
+	private IPlayer nextPlayer;
 	private IBackgammonBoard gameBoard;
 
 	
@@ -89,35 +89,75 @@ public class DefaultDataModel implements IDataController {
 		this.initCheckersOfPlayer(2);
 	}
 	
-	
-	protected void controlPlayerMove(IPlayer currentPlayer, Vector<Integer> diceResultsForPlayer) {
+	protected DiceResult getDiceResult(IPlayer currentPlayer, boolean initial) throws Exception {
 		
+		if (!initial && currentPlayer == null) {
+			throw new Exception();
+		}
+		
+		Integer diceResult1;
+		Integer diceResult2;
+		
+		do {
+			diceResult1 = (initial) ? (this.player1.rollDice(1, 6)) : (currentPlayer.rollDice(1, 6));
+			try {Thread.sleep(5);} catch (Exception e) { e.printStackTrace(); }
+			diceResult2 = (initial) ? (this.player2.rollDice(1, 6)) : (currentPlayer.rollDice(1, 6));
+			try {Thread.sleep(5);} catch (Exception e) { e.printStackTrace(); }
+			
+		} while (initial && diceResult1.equals(diceResult2));
+		
+		int playerID;
+		if (initial) { playerID = 0; } 
+		else { playerID = (currentPlayer.equals(this.player1)) ? (1) : (2);	}
+		
+		DiceResult diceResults = new DiceResult();
+		int factor = (initial && diceResult1.equals(diceResult2)) ? (1) : (2);
+		while (factor > 0) {
+			diceResults.add(diceResult1);
+			diceResults.add(diceResult2);
+			factor--;
+		}
+		DiceEvent diceEvent = new DiceEvent(DiceEvent.diceType.DICE, playerID, diceResults);
+		this.listener.handleDiceEvent(diceEvent);
+		
+		return diceResults;
+	}
+	protected void controlPlayerMove(IPlayer currentPlayer, DiceResult diceResultsForPlayer) {
+		
+		Move currentMove;
+		while (!diceResultsForPlayer.isEmpty()) {
+			
+			currentMove = currentPlayer.move(diceResultsForPlayer);
+			
+		}
+		
+	}
+	public void initNextPlayerMove() {
+		
+		this.nextPlayer = (this.nextPlayer.equals(this.player1)) ? (this.player2) : (this.player1);
+		
+		DiceResult nextDiceResult = null;
+		try {
+			nextDiceResult = this.getDiceResult(this.nextPlayer, false);
+		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
+		
+		this.controlPlayerMove(this.nextPlayer, nextDiceResult);
 		
 	}
 	public void initGame() {
 		
-		// Players roll dice
-		Integer diceResultPlayer1;
-		Integer diceResultPlayer2;
-		
-		do {
-			diceResultPlayer1 = new Integer(player1.rollDice(1, 6));
-			diceResultPlayer2 = new Integer(player2.rollDice(1, 6));
-			
-		} while(diceResultPlayer1.equals(diceResultPlayer2));
-		
-		Vector<Integer> diceResults = new Vector<Integer>();
-		diceResults.add(diceResultPlayer1);
-		diceResults.add(diceResultPlayer2);
-		
-		DiceEvent initialDiceEvent = new DiceEvent(DiceEvent.diceType.DICE, 0, diceResults);
-		this.listener.handleDiceEvent(initialDiceEvent);
+		DiceResult diceResult = null;
+		try { 
+			diceResult = this.getDiceResult(null, true); 
+		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
 		
 		// Player who wins the start roll begins the game with a move
-		IPlayer startPlayer = (diceResultPlayer1.intValue() > diceResultPlayer2.intValue()) ? (this.player1) : (this.player2);
-		this.controlPlayerMove(startPlayer, diceResults);
+		this.nextPlayer = (diceResult.elementAt(0) > diceResult.elementAt(1)) ? (this.player1) : (this.player2);
+		this.controlPlayerMove(this.nextPlayer, diceResult);
 		
 	}
+	
+	
 
 	
 	public Move requestMove(IPlayer player) {
@@ -128,6 +168,11 @@ public class DefaultDataModel implements IDataController {
 		Move resultingMove = this.listener.handlePlayerMoveRequest(request);
 
 		return resultingMove;
+	}
+	public int checkMove(Move move, DiceResult diceResult) {
+		
+		//TODO
+		return 0;
 	}
 
 	
@@ -165,29 +210,7 @@ public class DefaultDataModel implements IDataController {
 			
 		}
 	}
-	public int handleMove(Move registeredMove, Vector<Integer> numbers) {
-
-		int srcIndex = registeredMove.getFromIndex();
-		int dstIndex = registeredMove.getToIndex();
-		ICheckerList src;
-		ICheckerList dst;
-		IPlayer currentPlayer = (registeredMove.getID() == 1) ? (this.player1) : (this.player2);
-		
-		try {
-			src = this.getCheckerListForIndex(srcIndex);
-			dst = this.getCheckerListForIndex(dstIndex);
-		
-		} catch(Exception e) { return -1; }
-		
-		if (!dst.isBlockedForPlayer(currentPlayer)) {
-			return 0;
-		}
-		
-		
-		this.pushCheckerMoveEvent(registeredMove);
-		return 0;
-
-	}
+	
 	
 	
 	public void addDataModelListener(IModelEventListener listener) {
