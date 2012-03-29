@@ -1,5 +1,6 @@
 package backgammon.model;
 
+import java.util.Vector;
 import backgammon.app.GameSettings;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
@@ -122,15 +123,25 @@ public class DefaultDataModel implements IDataController {
 		
 		return diceResults;
 	}
+	protected Vector<Integer> getNumbersUsed(Move move, DiceResult diceResult) {
+		Vector<Integer> numbersUsed = new Vector<Integer>();
+		//TODO get all numbers which are used for the move
+		return numbersUsed;
+	}
+	protected void executeMove(IPlayer currentPlayer, Move move) {
+		//TODO set chips on board
+	}
 	protected void controlPlayerMove(IPlayer currentPlayer, DiceResult diceResultsForPlayer) {
 		
 		Move currentMove;
 		while (!diceResultsForPlayer.isEmpty()) {
 			
 			currentMove = currentPlayer.move(diceResultsForPlayer);
-			
+			Vector<Integer> numbersUsed = this.getNumbersUsed(currentMove, diceResultsForPlayer);
+			for (Integer number : numbersUsed) {
+				diceResultsForPlayer.remove(number);
+			}
 		}
-		
 	}
 	public void initNextPlayerMove() {
 		
@@ -171,7 +182,7 @@ public class DefaultDataModel implements IDataController {
 	}
 	public int checkMove(Move move, DiceResult diceResult) {
 		
-		//TODO
+		//TODO check move if illegal
 		return 0;
 	}
 
