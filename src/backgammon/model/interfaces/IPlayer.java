@@ -1,10 +1,11 @@
 package backgammon.model.interfaces;
 
-import java.util.Vector;
+import backgammon.model.player.DiceResult;
+import backgammon.model.player.Move;
 
 public interface IPlayer {
 
 	public int rollDice(int min, int max);
-	public void move(Vector<Integer> numbers);
+	public Move move(DiceResult diceResult);
 	
 }
