@@ -196,6 +196,13 @@ public class ImageBoard extends JPanel {
 		//endtest
 		return tmp;
 	}
+	public PHitBox getPlayerBoard(int player)
+	{
+		if(player == 1)
+			return new PHitBox(505, 900, 22, 578);
+		else
+			return new PHitBox(70, 465, 22, 578);
+	}
 	public static int getOBIndex(int player, int index)
 	{
 		if(player == 2)

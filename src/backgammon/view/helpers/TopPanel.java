@@ -12,40 +12,41 @@ import javax.swing.border.EtchedBorder;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
-public class TopPanel extends JPanel{
+public class TopPanel extends JPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private Image img;
-	public TopPanel(String checkerpfad, String name)
-	{
-		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
+
+	public TopPanel(String checkerpfad, String name) {
+		DefaultComponentFactory compFactory = DefaultComponentFactory
+				.getInstance();
 		JComponent seperator = compFactory.createSeparator(name);
-		
-		//Add Seperator
-		this.add(seperator,BorderLayout.NORTH);
-		
-		//set Dimensions
+
+		// Add Seperator
+		this.add(seperator, BorderLayout.NORTH);
+
+		// set Dimensions
 		Dimension pl_bars = new Dimension();
 		pl_bars.height = 70;
-		pl_bars.width = 385;
-		
-		//Set Size
+		pl_bars.width = 345;
+
+		// Set Size
 		this.setPreferredSize(pl_bars);
-		
-		
-		//Set Border
+
+		// Set Border
 		this.setBorder(new EtchedBorder());
-		
-		//Add Checkerimage
-		this.img = new ImageIcon(getClass().getResource("/img/"+checkerpfad)).getImage();
-		
+
+		// Add Checkerimage
+		this.img = new ImageIcon(getClass().getResource("/img/" + checkerpfad))
+				.getImage();
+
 	}
-	
+
 	public void paintComponent(Graphics g) {
-	    g.drawImage(this.img, 10, 10, null);
+		g.drawImage(this.img, 10, 10, null);
 	}
 }
