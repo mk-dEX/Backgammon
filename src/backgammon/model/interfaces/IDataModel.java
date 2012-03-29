@@ -6,5 +6,6 @@ public interface IDataModel {
 	public void addDataModelListener(IModelEventListener listener);
 	public void initGameCheckers();
 	public void initGame();
+	public void initNextPlayerMove();
 
 }
