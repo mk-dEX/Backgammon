@@ -118,49 +118,9 @@ public class ImageBoard extends JPanel {
 		
 		for(BChecker checker : this.checker)
 		{
-			if(checker.getPosition() == BChecker.Place.BOARD)
-			{
-				BPosition tmp = null;
-			
-				
-				if(checker.getPoint() == 99 && checker.getIndex() == 99)
-				{
-					tmp = checker.getCoords();
-					g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()-25,null);
-					continue;
-				}
-				
-				tmp = this.PositionMatrix.get(checker.getPoint());	
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+ImageBoard.getIndex(checker.getPoint(), checker.getIndex())-25,null);
-			}
-			else if(checker.getPosition() == BChecker.Place.BAR)
-			{
-				BPosition tmp = null;
-				
-				if(checker.getPoint() == 99 && checker.getIndex() == 99)
-				{
-					tmp = checker.getCoords();
-					g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()-25,null);
-					continue;
-				}
-				
-				tmp = ImageBoard.getBarPosition(checker.getPlayer());
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+ImageBoard.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
-			}
-			else
-			{
-				BPosition tmp = null;
-				
-				if(checker.getPoint() == 99 && checker.getIndex() == 99)
-				{
-					tmp = checker.getCoords();
-					g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()-25,null);
-					continue;
-				}
-				
-				tmp = ImageBoard.getOutPosition(checker.getPlayer());
-				g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()+ImageBoard.getOBIndex(checker.getPlayer(), checker.getIndex())-25,null);
-			}	
+			BPosition tmp = null;
+			tmp = checker.getCoords();
+			g.drawImage(this.view.getChecker(checker.getPlayer()), tmp.getX()-25,tmp.getY()-25,null);
 		}
 		
 		
@@ -199,6 +159,49 @@ public class ImageBoard extends JPanel {
 		
 		//endtest
 		return tmp;
+	}
+	public static ArrayList<PHitBox> getPointHitBox()
+	{
+		ArrayList<PHitBox> tmp = new ArrayList<PHitBox>();
+		//unten
+		tmp.add(new PHitBox(834, 895, 340,578));
+		tmp.add(new PHitBox(765, 833, 340,578));
+		tmp.add(new PHitBox(704, 764, 340,578));
+		tmp.add(new PHitBox(635, 703, 340,578));
+		tmp.add(new PHitBox(574, 634, 340,578));
+		tmp.add(new PHitBox(505, 573, 340,578));
+		
+		tmp.add(new PHitBox(400, 465, 340,578));
+		tmp.add(new PHitBox(333, 399, 340,578));
+		tmp.add(new PHitBox(270, 332, 340,578));
+		tmp.add(new PHitBox(200, 269, 340,578));
+		tmp.add(new PHitBox(140, 199, 340,578));
+		tmp.add(new PHitBox(74, 139, 340,578));
+		//oben
+		tmp.add(new PHitBox(74, 139, 22,265));
+		tmp.add(new PHitBox(140, 199, 22,265));
+		tmp.add(new PHitBox(200, 269, 22,265));
+		tmp.add(new PHitBox(270, 332, 22,265));
+		tmp.add(new PHitBox(333, 399, 22,265));
+		tmp.add(new PHitBox(400, 465, 22,265));
+		
+		tmp.add(new PHitBox(505, 573, 22,265));
+		tmp.add(new PHitBox(574, 634, 22,265));
+		tmp.add(new PHitBox(635, 703, 22,265));
+		tmp.add(new PHitBox(704, 764, 22,265));
+		tmp.add(new PHitBox(765, 833, 22,265));
+		tmp.add(new PHitBox(834, 895, 22,265));
+		//test
+		
+		//endtest
+		return tmp;
+	}
+	public PHitBox getPlayerBoard(int player)
+	{
+		if(player == 1)
+			return new PHitBox(505, 900, 22, 578);
+		else
+			return new PHitBox(70, 465, 22, 578);
 	}
 	public static int getOBIndex(int player, int index)
 	{
@@ -256,9 +259,18 @@ public class ImageBoard extends JPanel {
 		{
 			if(result == null)
 				result = c;
-			if(c.getPoint() == point && c.getIndex() > result.getIndex())
+			if(c.getPoint() == point && c.getIndex() >= result.getIndex())
 				result = c;
 		}
 		return result;	
+	}
+	public void setFocus(BChecker tmp)
+	{
+		this.checker.remove(tmp);
+		this.checker.add(tmp);
+	}
+	public MoveAnimationManager getAnimation()
+	{
+		return this.animation;
 	}
 }
