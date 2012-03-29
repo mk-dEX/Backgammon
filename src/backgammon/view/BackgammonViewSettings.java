@@ -134,7 +134,7 @@ public class BackgammonViewSettings extends JFrame {
 			default: checker1 = "standardblue";break;
 		}
 		
-		c.setPathDicePlayer1(checker1 + "Dice.png");
+		c.setPathDicePlayer1(checker1);
 		
 		
 		String checker2 = "";
@@ -149,7 +149,7 @@ public class BackgammonViewSettings extends JFrame {
 			default: checker2 = "standardgreen";break;
 		}
 		
-		c.setPathDicePlayer2(checker2 + "Dice.png");
+		c.setPathDicePlayer2(checker2);
 		
 		
 		
