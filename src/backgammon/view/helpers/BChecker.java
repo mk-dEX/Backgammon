@@ -71,7 +71,7 @@ public class BChecker {
 		return index;
 	}
 
-	protected int getPlayer() {
+	public int getPlayer() {
 		return player;
 	}
 
