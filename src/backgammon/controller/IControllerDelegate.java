@@ -9,15 +9,18 @@ public interface IControllerDelegate {
 	public void initGame();
 	public void exitGame();
 	
-	/*boolean*/
+	/* InfoEvent welcher player(name / human?) ist an der reihe? "ist das der gleiche wie vorher" mit rein nehmen */
+	/* IF computer gleich dice roll -> event & move -> MoveEvent */
+	/* ComputerDidFinish Event --> GUI initNextPlayerMove */
 	public void initNextPlayerMove();
 	
-	/*CheckerMoveResultEvent*/
-	public void startMove(CheckerMoveEvent moveEvent);
-	/*Vector<CheckerMoveResultEvent>*/
+	/* ist der angeklickte player an der Reihe? */
+	public boolean startMove(int playerID);
+	/*multiple CheckerMoveResultEvent*/
 	public void endMove(CheckerMoveEvent moveEvent);
 	
-	/*boolean*/
+	/*DiceEvent*/
 	public void startDoubleOffer(int playerID);
+	/*DiceEvent ; playerID = 0 == spiel beendet*/
 	public void offerAccepted(boolean didAccept);
 }

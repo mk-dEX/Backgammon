@@ -29,11 +29,4 @@ public interface IModelEventListener {
 	 */
 	public int handleInfoEvent(InfoEvent event);
 	
-	/**
-	 * Checkers of one player have to be moved using the GUI. 
-	 * @param request The corresponding {@link PlayerMoveRequest}
-	 * @return The {@link Move} object which results from UI events
-	 */
-	public Move handlePlayerMoveRequest(PlayerMoveRequest request);
-	
 }
