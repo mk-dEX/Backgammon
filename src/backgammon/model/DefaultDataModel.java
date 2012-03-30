@@ -134,14 +134,14 @@ public class DefaultDataModel implements IDataController {
 	protected void controlPlayerMove(IPlayer currentPlayer, DiceResult diceResultsForPlayer) {
 		
 		Move currentMove;
-		while (!diceResultsForPlayer.isEmpty()) {
+	/*	while (!diceResultsForPlayer.isEmpty()) {
 			
 			currentMove = currentPlayer.move(diceResultsForPlayer);
 			Vector<Integer> numbersUsed = this.getNumbersUsed(currentMove, diceResultsForPlayer);
 			for (Integer number : numbersUsed) {
 				diceResultsForPlayer.remove(number);
 			}
-		}
+		}*/
 	}
 	public void initNextPlayerMove() {
 		
