@@ -2,6 +2,7 @@ package backgammon.controller;
 
 import backgammon.app.GameAgent;
 import backgammon.app.GameSettings;
+import backgammon.event.CheckerMoveEvent;
 import backgammon.model.DefaultDataModel;
 import backgammon.model.interfaces.IDataModel;
 import backgammon.view.BackgammonViewGUI;
@@ -41,5 +42,35 @@ public class ControllerDelegate implements IControllerDelegate {
 	public void exitGame() {
 		
 		this.rootController.startUpdateSettings();
+	}
+
+	@Override
+	public void initNextPlayerMove() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void startMove(CheckerMoveEvent moveEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endMove(CheckerMoveEvent moveEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void startDoubleOffer(int playerID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerAccepted(boolean didAccept) {
+		// TODO Auto-generated method stub
+		
 	}
 }
