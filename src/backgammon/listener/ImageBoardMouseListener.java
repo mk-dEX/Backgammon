@@ -139,14 +139,14 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 				int index = this.parent.getHighestIndex(i);
 				if(ImageBoardMouseListener.checker.getPoint() != i)
 					//ImageBoardMouseListener.checker.setPointIndex(i, index+1);
-					this.parent.getAnimation().addMoveAnimation(ImageBoardMouseListener.checker, i, index+1);
+					this.parent.getCheckerAnimation().addMoveAnimation(ImageBoardMouseListener.checker, i, index+1);
 				
 			}
 			i++;
 		}
 		//keine Hitbox getroffen, also zurücksetzen.
 		if(!found)
-			this.parent.getAnimation().addMoveAnimation(ImageBoardMouseListener.checker, ImageBoardMouseListener.checker.getPoint(), ImageBoardMouseListener.checker.getIndex());
+			this.parent.getCheckerAnimation().addMoveAnimation(ImageBoardMouseListener.checker, ImageBoardMouseListener.checker.getPoint(), ImageBoardMouseListener.checker.getIndex());
 		//ImageBoardMouseListener.checker.setCoordsFromPointAndIndex();
 		this.parent.repaint();
 	}
