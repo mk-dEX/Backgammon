@@ -176,9 +176,9 @@ public class DefaultDataModel implements IDataController {
 		int playerID = (player.equals(player1)) ? (1) : (2);
 		PlayerMoveRequest request = new PlayerMoveRequest(playerID);
 
-		Move resultingMove = this.listener.handlePlayerMoveRequest(request);
+		//Move resultingMove = this.listener.handlePlayerMoveRequest(request);
 
-		return resultingMove;
+		return null;//resultingMove;
 	}
 	public int checkMove(Move move, DiceResult diceResult) {
 		
@@ -230,5 +230,12 @@ public class DefaultDataModel implements IDataController {
 	}
 	public IBackgammonBoard getBackgammonBoard() {
 		return this.gameBoard;
+	}
+
+
+	@Override
+	public boolean startMove(int playerID) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

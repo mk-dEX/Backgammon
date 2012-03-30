@@ -309,12 +309,6 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 	}
 
 	@Override
-	public Move handlePlayerMoveRequest(PlayerMoveRequest request) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		//System.out.println("Test1");

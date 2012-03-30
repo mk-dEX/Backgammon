@@ -1,3 +1,4 @@
+
 package backgammon.controller;
 
 import backgammon.app.GameAgent;
@@ -74,4 +75,3 @@ public class ControllerDelegate implements IControllerDelegate {
 		
 	}
 }
-
