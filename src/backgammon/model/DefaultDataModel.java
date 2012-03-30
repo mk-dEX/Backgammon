@@ -112,7 +112,7 @@ public class DefaultDataModel implements IDataController {
 		else { playerID = (currentPlayer.equals(this.player1)) ? (1) : (2);	}
 		
 		DiceResult diceResults = new DiceResult();
-		int factor = (initial && diceResult1.equals(diceResult2)) ? (1) : (2);
+		int factor = (!initial && diceResult1.equals(diceResult2)) ? (2) : (1);
 		while (factor > 0) {
 			diceResults.add(diceResult1);
 			diceResults.add(diceResult2);
