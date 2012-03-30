@@ -3,8 +3,6 @@ package backgammon.listener;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.InfoEvent;
-import backgammon.event.PlayerMoveRequest;
-import backgammon.model.player.Move;
 
 public interface IModelEventListener {
 
