@@ -23,16 +23,10 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		
-
-	}
+	public void mouseEntered(MouseEvent arg0) {}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		
-
-	}
+	public void mouseExited(MouseEvent arg0) {}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -41,9 +35,13 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 		if(!this.setCheckerFromEvent(e))
 			return;
 		
-		//System.out.println("Start dragging");
-		ImageBoardMouseListener.dragging = true;
-		this.parent.setFocus(ImageBoardMouseListener.checker);
+		if(this.parent.getView().getController().startMove(this.checker.getPlayer()))
+		{
+			//System.out.println("Start dragging");
+			ImageBoardMouseListener.dragging = true;
+			this.parent.setFocus(ImageBoardMouseListener.checker);
+		}
+		
 		
 	}
 

@@ -338,4 +338,7 @@ public class ImageBoard extends JPanel {
 			return generator.nextInt(6) + 1;
 		}
 	}
+	public BackgammonViewGUI getView() {
+		return view;
+	}
 }
