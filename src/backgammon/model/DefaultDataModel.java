@@ -49,41 +49,44 @@ public class DefaultDataModel implements IDataController {
 	}
 	
 	
-	protected void initCheckersOfPlayer(int playerID) {
+	
+// 	Privates	
+	
+	protected void initCheckersOfPlayer(int playerID) throws Exception {
 		Move tempRegisteredMove;
-		int j = 14;
+		int indexFrom = 14;
 
 		// IndexPoint 0
-		for (int i = 0; i < 2; i++) {
+		for (int indexTo = 0; indexTo < 2; indexTo++) {
 
-			tempRegisteredMove = new Move(playerID, 25, j, 0, i);
-			this.pushCheckerMoveEvent(tempRegisteredMove);
-			j--;		
+			tempRegisteredMove = new Move(playerID, 25, indexFrom, 0, indexTo);
+			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			catch (Exception e) { throw e; }
+			indexFrom--;		
 		}
 
 		// IndexPoint 11 & 18
-		for (int i = 0; i < 5; i++) {
+		for (int indexTo = 0; indexTo < 5; indexTo++) {
 
-			tempRegisteredMove = new Move(playerID, 25, j, 11, i);
-			this.pushCheckerMoveEvent(tempRegisteredMove);
-			j--;
+			tempRegisteredMove = new Move(playerID, 25, indexFrom, 11, indexTo);
+			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			catch (Exception e) { throw e; }
+			indexFrom--;
 			
-			tempRegisteredMove = new Move(playerID, 25, j, 18, i);
-			this.pushCheckerMoveEvent(tempRegisteredMove);
-			j--;
+			tempRegisteredMove = new Move(playerID, 25, indexFrom, 18, indexTo);
+			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			catch (Exception e) { throw e; }
+			indexFrom--;
 		}
 
 		// IndexPoint 16
-		for (int i = 0; i < 3; i++) {
+		for (int indexTo = 0; indexTo < 3; indexTo++) {
 
-			tempRegisteredMove = new Move(playerID, 25, j, 16, i);
-			this.pushCheckerMoveEvent(tempRegisteredMove);
-			j--;	
+			tempRegisteredMove = new Move(playerID, 25, indexFrom, 16, indexTo);
+			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			catch (Exception e) { throw e; }
+			indexFrom--;	
 		}
-	}
-	public void initGameCheckers() {
-		this.initCheckersOfPlayer(1);
-		this.initCheckersOfPlayer(2);
 	}
 	
 	protected DiceResult getDiceResult(Player currentPlayer, boolean initial) throws Exception {
@@ -119,60 +122,18 @@ public class DefaultDataModel implements IDataController {
 		
 		return diceResults;
 	}
+	
 	protected Vector<Integer> getNumbersUsed(Move move, DiceResult diceResult) {
 		Vector<Integer> numbersUsed = new Vector<Integer>();
 		//TODO get all numbers which are used for the move
 		return numbersUsed;
 	}
-	protected void executeMove(Player currentPlayer, Move move) {
+	
+	protected void pushCheckerMove(Player currentPlayer, Move move) throws Exception {
 		//TODO set chips on board
 	}
-	protected void controlPlayerMove(Player currentPlayer, DiceResult diceResultsForPlayer) {
-		
-		Move currentMove;
-	/*	while (!diceResultsForPlayer.isEmpty()) {
-			
-			currentMove = currentPlayer.move(diceResultsForPlayer);
-			Vector<Integer> numbersUsed = this.getNumbersUsed(currentMove, diceResultsForPlayer);
-			for (Integer number : numbersUsed) {
-				diceResultsForPlayer.remove(number);
-			}
-		}*/
-	}
-	public void initNextPlayerMove() {
-		
-		this.nextPlayer = (this.nextPlayer.equals(this.player1)) ? (this.player2) : (this.player1);
-		
-		DiceResult nextDiceResult = null;
-		try {
-			nextDiceResult = this.getDiceResult(this.nextPlayer, false);
-		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
-		
-		this.controlPlayerMove(this.nextPlayer, nextDiceResult);
-		
-	}
-	public void initGame() {
-		
-		DiceResult diceResult = null;
-		try { 
-			diceResult = this.getDiceResult(null, true); 
-		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
-		
-		// Player who wins the start roll begins the game with a move
-		this.nextPlayer = (diceResult.elementAt(0) > diceResult.elementAt(1)) ? (this.player1) : (this.player2);
-		this.controlPlayerMove(this.nextPlayer, diceResult);
-		
-	}
 	
-	
-	public int checkMove(Move move, DiceResult diceResult) {
-		
-		//TODO check move if illegal
-		return 0;
-	}
-
-	
-	protected void pushCheckerMoveEvent(Move move) {
+	protected void pushCheckerMoveEvent(Move move) throws Exception {
 		
 		if (move.getID() == 2) {
 			
@@ -184,12 +145,14 @@ public class DefaultDataModel implements IDataController {
 			}
 
 		}
-
-		this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(move));
+		
+		if (this.listener == null || (this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(move))) < 0)
+			throw new Exception();
 	}
+	
 	protected ICheckerList getCheckerListForIndex(int index) throws Exception{
 		
-		if (index < IBackgammonBoard.BAR_INDEX) {
+		if (index >= 0 && index < IBackgammonBoard.BAR_INDEX) {
 			return this.gameBoard.getPointAtIndex(index);
 		
 		} else if (index == IBackgammonBoard.BAR_INDEX) {
@@ -203,20 +166,52 @@ public class DefaultDataModel implements IDataController {
 		
 		} else {
 			throw new Exception();
-			
 		}
 	}
 	
 	
 	
+//	IDataModel
+	
+	@Override
 	public void addDataModelListener(IModelEventListener listener) {
-
 		this.listener = listener;
 	}
-	public IBackgammonBoard getBackgammonBoard() {
-		return this.gameBoard;
+	
+	@Override
+	public void initGame() {
+		
+		DiceResult diceResult = null;
+		try { 
+			diceResult = this.getDiceResult(null, true);
+			
+		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
+		
+		this.nextPlayer = (diceResult.elementAt(0) > diceResult.elementAt(1)) ? (this.player1) : (this.player2);	
 	}
-
+	
+	@Override
+	public void initGameCheckers() throws Exception {
+		try {
+			this.initCheckersOfPlayer(1);
+			this.initCheckersOfPlayer(2);
+		
+		} catch (Exception e) { throw e; }
+	}
+	
+	@Override
+	public void initNextPlayerMove() {
+		
+		this.nextPlayer = (this.nextPlayer.equals(this.player1)) ? (this.player2) : (this.player1);
+		
+		DiceResult nextDiceResult = null;
+		try {
+			nextDiceResult = this.getDiceResult(this.nextPlayer, false);
+		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
+		
+		
+		
+	}
 
 	@Override
 	public boolean startMove(int playerID) {
@@ -224,13 +219,11 @@ public class DefaultDataModel implements IDataController {
 		return false;
 	}
 
-
 	@Override
 	public void endMove(CheckerMoveEvent moveEvent) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 	@Override
 	public void startDoubleOffer(int playerID) {
@@ -238,10 +231,18 @@ public class DefaultDataModel implements IDataController {
 		
 	}
 
-
 	@Override
 	public void offerAccepted(boolean didAccept) {
 		// TODO Auto-generated method stub
 		
+	}	
+	
+	
+	
+//	IDataController
+	
+	public IBackgammonBoard getBackgammonBoard() {
+		return this.gameBoard;
 	}
+
 }
