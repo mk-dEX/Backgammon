@@ -4,6 +4,7 @@ import java.util.Vector;
 import backgammon.app.GameSettings;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
+import backgammon.event.DiceEvent.diceType;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.DefaultBackgammonBoard;
 import backgammon.model.interfaces.IBackgammonBoard;
@@ -22,7 +23,7 @@ public class DefaultDataModel implements IDataController {
 
 	private Player player1;
 	private Player player2;
-	private Player nextPlayer;
+	private Player currentPlayer;
 	private IBackgammonBoard gameBoard;
 
 	
@@ -52,6 +53,7 @@ public class DefaultDataModel implements IDataController {
 	
 // 	Privates	
 	
+	//init
 	protected void initCheckersOfPlayer(int playerID) throws Exception {
 		Move tempRegisteredMove;
 		int indexFrom = 14;
@@ -89,6 +91,8 @@ public class DefaultDataModel implements IDataController {
 		}
 	}
 	
+	
+	//get
 	protected DiceResult getDiceResult(Player currentPlayer, boolean initial) throws Exception {
 		
 		if (!initial && currentPlayer == null) {
@@ -106,10 +110,6 @@ public class DefaultDataModel implements IDataController {
 			
 		} while (initial && diceResult1.equals(diceResult2));
 		
-		int playerID;
-		if (initial) { playerID = 0; } 
-		else { playerID = (currentPlayer.equals(this.player1)) ? (1) : (2);	}
-		
 		DiceResult diceResults = new DiceResult();
 		int factor = (!initial && diceResult1.equals(diceResult2)) ? (2) : (1);
 		while (factor > 0) {
@@ -117,8 +117,6 @@ public class DefaultDataModel implements IDataController {
 			diceResults.add(diceResult2);
 			factor--;
 		}
-		DiceEvent diceEvent = new DiceEvent(DiceEvent.diceType.DICE, playerID, diceResults);
-		this.listener.handleDiceEvent(diceEvent);
 		
 		return diceResults;
 	}
@@ -127,27 +125,6 @@ public class DefaultDataModel implements IDataController {
 		Vector<Integer> numbersUsed = new Vector<Integer>();
 		//TODO get all numbers which are used for the move
 		return numbersUsed;
-	}
-	
-	protected void pushCheckerMove(Player currentPlayer, Move move) throws Exception {
-		//TODO set chips on board
-	}
-	
-	protected void pushCheckerMoveEvent(Move move) throws Exception {
-		
-		if (move.getID() == 2) {
-			
-			if (move.getFromPoint() < IBackgammonBoard.BAR_INDEX) {
-				move.setFromPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getFromPoint());
-			}
-			if (move.getToPoint() < IBackgammonBoard.BAR_INDEX) {
-				move.setToPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getToPoint());
-			}
-
-		}
-		
-		if (this.listener == null || (this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(move))) < 0)
-			throw new Exception();
 	}
 	
 	protected ICheckerList getCheckerListForIndex(int index) throws Exception{
@@ -169,6 +146,53 @@ public class DefaultDataModel implements IDataController {
 		}
 	}
 	
+	protected Player getPlayer(int playerID) {
+		if (playerID == 1) return player1;
+		if (playerID == 2) return player2;
+		return null;
+	}
+	
+	protected boolean isNextPlayer(Player requestedPlayer) {
+		return (requestedPlayer != null && requestedPlayer.equals(this.currentPlayer));
+	}
+	
+	protected boolean playerHasMovesLeft(Player currentPlayer) {
+		
+		//TODO
+		
+		return false;
+	}
+	
+	//push
+	protected void pushCheckerMove(Player currentPlayer, Move move) throws Exception {
+		//TODO set chips on board
+	}
+	
+	protected void pushCheckerMoveEvent(Move move) throws Exception {
+		
+		if (move.getID() == 2) {
+			
+			if (move.getFromPoint() < IBackgammonBoard.BAR_INDEX) {
+				move.setFromPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getFromPoint());
+			}
+			if (move.getToPoint() < IBackgammonBoard.BAR_INDEX) {
+				move.setToPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getToPoint());
+			}
+
+		}
+		
+		if (this.listener == null || (this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(move))) < 0)
+			throw new Exception();
+	}
+	
+	protected void pushDiceEvent(DiceEvent.diceType type, int playerID, DiceResult result) throws Exception {
+		
+		DiceEvent diceEvent = new DiceEvent(DiceEvent.diceType.DICE, playerID, result);
+		
+		if (this.listener == null || (this.listener.handleDiceEvent(diceEvent)) < 0)
+			throw new Exception();
+	}
+	
 	
 	
 //	IDataModel
@@ -181,13 +205,17 @@ public class DefaultDataModel implements IDataController {
 	@Override
 	public void initGame() {
 		
+		// roll dice
 		DiceResult diceResult = null;
-		try { 
-			diceResult = this.getDiceResult(null, true);
-			
-		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
+		try { diceResult = this.getDiceResult(null, true); } 
+		catch (Exception e) { e.printStackTrace(); System.exit(0); }
 		
-		this.nextPlayer = (diceResult.elementAt(0) > diceResult.elementAt(1)) ? (this.player1) : (this.player2);	
+		// push dice event to GUI
+		try { this.pushDiceEvent(diceType.DICE, 0, diceResult); }
+		catch (Exception e) { e.printStackTrace(); }
+		
+		// 
+		this.currentPlayer = (diceResult.elementAt(0) > diceResult.elementAt(1)) ? (this.player1) : (this.player2);	
 	}
 	
 	@Override
@@ -202,11 +230,17 @@ public class DefaultDataModel implements IDataController {
 	@Override
 	public void initNextPlayerMove() {
 		
-		this.nextPlayer = (this.nextPlayer.equals(this.player1)) ? (this.player2) : (this.player1);
+		if (!this.playerHasMovesLeft(this.currentPlayer)) {
+			
+			this.currentPlayer = (this.currentPlayer.equals(this.player1)) ? (this.player2) : (this.player1);
+			
+		}
+		
+		this.currentPlayer = (this.currentPlayer.equals(this.player1)) ? (this.player2) : (this.player1);
 		
 		DiceResult nextDiceResult = null;
 		try {
-			nextDiceResult = this.getDiceResult(this.nextPlayer, false);
+			nextDiceResult = this.getDiceResult(this.currentPlayer, false);
 		} catch (Exception e) { e.printStackTrace(); System.exit(0); }
 		
 		
@@ -215,8 +249,7 @@ public class DefaultDataModel implements IDataController {
 
 	@Override
 	public boolean startMove(int playerID) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.isNextPlayer(this.getPlayer(playerID));
 	}
 
 	@Override
