@@ -2,7 +2,7 @@ package backgammon.listener;
 
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
-import backgammon.event.InfoEvent;
+import backgammon.event.ActivePlayerInfoEvent;
 
 public interface IModelEventListener {
 
@@ -21,10 +21,10 @@ public interface IModelEventListener {
 	public int handleDiceEvent(DiceEvent event);
 	
 	/**
-	 * An info string is available.
-	 * @param event The corresponding {@link InfoEvent}
+	 * Possible change of active player.
+	 * @param event The corresponding {@link ActivePlayerInfoEvent}
 	 * @return >=0 if the event has been handled correctly
 	 */
-	public int handleInfoEvent(InfoEvent event);
+	public int handleActivePlayerInfoEvent(ActivePlayerInfoEvent event);
 	
 }

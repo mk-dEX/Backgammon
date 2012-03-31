@@ -16,7 +16,7 @@ import backgammon.controller.IControllerDelegate;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.DiceEvent.diceType;
-import backgammon.event.InfoEvent;
+import backgammon.event.ActivePlayerInfoEvent;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.player.Move;
 import backgammon.view.helpers.ImageBoard;
@@ -302,7 +302,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 	}
 
 	@Override
-	public int handleInfoEvent(InfoEvent event) {
+	public int handleActivePlayerInfoEvent(ActivePlayerInfoEvent event) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
