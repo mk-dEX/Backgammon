@@ -17,6 +17,10 @@ public abstract class Player {
 		this.currentDiceResult = newDiceResult;
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	public DiceResult getCurrentDiceResult() {
 		return this.currentDiceResult;
 	}
