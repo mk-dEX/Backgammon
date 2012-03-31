@@ -17,7 +17,6 @@ import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.DiceEvent.diceType;
 import backgammon.event.InfoEvent;
-import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.player.Move;
 import backgammon.view.helpers.ImageBoard;
