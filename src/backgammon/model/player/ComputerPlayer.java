@@ -1,5 +1,7 @@
 package backgammon.model.player;
 
+import java.util.Vector;
+
 import backgammon.app.GameSettings;
 import backgammon.model.interfaces.IDataController;
 
@@ -17,7 +19,7 @@ public class ComputerPlayer extends HumanPlayer {
 		return false;
 	}
 	
-	public Move move(DiceResult diceResult) {
+	public Vector<Move> move() {
 		return null;
 	}
 	
