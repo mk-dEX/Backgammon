@@ -1,4 +1,3 @@
-
 package backgammon.controller;
 
 import backgammon.app.GameAgent;
@@ -30,48 +29,43 @@ public class ControllerDelegate implements IControllerDelegate {
 		this.model.initGameCheckers();
 	}
 	
+	@Override
 	public GameSettings getCurrentGameSettings() {
-		
 		return this.gameSettings;
 	}
 	
+	@Override
 	public void initGame() {
-		
 		this.model.initGame();
 	}
 	
+	@Override
 	public void exitGame() {
-		
 		this.rootController.startUpdateSettings();
 	}
 
 	@Override
 	public void initNextPlayerMove() {
-		// TODO Auto-generated method stub
-		
+		this.model.initNextPlayerMove();
 	}
 	
 	@Override
 	public boolean startMove(int playerID) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.model.startMove(playerID);
 	}
 
 	@Override
 	public void endMove(CheckerMoveEvent moveEvent) {
-		// TODO Auto-generated method stub
-		
+		this.model.endMove(moveEvent);
 	}
 
 	@Override
 	public void startDoubleOffer(int playerID) {
-		// TODO Auto-generated method stub
-		
+		this.model.startDoubleOffer(playerID);
 	}
 
 	@Override
 	public void offerAccepted(boolean didAccept) {
-		// TODO Auto-generated method stub
-		
+		this.model.offerAccepted(didAccept);
 	}
 }
