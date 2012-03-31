@@ -5,7 +5,7 @@ import backgammon.model.interfaces.ICheckerList;
 
 public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
-	private final int numberOfPoints = 24;
+	private final int numberOfPoints = IBackgammonBoard.BAR_INDEX - 1;
 	
 	private ICheckerList[] points = new Point[this.numberOfPoints];
 	private ICheckerList bar = new Bar();
