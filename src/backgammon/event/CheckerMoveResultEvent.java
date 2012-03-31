@@ -7,7 +7,8 @@ public class CheckerMoveResultEvent extends CheckerMoveEvent {
 
 	public static enum infoType {
 		CORRECT_MOVE,
-		ILLEGAL_MOVE
+		ILLEGAL_MOVE,
+		COMPUTER_DID_FINISH
 	};
 	
 	private infoType type;
