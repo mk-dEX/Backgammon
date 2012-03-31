@@ -1,16 +1,16 @@
 package backgammon.model.board;
 
-import backgammon.model.interfaces.IPlayer;
+import backgammon.model.player.Player;
 
 public class Checker {
 
-	private IPlayer owner;
+	private Player owner;
 	
-	public Checker(IPlayer player) {
+	public Checker(Player player) {
 		this.owner = player;
 	}
 	
-	public IPlayer getOwner() {
+	public Player getOwner() {
 		return this.owner;
 	}
 }

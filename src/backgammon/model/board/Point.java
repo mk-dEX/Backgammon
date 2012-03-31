@@ -2,13 +2,13 @@ package backgammon.model.board;
 
 import java.util.Vector;
 import backgammon.model.interfaces.ICheckerList;
-import backgammon.model.interfaces.IPlayer;
+import backgammon.model.player.Player;
 
 public class Point implements ICheckerList {
 	
 	protected Vector<Checker> checkers = new Vector<Checker>();
 	
-	public int addChecker(IPlayer player) {
+	public int addChecker(Player player) {
 		
 		if (this.isBlockedForPlayer(player)) {
 			return -1;
@@ -20,7 +20,7 @@ public class Point implements ICheckerList {
 		return this.checkers.size() - 1;
 	}
 
-	public int removeChecker(IPlayer player) {
+	public int removeChecker(Player player) {
 		
 		int index = this.getTopCheckerIndexForPlayer(player);
 		
@@ -35,7 +35,7 @@ public class Point implements ICheckerList {
 		return this.checkers;
 	}
 
-	public Vector<Checker> getCheckersForPlayer(IPlayer player) {
+	public Vector<Checker> getCheckersForPlayer(Player player) {
 		
 		Vector<Checker> playerCheckers = new Vector<Checker>();
 		
@@ -48,7 +48,7 @@ public class Point implements ICheckerList {
 		return playerCheckers;
 	}
 	
-	protected int getTopCheckerIndexForPlayer(IPlayer player) {
+	protected int getTopCheckerIndexForPlayer(Player player) {
 		
 		if (this.hasCheckersOfPlayer(player) == false) {
 			return -1;
@@ -66,7 +66,7 @@ public class Point implements ICheckerList {
 		return index;
 	}
 	
-	public boolean hasCheckersOfPlayer(IPlayer player) {
+	public boolean hasCheckersOfPlayer(Player player) {
 		
 		if (this.checkers.isEmpty()) {
 			return false;
@@ -85,7 +85,7 @@ public class Point implements ICheckerList {
 		return (this.checkers.isEmpty());
 	}
 
-	public boolean isBlockedForPlayer(IPlayer player) {
+	public boolean isBlockedForPlayer(Player player) {
 		
 		if (this.isEmpty()) {
 			return false;

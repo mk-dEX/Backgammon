@@ -1,10 +1,10 @@
 package backgammon.model.board;
 
-import backgammon.model.interfaces.IPlayer;
+import backgammon.model.player.Player;
 
 public class Bar extends Point {
 	
-	public boolean isBlockedForPlayer(IPlayer player) {
+	public boolean isBlockedForPlayer(Player player) {
 		return false;
 	}
 	

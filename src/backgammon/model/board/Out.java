@@ -1,10 +1,10 @@
 package backgammon.model.board;
 
-import backgammon.model.interfaces.IPlayer;
+import backgammon.model.player.Player;
 
 public class Out extends Bar {
 
-	public int removeChecker(IPlayer player) {
+	public int removeChecker(Player player) {
 		
 		if (this.isEmpty()) {
 			return -1;
