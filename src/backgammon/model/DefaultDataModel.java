@@ -4,26 +4,25 @@ import java.util.Vector;
 import backgammon.app.GameSettings;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
-import backgammon.event.PlayerMoveRequest;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.DefaultBackgammonBoard;
 import backgammon.model.interfaces.IBackgammonBoard;
 import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IDataController;
-import backgammon.model.interfaces.IPlayer;
 import backgammon.model.player.ComputerPlayer;
 import backgammon.model.player.DiceResult;
 import backgammon.model.player.HumanPlayer;
 import backgammon.model.player.Move;
+import backgammon.model.player.Player;
 
 public class DefaultDataModel implements IDataController {
 
 	private IModelEventListener listener;
 	private GameSettings settings;
 
-	private IPlayer player1;
-	private IPlayer player2;
-	private IPlayer nextPlayer;
+	private Player player1;
+	private Player player2;
+	private Player nextPlayer;
 	private IBackgammonBoard gameBoard;
 
 	
@@ -83,14 +82,11 @@ public class DefaultDataModel implements IDataController {
 		}
 	}
 	public void initGameCheckers() {
-
-		// Player initialization
-		// checkers are placed
 		this.initCheckersOfPlayer(1);
 		this.initCheckersOfPlayer(2);
 	}
 	
-	protected DiceResult getDiceResult(IPlayer currentPlayer, boolean initial) throws Exception {
+	protected DiceResult getDiceResult(Player currentPlayer, boolean initial) throws Exception {
 		
 		if (!initial && currentPlayer == null) {
 			throw new Exception();
@@ -128,10 +124,10 @@ public class DefaultDataModel implements IDataController {
 		//TODO get all numbers which are used for the move
 		return numbersUsed;
 	}
-	protected void executeMove(IPlayer currentPlayer, Move move) {
+	protected void executeMove(Player currentPlayer, Move move) {
 		//TODO set chips on board
 	}
-	protected void controlPlayerMove(IPlayer currentPlayer, DiceResult diceResultsForPlayer) {
+	protected void controlPlayerMove(Player currentPlayer, DiceResult diceResultsForPlayer) {
 		
 		Move currentMove;
 	/*	while (!diceResultsForPlayer.isEmpty()) {
@@ -169,17 +165,6 @@ public class DefaultDataModel implements IDataController {
 	}
 	
 	
-
-	
-	public Move requestMove(IPlayer player) {
-
-		int playerID = (player.equals(player1)) ? (1) : (2);
-		PlayerMoveRequest request = new PlayerMoveRequest(playerID);
-
-		//Move resultingMove = this.listener.handlePlayerMoveRequest(request);
-
-		return null;//resultingMove;
-	}
 	public int checkMove(Move move, DiceResult diceResult) {
 		
 		//TODO check move if illegal
@@ -237,5 +222,26 @@ public class DefaultDataModel implements IDataController {
 	public boolean startMove(int playerID) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	@Override
+	public void endMove(CheckerMoveEvent moveEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void startDoubleOffer(int playerID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void offerAccepted(boolean didAccept) {
+		// TODO Auto-generated method stub
+		
 	}
 }
