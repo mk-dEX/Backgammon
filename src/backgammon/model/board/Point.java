@@ -68,7 +68,7 @@ public class Point implements ICheckerList {
 	
 	public boolean hasCheckersOfPlayer(Player player) {
 		
-		if (this.checkers.isEmpty()) {
+		if (this.isEmpty()) {
 			return false;
 		}
 		
