@@ -21,8 +21,16 @@ public class Move {
 		this.fromPoint = newFromPoint;
 	}
 	
+	public void reverseFromPoint(int maxIndex) {
+		this.fromPoint = this.getReversedFromPoint(maxIndex);
+	}
+	
 	public void setToPoint(int newToPoint) {
 		this.toPoint = newToPoint;
+	}
+	
+	public void reverseToPoint(int maxIndex) {
+		this.toPoint = this.getReversedToPoint(maxIndex);
 	}
 	
 	public boolean isSetMove() {
@@ -36,9 +44,17 @@ public class Move {
 	public int getFromPoint() {
 		return this.fromPoint;
 	}
+	
+	public int getReversedFromPoint(int maxIndex) {
+		return maxIndex - this.fromPoint;
+	}
 
 	public int getToPoint() {
 		return this.toPoint;
+	}
+	
+	public int getReversedToPoint(int maxIndex) {
+		return maxIndex - this.toPoint;
 	}
 
 	public int getFromIndex() {
