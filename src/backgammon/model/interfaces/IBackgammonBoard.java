@@ -1,5 +1,9 @@
 package backgammon.model.interfaces;
 
+import java.util.Vector;
+import backgammon.model.player.Move;
+import backgammon.model.player.Player;
+
 public interface IBackgammonBoard {
 
 	public static final int BAR_INDEX = 24;
@@ -9,5 +13,7 @@ public interface IBackgammonBoard {
 	public ICheckerList getPointAtIndex(int index);
 	public ICheckerList getBar();
 	public ICheckerList getOut(int playerID);
+	
+	public Vector<Move> getPossiblePlayerMoves(Player player, int playerID);
 	
 }

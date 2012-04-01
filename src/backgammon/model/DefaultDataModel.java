@@ -52,7 +52,7 @@ public class DefaultDataModel implements IDataController {
 	}
 	
 	
-// 	Privates	
+// 	Privates
 	
 	//init
 	protected void initCheckersOfPlayer(int playerID) throws Exception {
@@ -61,9 +61,9 @@ public class DefaultDataModel implements IDataController {
 
 		// IndexPoint 0
 		for (int indexTo = 0; indexTo < 2; indexTo++) {
-
+			
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 0, indexTo);
-			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
 			catch (Exception e) { throw e; }
 			indexFrom--;		
 		}
@@ -72,12 +72,12 @@ public class DefaultDataModel implements IDataController {
 		for (int indexTo = 0; indexTo < 5; indexTo++) {
 
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 11, indexTo);
-			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
 			
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 18, indexTo);
-			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
 		}
@@ -86,7 +86,7 @@ public class DefaultDataModel implements IDataController {
 		for (int indexTo = 0; indexTo < 3; indexTo++) {
 
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 16, indexTo);
-			try { this.pushCheckerMoveEvent(tempRegisteredMove); }
+			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
 			catch (Exception e) { throw e; }
 			indexFrom--;	
 		}
@@ -122,31 +122,6 @@ public class DefaultDataModel implements IDataController {
 		return diceResults;
 	}
 	
-	protected Vector<Integer> getNumbersUsed(Move move) {
-		Vector<Integer> numbersUsed = new Vector<Integer>();
-		//TODO get all numbers which are used for the move
-		return numbersUsed;
-	}
-	
-	protected ICheckerList getCheckerListForIndex(int index) throws Exception{
-		
-		if (index >= 0 && index < IBackgammonBoard.BAR_INDEX) {
-			return this.gameBoard.getPointAtIndex(index);
-		
-		} else if (index == IBackgammonBoard.BAR_INDEX) {
-			return this.gameBoard.getBar();
-					
-		} else if (index == IBackgammonBoard.OUT_PLAYER1_INDEX) {
-			return this.gameBoard.getOut(1);
-			
-		} else if (index == IBackgammonBoard.OUT_PLAYER2_INDEX) {
-			return this.gameBoard.getOut(2);
-		
-		} else {
-			throw new Exception();
-		}
-	}
-	
 	protected int getPlayerID(Player player) {
 		if (player.equals(this.player1))
 			return 1;
@@ -166,11 +141,30 @@ public class DefaultDataModel implements IDataController {
 		return (requestedPlayer != null && requestedPlayer.equals(this.currentPlayer));
 	}
 	
-	protected boolean playerHasMovesLeft(Player currentPlayer) {
+	protected boolean currentPlayerHasMovesLeft() {
+		return (this.currentPlayer.getCurrentDiceResult().isEmpty() == false);
+	}
+	
+	protected Vector<Move> getPossibleMovesOfCurrentPlayer() {
 		
-		//TODO
+		boolean hasMovesLeft;
+		Vector<Move> possibleMoves = new Vector<Move>();
 		
-		return false;
+		hasMovesLeft = this.currentPlayerHasMovesLeft();
+		if (!hasMovesLeft) {
+			return possibleMoves;
+		}
+		
+		possibleMoves = this.gameBoard.getPossiblePlayerMoves(this.currentPlayer, this.getPlayerID(this.currentPlayer));
+		
+		return possibleMoves;
+	}
+	
+	protected boolean checkMove(Move move) {
+		
+		//TODO first check if move is correct
+		//second check in pushCheckerMove!!
+		return true;
 	}
 	
 	
@@ -180,25 +174,26 @@ public class DefaultDataModel implements IDataController {
 		//TODO Point methods should return Result indicating remove or similar
 	}
 	
-	protected void pushCheckerMoveEvent(Move move) throws Exception {
+	protected void pushCheckerMoveEvent(CheckerMoveEvent checkerMoveEvent) throws Exception {
+		
+		Move move = checkerMoveEvent.getMove();
+		CheckerMoveEvent temp = checkerMoveEvent;
+		
+		//TODO hier rausnehmen und in aufrufende methode, damit auch bei chips aufs board verfügbar
 		
 		if (move.getID() == 2) {
 			
 			if (move.getFromPoint() < IBackgammonBoard.BAR_INDEX) {
-				move.setFromPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getFromPoint());
+				move.reverseFromPoint(IBackgammonBoard.BAR_INDEX - 1);
 			}
 			if (move.getToPoint() < IBackgammonBoard.BAR_INDEX) {
-				move.setToPoint((IBackgammonBoard.BAR_INDEX - 1) - move.getToPoint());
+				move.reverseToPoint(IBackgammonBoard.BAR_INDEX - 1);
 			}
-
+			
+			temp = new CheckerMoveEvent(move);
 		}
 		
-		if (this.listener == null || (this.listener.handleCheckerMoveEvent(new CheckerMoveEvent(move))) < 0)
-			throw new Exception();
-	}
-	
-	protected void pushCheckerMoveEvent(CheckerMoveResultEvent moveResultEvent) throws Exception {
-		if (this.listener == null || (this.listener.handleCheckerMoveEvent(moveResultEvent)) < 0)
+		if (this.listener == null || (this.listener.handleCheckerMoveEvent(temp)) < 0)
 			throw new Exception();
 	}
 	
@@ -227,7 +222,7 @@ public class DefaultDataModel implements IDataController {
 	@Override
 	public void initGame() {
 		
-		// roll dice
+		// initially roll dice
 		DiceResult diceResult = null;
 		try { diceResult = this.getDiceResult(null, true); } 
 		catch (Exception e) { e.printStackTrace(); System.exit(0); }
@@ -243,19 +238,17 @@ public class DefaultDataModel implements IDataController {
 	
 	@Override
 	public void initGameCheckers() throws Exception {
-		try {
-			this.initCheckersOfPlayer(1);
-			this.initCheckersOfPlayer(2);
-		
-		} catch (Exception e) { throw e; }
+		this.initCheckersOfPlayer(1);
+		this.initCheckersOfPlayer(2);
 	}
 	
 	@Override
 	public void initNextPlayerMove() {
 		
 		boolean nextMove = false;
+		Vector<Move> possibleMovesOfCurrentPlayer = this.getPossibleMovesOfCurrentPlayer();
 		
-		if (!this.playerHasMovesLeft(this.currentPlayer)) {
+		if (possibleMovesOfCurrentPlayer.isEmpty()) {
 			this.currentPlayer = (this.currentPlayer.equals(this.player1)) ? (this.player2) : (this.player1);
 			nextMove = true;
 		}
@@ -280,7 +273,7 @@ public class DefaultDataModel implements IDataController {
 				
 				Vector<Move> computerPlayerMoves = ((ComputerPlayer)this.currentPlayer).move();
 				for (Move move : computerPlayerMoves) {
-					try { this.pushCheckerMoveEvent(move); }
+					try { this.pushCheckerMoveEvent( new CheckerMoveEvent(move) ); }
 					catch (Exception e) { e.printStackTrace(); }
 				}
 				
@@ -294,7 +287,7 @@ public class DefaultDataModel implements IDataController {
 
 	@Override
 	public boolean startMove(int playerID) {
-		return this.isCurrentPlayer(this.getPlayer(playerID));
+		return this.isCurrentPlayer( this.getPlayer(playerID) );
 	}
 
 	@Override
@@ -322,6 +315,25 @@ public class DefaultDataModel implements IDataController {
 	
 	public IBackgammonBoard getBackgammonBoard() {
 		return this.gameBoard;
+	}
+	
+	public ICheckerList getCheckerListForIndex(int index) throws Exception{
+		
+		if (index >= 0 && index < IBackgammonBoard.BAR_INDEX) {
+			return this.gameBoard.getPointAtIndex(index);
+		
+		} else if (index == IBackgammonBoard.BAR_INDEX) {
+			return this.gameBoard.getBar();
+					
+		} else if (index == IBackgammonBoard.OUT_PLAYER1_INDEX) {
+			return this.gameBoard.getOut(1);
+			
+		} else if (index == IBackgammonBoard.OUT_PLAYER2_INDEX) {
+			return this.gameBoard.getOut(2);
+		
+		} else {
+			throw new Exception();
+		}
 	}
 
 }

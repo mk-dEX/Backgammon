@@ -48,7 +48,7 @@ public class Point implements ICheckerList {
 		return playerCheckers;
 	}
 	
-	protected int getTopCheckerIndexForPlayer(Player player) {
+	public int getTopCheckerIndexForPlayer(Player player) {
 		
 		if (this.hasCheckersOfPlayer(player) == false) {
 			return -1;

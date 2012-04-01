@@ -10,6 +10,7 @@ public interface ICheckerList {
 	public int removeChecker(Player player);
 	public Vector<Checker> getCheckers();
 	public Vector<Checker> getCheckersForPlayer(Player player);
+	public int getTopCheckerIndexForPlayer(Player player);
 	public boolean hasCheckersOfPlayer(Player player);
 	public boolean isEmpty();
 	public boolean isBlockedForPlayer(Player player);
