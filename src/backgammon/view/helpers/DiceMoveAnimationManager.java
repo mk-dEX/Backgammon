@@ -87,32 +87,35 @@ public class DiceMoveAnimationManager implements Runnable {
 		this.board.getDices().add(this.dice.dice);
 		
 		//Für Wuerfelbilder
-		Long zwischen = System.currentTimeMillis();
+		//Long zwischen = System.currentTimeMillis();
 		
 		this.startTime = System.currentTimeMillis();
 
 		if (this.animationqueue.size() >= 3)
 			this.duration = 150;
 
-		int rPauseCount = 0;
+		//Ueber Getter und Setter machen...
+		
+		
+		//int rPauseCount = 0;
 		while (System.currentTimeMillis() - this.startTime <= this.duration) {
 			
-			rPauseCount += System.currentTimeMillis() - zwischen;
+			//rPauseCount += System.currentTimeMillis() - zwischen;
 
-			zwischen = System.currentTimeMillis();
+			//zwischen = System.currentTimeMillis();
 			
-			if(rPauseCount >= this.Rpause)
-			{
+			//if(rPauseCount >= this.Rpause)
+			//{
 				//Zufallswert holen
-				int tmp = this.roll(1, 6);
-				this.dice.dice.setRValue(tmp);
+				//int tmp = this.roll(1, 6);
+				//this.dice.dice.setRValue(tmp);
 				
-				tmp = this.roll(0,360);
+				//tmp = this.roll(0,360);
 				
-				this.dice.dice.setRotation(tmp);
+				//this.dice.dice.setRotation(tmp);
 				
-				rPauseCount = 0;
-			}
+				//rPauseCount = 0;
+			//}
 			int deltaX = (this.dice.toX - this.dice.dice.getX());
 			int deltaY = (this.dice.toY - this.dice.dice.getY());
 
