@@ -1,6 +1,6 @@
 package backgammon.view.helpers;
 
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -9,17 +9,18 @@ public class DiceMoveAnimationManager implements Runnable {
 	private AnimationEntry dice;
 	private ImageBoard board;
 	private int duration = 1500;
-	private final int speed = 5;
-	private final int pause = 20;
-	private final int Rpause = 100;
+	private final int pause = 30;
+	private final int Rpause = 240;
 	private Thread thread;
 	private long startTime;
-	private ArrayList<AnimationEntry> animationqueue;
+	private int deltaMoveX;
+	private int deltaMoveY;
+	private Vector<AnimationEntry> animationqueue;
 	private boolean animating = false;
 
 	public DiceMoveAnimationManager(ImageBoard board) {
 		this.board = board;
-		this.animationqueue = new ArrayList<AnimationEntry>();
+		this.animationqueue = new Vector<AnimationEntry>();
 	}
 
 	public void addMoveAnimation(BDice dice, int toX, int toY) {
@@ -38,6 +39,8 @@ public class DiceMoveAnimationManager implements Runnable {
 		
 		AnimationEntry tmp = this.animationqueue.get(0);
 		
+		//System.out.println(Integer.toString(deltaMoveX) + " - " + Integer.toString(deltaMoveY));
+		
 		this.dice = tmp;
 		tmp.dice.setRValue(this.roll(1, 6));
 		tmp.dice.setRotation(0);
@@ -52,7 +55,8 @@ public class DiceMoveAnimationManager implements Runnable {
 		this.dice.dice.setCoords(tmpX, tmpY);
 		//Ende zufallswert
 		
-		
+		deltaMoveX = (int) (((tmp.toX+0) - tmp.dice.getX()) / Math.ceil((this.duration / (this.pause-0)))) ;
+		deltaMoveY = (int) (((tmp.toY+0) - tmp.dice.getY()) / Math.ceil((this.duration / (this.pause-0)))) ;
 		
 		this.animationqueue.remove(0);
 
@@ -71,7 +75,7 @@ public class DiceMoveAnimationManager implements Runnable {
 		//System.out.println(Integer.toString(toIndex));
 		
 		this.dice.dice.setRValue(this.dice.dice.getValue());
-		this.dice.dice.setCoords(this.dice.toX, this.dice.toY);
+		//this.dice.dice.setCoords(this.dice.toX, this.dice.toY);
 		this.board.repaint();
 		if(!this.animationqueue.isEmpty())
 		{
@@ -87,45 +91,36 @@ public class DiceMoveAnimationManager implements Runnable {
 		this.board.getDices().add(this.dice.dice);
 		
 		//Für Wuerfelbilder
-		//Long zwischen = System.currentTimeMillis();
+		Long zwischen = System.currentTimeMillis();
 		
 		this.startTime = System.currentTimeMillis();
 
 		if (this.animationqueue.size() >= 3)
 			this.duration = 150;
-
-		//Ueber Getter und Setter machen...
 		
-		
-		//int rPauseCount = 0;
+		int rPauseCount = 0;
 		while (System.currentTimeMillis() - this.startTime <= this.duration) {
 			
-			//rPauseCount += System.currentTimeMillis() - zwischen;
+			rPauseCount += System.currentTimeMillis() - zwischen;
 
-			//zwischen = System.currentTimeMillis();
+			zwischen = System.currentTimeMillis();
 			
-			//if(rPauseCount >= this.Rpause)
-			//{
+			if(rPauseCount >= this.Rpause)
+			{
 				//Zufallswert holen
-				//int tmp = this.roll(1, 6);
-				//this.dice.dice.setRValue(tmp);
+				int tmp = this.roll(1, 6);
+				this.dice.dice.setRValue(tmp);
 				
-				//tmp = this.roll(0,360);
+				tmp = this.roll(0,360);
 				
-				//this.dice.dice.setRotation(tmp);
+				this.dice.dice.setRotation(tmp);
 				
-				//rPauseCount = 0;
-			//}
-			int deltaX = (this.dice.toX - this.dice.dice.getX());
-			int deltaY = (this.dice.toY - this.dice.dice.getY());
-
-			if ((deltaX >= speed || deltaY >= speed)
-			|| (-deltaX >= speed || -deltaY >= speed)) {
-				deltaX = (int) Math.ceil(deltaX / speed);
-				deltaY = (int) Math.ceil(deltaY / speed);
+				rPauseCount = 0;
 			}
 
-			this.dice.dice.setCoords(this.dice.dice.getX()+deltaX, this.dice.dice.getY()+deltaY);
+			
+
+			this.dice.dice.setCoords(this.dice.dice.getX()+deltaMoveX, this.dice.dice.getY()+deltaMoveY);
 	
 			try {
 				Thread.sleep(pause);

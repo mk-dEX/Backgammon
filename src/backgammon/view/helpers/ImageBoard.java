@@ -2,7 +2,10 @@ package backgammon.view.helpers;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.Vector;
 import java.util.Calendar;
 import java.util.Random;
@@ -74,6 +77,7 @@ public class ImageBoard extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
+
 		g.drawImage(img, 0, 0, null);
 
 		this.drawChecker(g);
@@ -129,18 +133,35 @@ public class ImageBoard extends JPanel {
 	}
 
 	private void drawDice(Graphics g) {
-		for (BDice d : this.dice) {
-			
-			//Rotieren
-			
-			//Graphics2D gG = (Graphics2D) this.getGraphics();  
-	        //gG.rotate(Math.toRadians(d.getRotation()), 24, 24);  
-			
-			//ende Rotieren
-			
-			g.drawImage(this.view.getDice(d.getPlayer(),d.getRValue()),
-					d.getX()-24, d.getY()-24, null);
+		for (int i = 0; i < this.getDices().size(); i++) {
+				
+				rotate(g.create(),this.getDices().get(i));
 		}
+	}
+
+	private void rotate(Graphics g, BDice d) {
+		
+		//Graphics2D g2d = (Graphics2D) g;
+		 
+		// Rotieren
+		Image img = this.view.getDice(d.getPlayer(), d.getRValue());
+		/*
+        int w = 48;
+        int h = 48;
+        int x = (this.getWidth() - w) / 2;
+        int y = (this.getHeight() - h) / 2;
+        //center of rotation is center of the Image:
+        int xRot = x + w / 2;
+        int yRot = y + h / 2;
+		
+		AffineTransform rotation = g2d.getTransform();
+        rotation.rotate(Math.toRadians(d.getRotation()), 24, 24);
+        //draw Image with rotation:
+        g2d.setTransform(rotation);
+        */
+        g.drawImage(img, d.getX() - 24, d.getY() - 24, this);
+        //g2d.dispose();
+		
 	}
 
 	public static Vector<BPosition> getPoisitionMatrix() {
@@ -212,25 +233,19 @@ public class ImageBoard extends JPanel {
 		// endtest
 		return tmp;
 	}
-	public BPosition getDicePosition(int player, int dice)
-	{
-		if(player == 1 && dice == 1)
-		{
+
+	public BPosition getDicePosition(int player, int dice) {
+		if (player == 1 && dice == 1) {
 			return new BPosition(620, 300);
-		}
-		else if(player == 2 && dice == 1)
-		{
+		} else if (player == 2 && dice == 1) {
 			return new BPosition(200, 300);
-		}
-		else if (player == 1 && dice == 2)
-		{
+		} else if (player == 1 && dice == 2) {
 			return new BPosition(730, 300);
-		}
-		else
-		{
+		} else {
 			return new BPosition(310, 300);
 		}
 	}
+
 	public PHitBox getPlayerBoard(int player) {
 		if (player == 1)
 			return new PHitBox(505, 900, 22, 578);
@@ -299,43 +314,46 @@ public class ImageBoard extends JPanel {
 		this.checker.remove(tmp);
 		this.checker.add(tmp);
 	}
-	public CheckerMoveAnimationManager getCheckerAnimation()
-	{
+
+	public CheckerMoveAnimationManager getCheckerAnimation() {
 		return this.checkerAnimation;
 	}
+
 	public void addDice(int player, Integer value, int dice) {
-		
-		//System.out.println("Dice added");
-		
+
+		// System.out.println("Dice added");
+
 		BDice tmp = new BDice(player, value);
-		
-		//100 100 ist nicht wichtig, wird später eh geändert
-		//tmp.setCoords(100, 100);
-		
-		//this.dice.add(tmp);
-		
+
+		// 100 100 ist nicht wichtig, wird später eh geändert
+		// tmp.setCoords(100, 100);
+
+		// this.dice.add(tmp);
+
 		BPosition p = this.getDicePosition(player, dice);
-		//tmp.setCoords(p.getX(), p.getY());
-		
+		// tmp.setCoords(p.getX(), p.getY());
+
 		this.diceAnimation.addMoveAnimation(tmp, p.getX(), p.getY());
-		
+
 		this.repaint();
 	}
-	public Vector<BDice> getDices()
-	{
+
+	public Vector<BDice> getDices() {
 		return this.dice;
 	}
-	//Von Marc geklaut
+
+	// Von Marc geklaut
 	public int roll(int min, int max) {
-		
+
 		Random generator = new Random(Calendar.getInstance().getTimeInMillis());
-		
+
 		if (min < max && min >= 0 && max >= 0) {
 			return generator.nextInt(max) + min;
 		} else {
 			return generator.nextInt(6) + 1;
 		}
 	}
+
 	public BackgammonViewGUI getView() {
 		return view;
 	}

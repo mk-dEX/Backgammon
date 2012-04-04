@@ -22,10 +22,6 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	@Override
 	public void mouseClicked(MouseEvent f) {
 		
-		//check if würfel geklickt, falls ja, dann nächster Spieler.
-		//dazu wurfel durchgehen und nach Position abfragenn?
-		//vom imageboard die Würfel holen, wenn kein Würfel auf dem Spielfeld ist, 
-		//dann ist auch keiner in der Liste
 		Boolean found = false;
 		
 		for(BDice dice : this.parent.getDices())
@@ -39,8 +35,6 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 		}
 		if(found)
 		{
-			//Würfel entfernen
-			this.parent.getDices().clear();
 			
 			this.parent.repaint();
 			
@@ -58,6 +52,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	public void mousePressed(MouseEvent e) {
 		
 		//System.out.println("Press");
+		
 		if(!this.setCheckerFromEvent(e))
 			return;
 		
@@ -67,6 +62,10 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 			ImageBoardMouseListener.dragging = true;
 			this.parent.setFocus(ImageBoardMouseListener.checker);
 		}
+		else
+		{
+			ImageBoardMouseListener.checker = null;
+		}
 		
 		
 	}
@@ -74,12 +73,16 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	@Override
 	public void mouseReleased(MouseEvent f) {
 		// gucken, ob neuer Point, ansonsten zurückanimieren.
-		ImageBoardMouseListener.dragging = false;
 		
-		//System.out.println("Mouse released");
+		if(ImageBoardMouseListener.dragging == false)
+			return;
 		
 		if(ImageBoardMouseListener.checker == null)
 			return;
+		
+		//System.out.println("Checker released");
+		
+		ImageBoardMouseListener.dragging = false;
 		
 		this.setPointFromEvent(f);
 		

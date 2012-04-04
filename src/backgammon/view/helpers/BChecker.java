@@ -1,6 +1,5 @@
 package backgammon.view.helpers;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class BChecker {
