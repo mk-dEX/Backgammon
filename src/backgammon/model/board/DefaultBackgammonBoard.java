@@ -39,7 +39,8 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		return null;
 	}
 	
-	protected Move createNewMoveFromPointToPoint(Player player, int playerID, int oldPoint, int newPoint) {
+	//TODO geht deutlich einfacher!!
+	protected Move createNewMove(Player player, int playerID, int oldPoint, int newPoint) {
 		
 		Move newMove;
 		
@@ -48,12 +49,15 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		int toIndex;
 		int topToIndex = this.points[newPoint].getTopCheckerIndexForPlayer(player);
 		
+		//TODO kann evtl reduziert werden, ziehen auf blot wirft gegnerischen checker
+		//-> es reicht den obersten chip abzufragen und index + 1 zu rechnen
+		
 		// There are only checkers of this player or move does kick other checker
 		if (topToIndex >= 0) {
 			
 			toIndex = topToIndex + 1;
 			
-		// There may be one other checker
+		// There could be one other checker
 		} else {
 			
 			boolean hasOtherChecker = this.points[newPoint].getCheckers().size() > 0;
@@ -62,16 +66,30 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 			} else {
 				toIndex = 0;
 			}
-			
 		}
 		
 		newMove = new Move(playerID, oldPoint, fromIndex, newPoint, toIndex);	
 		return newMove;
 	}
 	
+	
+	//TODO zusammengesetzte distances zwischenstationen beachten!!
+	//TODO http://www.backgammoned.net/de/backgammon-artikel/backgammon-regeln.html
 	public Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {
 		
 		Vector<Move> possibleMoves = new Vector<Move>();
+		
+		//Bar zuerst prüfen
+		//Wenn Checker auf bar, dann field checker nicht prüfen(!), außer noch züge übrig ohne checker auf bar
+		
+		Vector<Checker> checkersOfBar = this.bar.getCheckersForPlayer(player);
+		if (!checkersOfBar.isEmpty()) {
+			
+			int fromIndex = IBackgammonBoard.BAR_INDEX;
+			//TODO nur ein würfelergebnis kann zum wiedereinsetzen verwendet werden
+			//TODO evtl in eigene Methode auslagern?
+		}
+		
 		
 		// Iteration over all points
 		for (int pointIndex = 0; pointIndex < this.numberOfPoints; pointIndex++) {
@@ -93,24 +111,38 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 						// - is used if playerID equals 2
 						int newIndex = (playerID == 1) ? (pointIndex + distance) : (pointIndex - distance);
 						
+						boolean isInField = (0 <= newIndex) && (newIndex < this.numberOfPoints);
+						boolean isOut1 = (playerID == 1) && (this.numberOfPoints <= newIndex);
+						boolean isOut2 = (playerID == 2) && (newIndex < 0);
+						
+						
+						//TODO checkers nur to out wenn alle im eigenen haus -> abfragen!!
+						//-> ganz am anfang der methode abfragen und als boolean speichern
+						if (isOut1) newIndex = IBackgammonBoard.OUT_PLAYER1_INDEX;
+						if (isOut2) newIndex = IBackgammonBoard.OUT_PLAYER2_INDEX;
+						
 						// If current new index is greater than max index or lower than 0, continue with next distance
-						if (newIndex >= this.numberOfPoints || newIndex < 0)
-							continue;
+						if (!isInField && !isOut1 && !isOut2)
+							continue;		
 						
 						// If aim field is not blocked, the move is possible and will be added to the list
 						boolean isBlocked = this.points[newIndex].isBlockedForPlayer(player);
 						if (!isBlocked) {
-							Move newPossibleMove = this.createNewMoveFromPointToPoint(player, playerID, pointIndex, newIndex);
+							Move newPossibleMove = this.createNewMove(player, playerID, pointIndex, newIndex);
 							possibleMoves.add(newPossibleMove);
 						}	
 					}
 				}
 			}
 		}
-		//TODO possible Move into Out
+
 		
-		//TODO Bar
+		
 		
 		return possibleMoves;
 	}
+	
+	//TODO public boolean hasCheckersOnBar(Player player)
+	//TODO public boolean allCheckersInHouse(Player player)
+	//TODO public int[](die indizes) playerHasBlots(Player player)
 }
