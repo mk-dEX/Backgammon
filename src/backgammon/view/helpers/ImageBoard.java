@@ -3,11 +3,9 @@ package backgammon.view.helpers;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Calendar;
 import java.util.Random;
-import java.util.Vector;
-
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import backgammon.listener.ImageBoardMouseListener;
@@ -141,7 +139,7 @@ public class ImageBoard extends JPanel {
 			//ende Rotieren
 			
 			g.drawImage(this.view.getDice(d.getPlayer(),d.getRValue()),
-					d.getX()-25, d.getY()-25, null);
+					d.getX()-24, d.getY()-24, null);
 		}
 	}
 
@@ -179,8 +177,8 @@ public class ImageBoard extends JPanel {
 		return tmp;
 	}
 
-	public static ArrayList<PHitBox> getPointHitBox() {
-		ArrayList<PHitBox> tmp = new ArrayList<PHitBox>();
+	public static Vector<PHitBox> getPointHitBox() {
+		Vector<PHitBox> tmp = new Vector<PHitBox>();
 		// unten
 		tmp.add(new PHitBox(834, 895, 340, 578));
 		tmp.add(new PHitBox(765, 833, 340, 578));

@@ -3,9 +3,10 @@ package backgammon.listener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
+import java.util.Vector;
 
 import backgammon.view.helpers.BChecker;
+import backgammon.view.helpers.BDice;
 import backgammon.view.helpers.ImageBoard;
 import backgammon.view.helpers.PHitBox;
 
@@ -20,6 +21,31 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 	}
 	@Override
 	public void mouseClicked(MouseEvent f) {
+		
+		//check if würfel geklickt, falls ja, dann nächster Spieler.
+		//dazu wurfel durchgehen und nach Position abfragenn?
+		//vom imageboard die Würfel holen, wenn kein Würfel auf dem Spielfeld ist, 
+		//dann ist auch keiner in der Liste
+		Boolean found = false;
+		
+		for(BDice dice : this.parent.getDices())
+		{	
+			if(dice.getX()-24 <= f.getX() && dice.getX()+24 >= f.getX() 
+			&& dice.getY()-24 <= f.getY() && dice.getY()+24 >= f.getY())
+			{
+				//Würfel gefunden
+				found = true;
+			}	
+		}
+		if(found)
+		{
+			//Würfel entfernen
+			this.parent.getDices().clear();
+			
+			this.parent.repaint();
+			
+			this.parent.getView().getController().initNextPlayerMove();
+		}
 	}
 
 	@Override
@@ -121,7 +147,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements Mouse
 		}
 	}
 	private void setPointFromEvent(MouseEvent f) {
-		ArrayList<PHitBox> tmp = ImageBoard.getPointHitBox();
+		Vector<PHitBox> tmp = ImageBoard.getPointHitBox();
 				
 		//gucken ob wir auf einem Point landen, falls ja, dann holen wir uns den höchsten Index
 		//und platzieren den Checker dort.
