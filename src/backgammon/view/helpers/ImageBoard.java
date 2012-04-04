@@ -2,12 +2,10 @@ package backgammon.view.helpers;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Calendar;
 import java.util.Random;
-
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import backgammon.listener.ImageBoardMouseListener;
@@ -23,9 +21,9 @@ public class ImageBoard extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private Image img;
 	private BackgammonViewGUI view;
-	private ArrayList<BPosition> PositionMatrix;
-	private ArrayList<BChecker> checker;
-	private ArrayList<BDice> dice;
+	private Vector<BPosition> PositionMatrix;
+	private Vector<BChecker> checker;
+	private Vector<BDice> dice;
 	private CheckerMoveAnimationManager checkerAnimation;
 	private DiceMoveAnimationManager diceAnimation;
 
@@ -34,8 +32,8 @@ public class ImageBoard extends JPanel {
 		this(img);
 
 		this.view = backgammonViewGUI;
-		this.checker = new ArrayList<BChecker>();
-		this.dice = new ArrayList<BDice>();
+		this.checker = new Vector<BChecker>();
+		this.dice = new Vector<BDice>();
 		this.PositionMatrix = getPoisitionMatrix();
 		this.checkerAnimation = new CheckerMoveAnimationManager(this);
 		this.diceAnimation = new DiceMoveAnimationManager(this);
@@ -82,7 +80,7 @@ public class ImageBoard extends JPanel {
 		this.drawDice(g);
 	}
 
-	public ArrayList<BChecker> getChecker() {
+	public Vector<BChecker> getChecker() {
 		return this.checker;
 	}
 
@@ -141,12 +139,12 @@ public class ImageBoard extends JPanel {
 			//ende Rotieren
 			
 			g.drawImage(this.view.getDice(d.getPlayer(),d.getRValue()),
-					d.getX()-25, d.getY()-25, null);
+					d.getX()-24, d.getY()-24, null);
 		}
 	}
 
-	public static ArrayList<BPosition> getPoisitionMatrix() {
-		ArrayList<BPosition> tmp = new ArrayList<BPosition>();
+	public static Vector<BPosition> getPoisitionMatrix() {
+		Vector<BPosition> tmp = new Vector<BPosition>();
 		// unten
 		tmp.add(new BPosition(867, 554));
 		tmp.add(new BPosition(802, 554));
@@ -179,8 +177,8 @@ public class ImageBoard extends JPanel {
 		return tmp;
 	}
 
-	public static ArrayList<PHitBox> getPointHitBox() {
-		ArrayList<PHitBox> tmp = new ArrayList<PHitBox>();
+	public static Vector<PHitBox> getPointHitBox() {
+		Vector<PHitBox> tmp = new Vector<PHitBox>();
 		// unten
 		tmp.add(new PHitBox(834, 895, 340, 578));
 		tmp.add(new PHitBox(765, 833, 340, 578));
@@ -270,7 +268,7 @@ public class ImageBoard extends JPanel {
 			return new BPosition(935, 46);
 	}
 
-	public ArrayList<BPosition> getPositionMatrix() {
+	public Vector<BPosition> getPositionMatrix() {
 
 		return PositionMatrix;
 	}
@@ -323,7 +321,7 @@ public class ImageBoard extends JPanel {
 		
 		this.repaint();
 	}
-	public ArrayList<BDice> getDices()
+	public Vector<BDice> getDices()
 	{
 		return this.dice;
 	}

@@ -105,9 +105,9 @@ public class DefaultDataModel implements IDataController {
 		
 		do {
 			diceResult1 = (initial) ? (this.player1.rollDice(1, 6)) : (currentPlayer.rollDice(1, 6));
-			try {Thread.sleep(5);} catch (Exception e) { e.printStackTrace(); }
+			try {Thread.sleep(50);} catch (Exception e) { e.printStackTrace(); }
 			diceResult2 = (initial) ? (this.player2.rollDice(1, 6)) : (currentPlayer.rollDice(1, 6));
-			try {Thread.sleep(5);} catch (Exception e) { e.printStackTrace(); }
+			try {Thread.sleep(50);} catch (Exception e) { e.printStackTrace(); }
 			
 		} while (initial && diceResult1.equals(diceResult2));
 		

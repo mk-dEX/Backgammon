@@ -290,12 +290,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			if (event.getPlayerID() == 0) {
 				this.imageBoard.addDice(1, event.getDiceResult().get(0),1);
 				this.imageBoard.addDice(2, event.getDiceResult().get(1),1);
-			} else {
-				int j = 0;
-				for (int i : event.getDiceResult()) {
-					this.imageBoard.addDice(event.getPlayerID(), i, (j%2)+1);
-					j++;
-				}
+			} else 
+			{
+				this.imageBoard.addDice(event.getPlayerID(), event.getDiceResult().get(0),1);
+				this.imageBoard.addDice(event.getPlayerID(), event.getDiceResult().get(1),2);
 			}
 		}
 		return 0;

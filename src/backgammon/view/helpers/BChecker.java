@@ -1,6 +1,7 @@
 package backgammon.view.helpers;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class BChecker {
 	private int point;
@@ -25,7 +26,7 @@ public class BChecker {
 
 	public void setCoordsFromPointAndIndex() {
 
-		ArrayList<BPosition> tmp = ImageBoard.getPoisitionMatrix();
+		Vector<BPosition> tmp = ImageBoard.getPoisitionMatrix();
 
 		int x, y = 0;
 
