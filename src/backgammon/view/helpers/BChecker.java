@@ -52,6 +52,13 @@ public class BChecker {
 
 	public void setPoint(int point) {
 		this.point = point;
+		
+		if(point == 24)
+			this.position = Place.BAR;
+		else if(point <= 23)
+			this.position = Place.BOARD;
+		else
+			this.position = Place.OUT;
 
 		this.setCoordsFromPointAndIndex();
 
@@ -90,8 +97,8 @@ public class BChecker {
 	}
 
 	public void setPointIndex(int point, int index) {
-		this.point = point;
-		this.index = index;
+		this.setPoint(point);
+		this.setIndex(index);
 
 		this.setCoordsFromPointAndIndex();
 	}

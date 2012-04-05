@@ -8,6 +8,10 @@ public class BDice {
 	private int y;
 	private int rvalue;
 	private int rotation;
+	public static enum diceType {
+		DICE,
+		DOUBLE_DICE
+	}
 
 	public BDice(int p, int i) {
 		this.p = p;

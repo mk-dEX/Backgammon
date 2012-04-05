@@ -233,6 +233,15 @@ public class ImageBoard extends JPanel {
 		// endtest
 		return tmp;
 	}
+	public static Vector<PHitBox> getOutHitBox() {
+		Vector<PHitBox> tmp = new Vector<PHitBox>();
+		// unten
+		tmp.add(new PHitBox(905, 965, 300, 578));
+		// oben
+		tmp.add(new PHitBox(905, 965, 22, 299));
+
+		return tmp;
+	}
 
 	public BPosition getDicePosition(int player, int dice) {
 		if (player == 1 && dice == 1) {

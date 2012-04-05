@@ -300,6 +300,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 				this.imageBoard.addDice(event.getPlayerID(), event.getDiceResult().get(1),2);
 			}
 		}
+		else if(event.getDiceType() == diceType.DOUBLE_DICE)
+		{
+			
+		}
 		return 0;
 	}
 
