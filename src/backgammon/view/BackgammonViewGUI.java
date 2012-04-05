@@ -285,6 +285,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	@Override
 	public int handleDiceEvent(DiceEvent event) {
+		
+		//Würfel leeren
+		this.imageBoard.getDices().clear();
+		
 		if (event.getDiceType() == diceType.DICE) {
 			//System.out.println("Ich würfel");
 			if (event.getPlayerID() == 0) {
