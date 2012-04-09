@@ -10,7 +10,6 @@ import backgammon.event.DiceEvent.diceType;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.DefaultBackgammonBoard;
 import backgammon.model.interfaces.IBackgammonBoard;
-import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IDataController;
 import backgammon.model.player.ComputerPlayer;
 import backgammon.model.player.DiceResult;
@@ -56,37 +55,38 @@ public class DefaultDataModel implements IDataController {
 	
 	//init
 	protected void initCheckersOfPlayer(int playerID) throws Exception {
+		
 		Move tempRegisteredMove;
 		int indexFrom = 14;
 
-		// IndexPoint 0
+		// Point 0
 		for (int indexTo = 0; indexTo < 2; indexTo++) {
 			
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 0, indexTo);
-			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
+			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;		
 		}
 
-		// IndexPoint 11 & 18
+		// Point 11 & 18
 		for (int indexTo = 0; indexTo < 5; indexTo++) {
 
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 11, indexTo);
-			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
+			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
 			
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 18, indexTo);
-			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
+			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
 		}
 
-		// IndexPoint 16
+		// Point 16
 		for (int indexTo = 0; indexTo < 3; indexTo++) {
 
 			tempRegisteredMove = new Move(playerID, 25, indexFrom, 16, indexTo);
-			try { this.pushCheckerMoveEvent( new CheckerMoveEvent(tempRegisteredMove) ); }
+			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;	
 		}
@@ -156,44 +156,64 @@ public class DefaultDataModel implements IDataController {
 		}
 		
 		possibleMoves = this.gameBoard.getPossiblePlayerMoves(this.currentPlayer, this.getPlayerID(this.currentPlayer));
-		
 		return possibleMoves;
 	}
 	
-	protected boolean checkMove(Move move) {
+	protected Vector<Move> getResultingMoves(Move originalMove) {
+		return this.gameBoard.getMoveResults(this.currentPlayer, originalMove);
+	}
+	
+	protected Move convertPlayer2Move(Move oldPlayer2Move) {
+		Move convertedMove = oldPlayer2Move;
 		
-		//TODO first check if move is correct
-		//second check in pushCheckerMove!!
-		return true;
+		int maxIndex = IBackgammonBoard.BAR_INDEX - 1;
+		convertedMove.setFromPoint(maxIndex - oldPlayer2Move.getFromPoint());
+		convertedMove.setToPoint(maxIndex - oldPlayer2Move.getToPoint());
+		
+		return convertedMove;
 	}
 	
 	
 	//push
-	protected void pushCheckerMove(Player currentPlayer, Move move) throws Exception {
-		//TODO set chips on board
-		//TODO Point methods should return Result indicating remove or similar
+	protected void executeResultingMoves(Vector<Move> resultingMoves) throws Exception {
+		
+		if (resultingMoves.isEmpty() == false) {
+			for (Move oneResultingMove : resultingMoves) {
+				try { this.executeResultingMoves(oneResultingMove); }
+				catch (Exception e) { throw e; }
+			}
+		}
+		else {
+			try {
+				CheckerMoveResultEvent failureMoveEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.ILLEGAL_MOVE, null);
+				this.pushCheckerMoveEvent(failureMoveEvent);
+				
+			} catch (Exception e) { throw e; }
+		}
+	}
+	
+	protected void executeResultingMoves(Move singleMove) throws Exception {
+		try {
+			Move theMove = singleMove;
+			if (theMove.getID() == 2) {
+				theMove = this.convertPlayer2Move(theMove);
+			}
+			
+			boolean correctMove = this.gameBoard.commitMove( singleMove );
+			
+			CheckerMoveResultEvent moveResult;
+			if (correctMove) {
+				moveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.CORRECT_MOVE, theMove);
+			} else {
+				moveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.ILLEGAL_MOVE, theMove);
+			}
+			this.pushCheckerMoveEvent(moveResult);
+		}
+		catch (Exception e) { throw e; }
 	}
 	
 	protected void pushCheckerMoveEvent(CheckerMoveEvent checkerMoveEvent) throws Exception {
-		
-		Move move = checkerMoveEvent.getMove();
-		CheckerMoveEvent temp = checkerMoveEvent;
-		
-		//TODO hier rausnehmen und in aufrufende methode, damit auch bei chips aufs board verfügbar
-		
-		if (move.getID() == 2) {
-			
-			if (move.getFromPoint() < IBackgammonBoard.BAR_INDEX) {
-				move.reverseFromPoint(IBackgammonBoard.BAR_INDEX - 1);
-			}
-			if (move.getToPoint() < IBackgammonBoard.BAR_INDEX) {
-				move.reverseToPoint(IBackgammonBoard.BAR_INDEX - 1);
-			}
-			
-			temp = new CheckerMoveEvent(move);
-		}
-		
-		if (this.listener == null || (this.listener.handleCheckerMoveEvent(temp)) < 0)
+		if (this.listener == null || (this.listener.handleCheckerMoveEvent(checkerMoveEvent)) < 0)
 			throw new Exception();
 	}
 	
@@ -210,6 +230,11 @@ public class DefaultDataModel implements IDataController {
 			throw new Exception();
 	}
 	
+	
+//TODO Exception unterscheiden zwischen EventException(kein Listener eingetragen,...) und InternalException(Zufallfehler, Zug illegal Fehler,...)	
+	
+//TODO pushExceptionEvent einbauen, statt Programm einfach zu beenden
+//GUI/Benutzer kann dann entscheiden, was passiert und ggf Programm beenden / neustarten
 	
 	
 //	IDataModel
@@ -272,13 +297,15 @@ public class DefaultDataModel implements IDataController {
 			if (!this.currentPlayer.isHuman()) {
 				
 				Vector<Move> computerPlayerMoves = ((ComputerPlayer)this.currentPlayer).move();
-				for (Move move : computerPlayerMoves) {
-					try { this.pushCheckerMoveEvent( new CheckerMoveEvent(move) ); }
-					catch (Exception e) { e.printStackTrace(); }
+				try { 
+					this.executeResultingMoves(computerPlayerMoves); 
 				}
+				catch (Exception e) { e.printStackTrace(); }
 				
 				CheckerMoveResultEvent moveResultEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.COMPUTER_DID_FINISH, null);
-				try { this.pushCheckerMoveEvent(moveResultEvent); }
+				try { 
+					this.pushCheckerMoveEvent(moveResultEvent); 
+				}
 				catch (Exception e) { e.printStackTrace(); }
 				
 			}
@@ -289,20 +316,25 @@ public class DefaultDataModel implements IDataController {
 	public boolean startMove(int playerID) {
 		return this.isCurrentPlayer( this.getPlayer(playerID) );
 	}
-
+	
 	@Override
 	public void endMove(CheckerMoveEvent moveEvent) {
-		// TODO Auto-generated method stub
 		
-		// x CheckerMoveResultEvents
+		Move finishedMove = moveEvent.getMove();
+		
+		try {
+			Vector<Move> moveResults = this.getResultingMoves(finishedMove);
+			this.executeResultingMoves(moveResults);
+		}
+		catch (Exception e) { e.printStackTrace(); }
 	}
-
+	
 	@Override
 	public void startDoubleOffer(int playerID) {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public void offerAccepted(boolean didAccept) {
 		// TODO Auto-generated method stub
@@ -311,29 +343,9 @@ public class DefaultDataModel implements IDataController {
 	
 	
 	
-//	IDataController
+// IDataController
 	
 	public IBackgammonBoard getBackgammonBoard() {
 		return this.gameBoard;
 	}
-	
-	public ICheckerList getCheckerListForIndex(int index) throws Exception{
-		
-		if (index >= 0 && index < IBackgammonBoard.BAR_INDEX) {
-			return this.gameBoard.getPointAtIndex(index);
-		
-		} else if (index == IBackgammonBoard.BAR_INDEX) {
-			return this.gameBoard.getBar();
-					
-		} else if (index == IBackgammonBoard.OUT_PLAYER1_INDEX) {
-			return this.gameBoard.getOut(1);
-			
-		} else if (index == IBackgammonBoard.OUT_PLAYER2_INDEX) {
-			return this.gameBoard.getOut(2);
-		
-		} else {
-			throw new Exception();
-		}
-	}
-
 }
