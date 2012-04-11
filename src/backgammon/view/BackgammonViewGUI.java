@@ -203,44 +203,6 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		return tmp;
 	}
 
-	/**
-	 * This function will draw the Doubledice on the board
-	 * 
-	 * @param value
-	 *            The value of the dice
-	 * @param player
-	 *            The side the dice should be drawn on, Zero (0) means in the
-	 *            middle
-	 * @return Boolean whether the draw was succeeded or not
-	 */
-	@SuppressWarnings("unused")
-	private boolean drawDoubleDice(int value, int player) {
-		return false;
-	}
-
-	/**
-	 * This function will draw all information needed, such as player names,
-	 * pipcount for both players and the actual winning points.
-	 * 
-	 * @param game
-	 *            Game Object that contains all information needed.
-	 * @return Boolean whether the draw was succeeded or not
-	 */
-	@SuppressWarnings("unused")
-	private boolean drawInformation(Object gamemodel) {
-		return false;
-	}
-
-	/**
-	 * 
-	 * Testfunction
-	 * 
-	 * @return Boolean True or false
-	 */
-	public boolean makeTestDraw() {
-		return false;
-	}
-
 	public Image getChecker(int pl) {
 
 		if (pl == 1)
@@ -302,7 +264,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		}
 		else if(event.getDiceType() == diceType.DOUBLE_DICE)
 		{
-			
+			this.imageBoard.addDice(event.getPlayerID(), event.getDiceResult().get(0),0);
 		}
 		return 0;
 	}

@@ -26,6 +26,8 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 	@Override
 	public void mouseClicked(MouseEvent f) {
 
+		//Anzeigen der möglichen Züge
+		
 		Boolean found = false;
 
 		for (BDice dice : this.parent.getDices()) {

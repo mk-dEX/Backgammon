@@ -2,18 +2,16 @@ package backgammon.view.helpers;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.util.Vector;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.Vector;
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
 import backgammon.listener.ImageBoardMouseListener;
 import backgammon.model.player.Move;
-import backgammon.view.helpers.BChecker;
 import backgammon.view.BackgammonViewGUI;
 
 public class ImageBoard extends JPanel {
@@ -243,6 +241,22 @@ public class ImageBoard extends JPanel {
 		return tmp;
 	}
 
+	private BPosition getDoubleDicePosition(int player) {
+
+		if(player == 2)
+		{
+			return new BPosition(100, 100);
+		}
+		else if(player == 1)
+		{
+			return new BPosition(200, 200);
+		}
+		else
+		{
+			return new BPosition(300, 300);
+		}
+	}
+	
 	public BPosition getDicePosition(int player, int dice) {
 		if (player == 1 && dice == 1) {
 			return new BPosition(620, 300);
@@ -330,20 +344,24 @@ public class ImageBoard extends JPanel {
 
 	public void addDice(int player, Integer value, int dice) {
 
-		// System.out.println("Dice added");
-
 		BDice tmp = new BDice(player, value);
-
-		// 100 100 ist nicht wichtig, wird später eh geändert
-		// tmp.setCoords(100, 100);
-
-		// this.dice.add(tmp);
-
-		BPosition p = this.getDicePosition(player, dice);
-		// tmp.setCoords(p.getX(), p.getY());
-
+		
+		BPosition p = null;
+		
+		if(dice == 0)
+		{
+			//Double Dice
+			p = this.getDoubleDicePosition(player);
+		}
+		else
+		{
+			//Normal Dice
+			p = this.getDicePosition(player, dice);
+			
+		}
+		
 		this.diceAnimation.addMoveAnimation(tmp, p.getX(), p.getY());
-
+		
 		this.repaint();
 	}
 
