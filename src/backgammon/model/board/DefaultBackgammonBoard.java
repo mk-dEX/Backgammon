@@ -41,13 +41,15 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 	}
 	
 	
+	//TODO evtl weglassen
 	protected Move createNewMove(Player player, int playerID, int oldPoint, int newPoint) {
 		
 		int fromIndex = this.points[oldPoint].getTopCheckerIndexForPlayer(player);
 		int toIndex = this.points[newPoint].getTopCheckerIndexForPlayer(player) + 1;	
 		return new Move(playerID, oldPoint, fromIndex, newPoint, toIndex);
 	}
-		
+	
+	//TODO use check methods
 	public Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {
 		
 		Vector<Move> possibleMoves = new Vector<Move>();
