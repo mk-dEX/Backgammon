@@ -26,13 +26,7 @@ public class ControllerDelegate implements IControllerDelegate {
 		this.model.addDataModelListener(gameView);
 		gameView.initGUI(this.workingTitle);
 		
-		try {
-			this.model.initGameCheckers();
-		
-		} catch (Exception e) { 
-			e.printStackTrace(); 
-			this.exitGame();
-		}
+		this.model.initGameCheckers();
 	}
 	
 	@Override
