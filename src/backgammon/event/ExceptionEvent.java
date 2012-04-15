@@ -2,13 +2,29 @@ package backgammon.event;
 
 public class ExceptionEvent {
 
-	private String errorText;
-	
-	public ExceptionEvent(String text) {
-		this.errorText = text;
+	public static enum errorType {
+		INIT,
+		DICE,
+		CHECKER_MOVE
 	}
 	
-	public String getError() {
-		return this.errorText;
+	private errorType error;
+	private Exception exception;
+	
+	public ExceptionEvent(ExceptionEvent.errorType type) {
+		this.error = type;
+	}
+	
+	public ExceptionEvent(ExceptionEvent.errorType type, Exception exception) {
+		this(type);
+		this.exception = exception;
+	}
+	
+	public ExceptionEvent.errorType getError() {
+		return this.error;
+	}
+	
+	public Exception getException() {
+		return this.exception;
 	}
 }
