@@ -7,6 +7,7 @@ import backgammon.event.CheckerMoveEvent;
 import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.DiceEvent.diceType;
+import backgammon.event.ExceptionEvent;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.DefaultBackgammonBoard;
 import backgammon.model.interfaces.IBackgammonBoard;
@@ -141,8 +142,8 @@ public class DefaultDataModel implements IDataController {
 	}
 	
 	protected Player getPlayer(int playerID) {
-		if (playerID == 1) return player1;
-		if (playerID == 2) return player2;
+		if (playerID == 1) return this.player1;
+		if (playerID == 2) return this.player2;
 		return null;
 	}
 	
@@ -226,11 +227,13 @@ public class DefaultDataModel implements IDataController {
 			throw new Exception();
 	}
 	
-	
-//TODO Exception unterscheiden zwischen EventException(kein Listener eingetragen,...) und InternalException(Zufallfehler, Zug illegal Fehler,...)	
-	
-//TODO pushExceptionEvent einbauen, statt Programm einfach zu beenden
-//GUI/Benutzer kann dann entscheiden, was passiert und ggf Programm beenden / neustarten
+	protected void pushExceptionEvent(ExceptionEvent event) {
+		if (this.listener == null || (this.listener.handleExceptionEvent(event)) < 0) {
+			System.out.println("error: pushExceptionEvent");
+			System.exit(1);
+		}
+	}
+
 	
 	
 //	IDataModel
@@ -246,7 +249,11 @@ public class DefaultDataModel implements IDataController {
 		// initially roll dice
 		DiceResult diceResult = null;
 		try { diceResult = this.getDiceResult(null, true); } 
-		catch (Exception e) { e.printStackTrace(); System.exit(0); }
+		catch (Exception e) { 
+			ExceptionEvent event = new ExceptionEvent(ExceptionEvent.errorType.DICE, e);
+			this.pushExceptionEvent(event);
+			return;
+		}
 		
 		// push dice event to GUI
 		try { this.pushDiceEvent(diceType.DICE, 0, diceResult); }
@@ -258,9 +265,15 @@ public class DefaultDataModel implements IDataController {
 	}
 	
 	@Override
-	public void initGameCheckers() throws Exception {
-		this.initCheckersOfPlayer(1);
-		this.initCheckersOfPlayer(2);
+	public void initGameCheckers() {
+		try {
+			this.initCheckersOfPlayer(1);
+			this.initCheckersOfPlayer(2);
+		}
+		catch (Exception e) {
+			ExceptionEvent event = new ExceptionEvent(ExceptionEvent.errorType.INIT, e);
+			this.pushExceptionEvent(event);
+		}
 	}
 	
 	@Override
@@ -281,7 +294,11 @@ public class DefaultDataModel implements IDataController {
 			
 			DiceResult diceResult = null;
 			try { diceResult = this.getDiceResult(this.currentPlayer, false); } 
-			catch (Exception e) { e.printStackTrace(); System.exit(0); }
+			catch (Exception e) { 
+				ExceptionEvent event = new ExceptionEvent(ExceptionEvent.errorType.DICE, e);
+				this.pushExceptionEvent(event);
+				return;
+			}
 			
 			int playerID = this.getPlayerID(this.currentPlayer);
 			
@@ -296,7 +313,11 @@ public class DefaultDataModel implements IDataController {
 				try { 
 					this.executeResultingMoves(computerPlayerMoves); 
 				}
-				catch (Exception e) { e.printStackTrace(); }
+				catch (Exception e) { 
+					ExceptionEvent event = new ExceptionEvent(ExceptionEvent.errorType.CHECKER_MOVE, e);
+					this.pushExceptionEvent(event);
+					return;
+				}
 				
 				CheckerMoveResultEvent moveResultEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.COMPUTER_DID_FINISH, null);
 				try { 
@@ -322,7 +343,10 @@ public class DefaultDataModel implements IDataController {
 			Vector<Move> moveResults = this.getResultingMoves(finishedMove);
 			this.executeResultingMoves(moveResults);
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e) { 
+			ExceptionEvent event = new ExceptionEvent(ExceptionEvent.errorType.CHECKER_MOVE, e);
+			this.pushExceptionEvent(event);
+		}
 	}
 	
 	@Override
