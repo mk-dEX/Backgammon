@@ -57,12 +57,15 @@ public class DefaultDataModel implements IDataController {
 	protected void initCheckersOfPlayer(int playerID) throws Exception {
 		
 		Move tempRegisteredMove;
+		int maxIndex = IBackgammonBoard.BAR_INDEX - 1;
 		int indexFrom = 14;
 
 		// Point 0
 		for (int indexTo = 0; indexTo < 2; indexTo++) {
 			
-			tempRegisteredMove = new Move(playerID, 25, indexFrom, 0, indexTo);
+			tempRegisteredMove = (playerID == 1) ? 
+					(new Move(playerID, 25, indexFrom, 0, indexTo)) : 
+					(new Move(playerID, 25, indexFrom, maxIndex - 0, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;		
@@ -71,12 +74,16 @@ public class DefaultDataModel implements IDataController {
 		// Point 11 & 18
 		for (int indexTo = 0; indexTo < 5; indexTo++) {
 
-			tempRegisteredMove = new Move(playerID, 25, indexFrom, 11, indexTo);
+			tempRegisteredMove = (playerID == 1) ? 
+					(new Move(playerID, 25, indexFrom, 11, indexTo)) : 
+					(new Move(playerID, 25, indexFrom, maxIndex - 11, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
 			
-			tempRegisteredMove = new Move(playerID, 25, indexFrom, 18, indexTo);
+			tempRegisteredMove = (playerID == 1) ? 
+					(new Move(playerID, 25, indexFrom, 18, indexTo)) : 
+					(new Move(playerID, 25, indexFrom, maxIndex - 18, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
@@ -85,7 +92,9 @@ public class DefaultDataModel implements IDataController {
 		// Point 16
 		for (int indexTo = 0; indexTo < 3; indexTo++) {
 
-			tempRegisteredMove = new Move(playerID, 25, indexFrom, 16, indexTo);
+			tempRegisteredMove = (playerID == 1) ? 
+					(new Move(playerID, 25, indexFrom, 16, indexTo)) : 
+					(new Move(playerID, 25, indexFrom, maxIndex - 16, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;	
@@ -163,16 +172,6 @@ public class DefaultDataModel implements IDataController {
 		return this.gameBoard.getMoveResults(this.currentPlayer, originalMove);
 	}
 	
-	protected Move convertPlayer2Move(Move oldPlayer2Move) {
-		Move convertedMove = oldPlayer2Move;
-		
-		int maxIndex = IBackgammonBoard.BAR_INDEX - 1;
-		convertedMove.setFromPoint(maxIndex - oldPlayer2Move.getFromPoint());
-		convertedMove.setToPoint(maxIndex - oldPlayer2Move.getToPoint());
-		
-		return convertedMove;
-	}
-	
 	
 	//push
 	protected void executeResultingMoves(Vector<Move> resultingMoves) throws Exception {
@@ -195,10 +194,7 @@ public class DefaultDataModel implements IDataController {
 	protected void executeResultingMoves(Move singleMove) throws Exception {
 		try {
 			Move theMove = singleMove;
-			if (theMove.getID() == 2) {
-				theMove = this.convertPlayer2Move(theMove);
-			}
-			
+
 			boolean correctMove = this.gameBoard.commitMove( singleMove );
 			
 			CheckerMoveResultEvent moveResult;
