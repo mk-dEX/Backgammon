@@ -3,6 +3,7 @@ package backgammon.listener;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.ActivePlayerInfoEvent;
+import backgammon.event.ExceptionEvent;
 
 public interface IModelEventListener {
 
@@ -26,5 +27,7 @@ public interface IModelEventListener {
 	 * @return >=0 if the event has been handled correctly
 	 */
 	public int handleActivePlayerInfoEvent(ActivePlayerInfoEvent event);
+
+	public int handleExceptionEvent(ExceptionEvent event);
 	
 }
