@@ -331,7 +331,11 @@ public class DefaultDataModel implements IDataController {
 
 	@Override
 	public boolean startMove(int playerID) {
-		return this.isCurrentPlayer( this.getPlayer(playerID) );
+		Player selectedPlayer = this.getPlayer(playerID);
+		if (selectedPlayer == null)
+			return false;
+		
+		return (this.isCurrentPlayer(selectedPlayer) && selectedPlayer.isHuman());
 	}
 	
 	@Override
