@@ -85,6 +85,14 @@ public class Point implements ICheckerList {
 		return (this.checkers.isEmpty());
 	}
 
+	public boolean isBlot() {
+		return (this.checkers.size() == 1);
+	}
+	
+	public boolean isBlotOfPlayer(Player player) {
+		return (this.isBlot() && this.hasCheckersOfPlayer(player));
+	}
+	
 	public boolean isBlockedForPlayer(Player player) {
 		
 		if (this.isEmpty()) {

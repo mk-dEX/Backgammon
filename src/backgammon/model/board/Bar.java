@@ -8,4 +8,7 @@ public class Bar extends Point {
 		return false;
 	}
 	
+	public boolean isBlot() {
+		return false;
+	}
 }

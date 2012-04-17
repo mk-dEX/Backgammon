@@ -13,6 +13,8 @@ public interface ICheckerList {
 	public int getTopCheckerIndexForPlayer(Player player);
 	public boolean hasCheckersOfPlayer(Player player);
 	public boolean isEmpty();
+	public boolean isBlot();
+	public boolean isBlotOfPlayer(Player player);
 	public boolean isBlockedForPlayer(Player player);
 	
 }
