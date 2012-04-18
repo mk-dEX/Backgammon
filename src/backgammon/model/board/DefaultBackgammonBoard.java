@@ -13,35 +13,19 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 	private final int numberOfCheckersOfOnePlayer = 15;
 	
 	private ICheckerList[] points = new Point[this.numberOfPoints];
-	private ICheckerList bar = new Bar();
+	private ICheckerList bar;
 	private ICheckerList[] outs = new Out[2];
 	
-	public DefaultBackgammonBoard() {
+	public DefaultBackgammonBoard(Player player1, Player player2) {
 		for (int i = 0; i < this.numberOfPoints; i++) {
 			this.points[i] = new Point();
 		}
-		outs[0] = new Out();
-		outs[1] = new Out();
+		this.bar = new Bar(player1, player2);
+		this.outs[0] = new Out();
+		this.outs[1] = new Out();
 	}
 
-	public ICheckerList getPointAtIndex(int index) {
-		if (index >= 0 && index < this.numberOfPoints)
-			return this.points[index];
-		return null;
-	}
-
-	public ICheckerList getBar() {
-		return this.bar;
-	}
-
-	public ICheckerList getOut(int playerID) {
-		if (0 < playerID && playerID < 3) {
-			return this.outs[playerID];
-		}
-		return null;
-	}
-	
-	protected ICheckerList getFieldOnBoard(int index) {
+	public ICheckerList getFieldOnBoard(int index) {
 		if (0 <= index && index < IBackgammonBoard.BAR_INDEX) {
 			return this.points[index];
 		
