@@ -5,34 +5,27 @@ import java.util.Vector;
 public class DiceResult extends Vector<Integer> {
 	private static final long serialVersionUID = 1L;
 	
-	public static final int ILLEGAL_NUMBER = -2;
-	public static final int ILLEGAL_DISTANCE = -1;
-	public static final int STANDARD_DISTANCE = 0;
-	public static final int COMPOSED_DISTANCE = 1;
 	
-	public int makeMove(Integer distance) {
+	//Handle move request
+	public Vector<Integer> makeMove(Integer distance) {
 		
-		if (this.contains(distance)) {
+		Vector<Integer> removedValues = new Vector<Integer>();
+		
+		if (this.baseResultContainsDistance(distance)) {
 			
 			this.remove(distance);
-			return DiceResult.STANDARD_DISTANCE;
+			removedValues.add(distance);
 			
-		} else if (this.getPossibleMoveDistances().contains(distance)) {
+		} else if (this.composedResultContainsDistance(distance)) {
 			
-			try { this.removeComposedDistance(distance); }
-			catch (Exception e) { 
-				e.printStackTrace();
-				return DiceResult.ILLEGAL_NUMBER;
-			}
-			
-			return DiceResult.COMPOSED_DISTANCE;
-			
-		} else {
-			
-			return DiceResult.ILLEGAL_DISTANCE;
+			removedValues = this.removeComposedDistance(distance);
 		}
+		
+		return removedValues;
 	}
 	
+	
+	//All distances
 	public Vector<Integer> getPossibleMoveDistances() {
 		
 		Vector<Integer> numbers = new Vector<Integer>();
@@ -61,13 +54,70 @@ public class DiceResult extends Vector<Integer> {
 		return numbers;
 	}
 	
-	private void removeComposedDistance(Integer distance) throws Exception {
+	
+	//Available?
+	public boolean baseResultContainsDistance(Integer distance) {
+		return this.contains(distance);
+	}
+	public boolean baseResultContainsDistanceOrGreater(Integer distance) {
 		
+		for (Integer number : this) {
+			if (number >= distance) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	public boolean composedResultContainsDistance(Integer distance) {
+		return this.getPossibleMoveDistances().contains(distance);
+	}
+	public boolean composedResultContainsDistanceOrGreater(Integer distance) {
+		
+		for (Integer number : this.getPossibleMoveDistances()) {
+			if (number >= distance) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	//Greater or equal
+	public Vector<Integer> getComposedResultGreaterOrEqual(Integer distance) {
+		
+		for (Integer aDistance : this.getPossibleMoveDistances()) {
+			if (aDistance >= distance) {
+				return this.getNumbersForComposedDistance(aDistance);
+			}
+		}
+		
+		return new Vector<Integer>();
+	}
+	
+	
+ 	private Vector<Integer> removeComposedDistance(Integer distance) {
+		
+ 		Vector<Integer> numbersToBeRemoved = getNumbersForComposedDistance(distance);
+ 		for (Integer aNumber : numbersToBeRemoved) {
+			this.remove(aNumber);
+		}
+ 		
+ 		return numbersToBeRemoved;
+	}
+	private Vector<Integer> getNumbersForComposedDistance(Integer distance) {
+		Vector<Integer> theNumbers = new Vector<Integer>();
 		Integer baseValue = this.elementAt(0);
+		if (baseValue.intValue() == 0)
+			return theNumbers;
 		int iteratorCounterMax = distance / baseValue;
 		
+		
 		for (int removeCounter = 0; removeCounter < iteratorCounterMax; removeCounter++) {
-			this.remove(baseValue);
+			theNumbers.add(baseValue);
 		}
+		
+		return theNumbers;
 	}
 }
