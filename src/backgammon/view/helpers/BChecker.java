@@ -29,6 +29,10 @@ public class BChecker {
 
 		int x, y = 0;
 
+		//Fehler vorbeugen
+		//OutOfBound
+
+		
 		if (this.position == Place.BOARD) {
 			x = tmp.get(point).getX();
 			y = tmp.get(point).getY() + ImageBoard.getIndex(point, index);
