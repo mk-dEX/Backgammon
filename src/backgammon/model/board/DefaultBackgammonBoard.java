@@ -277,26 +277,32 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
 	protected boolean checkDistanceSteps(Player player, int playerID, Vector<Integer> moveSteps, int startIndex, int distance) {
 		
-		int currentIndex = (currentIndex == IBackgammonBoard.BAR_INDEX && playerID == 1) ? (-1) : (startIndex);
+		int currentIndex = (startIndex == IBackgammonBoard.BAR_INDEX && playerID == 1) ? (-1) : (startIndex);
 		DiceResult playersResult = player.getCurrentDiceResult();
 		boolean isDoublet = playersResult.size()>2;
-		boolean legal = false;
+		boolean isLegal = false;
 		
 		if (isDoublet) {
+			
+			
+			
 			
 		
 		} else {
 			
 			int tempIndex;
 			for (int indexOfStep = 0; indexOfStep < 2; indexOfStep++) {
-				if (legal == false) {
+				if (isLegal == false) {
 					tempIndex = (playerID == 1) ? (currentIndex += moveSteps.elementAt(indexOfStep)) : (currentIndex -= moveSteps.elementAt(indexOfStep));
-					ICheckerList point = this.getFieldOnBoard(index)
+					ICheckerList point = this.getFieldOnBoard(tempIndex);
+					if (point.getClass().equals(Point.class) && !point.isBlockedForPlayer(player)) {
+						isLegal = true;
+					}
 				}
 			}
 		}
 		
-		return legal;
+		return isLegal;
 	}
 	
 	protected boolean checkDistanceStepsOrGreater(Player player, int playerID, Vector<Integer> moveSteps, int startIndex, int distance) {
