@@ -304,7 +304,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
 	
 	public boolean hasCheckersOnBar(Player player) {
-		return (this.bar.getCheckersForPlayer(player).isEmpty() == false);
+		return (this.bar.getCheckerCountForPlayer(player) == 0);
 	}
 	
 	public boolean allCheckersInHouse(Player player, int playerID) {
@@ -314,7 +314,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		int count = 0;
 		
 		for (int currentIndex = beginIndex; currentIndex <= endIndex; currentIndex++) {
-			count += this.points[currentIndex].getCheckersForPlayer(player).size();
+			count += this.points[currentIndex].getCheckerCountForPlayer(player);
 		}
 		
 		return (count == this.numberOfCheckersOfOnePlayer) ? (true) : (false);
