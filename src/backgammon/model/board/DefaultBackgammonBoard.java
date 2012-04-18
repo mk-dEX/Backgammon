@@ -210,8 +210,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 			
 			} else if (playersResult.composedResultContainsDistance(distance)) {
 				
-				Vector<Integer> steps = playersResult.getPossibleMoveDistances();
-				return this.checkDistanceSteps(player, playerID, steps, fromPoint, distance);
+				return this.checkDistanceSteps(player, playerID, fromPoint, distance);
 			}
 		}
 		
@@ -236,8 +235,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 			
 			} else if (playersResult.composedResultContainsDistance(distance)) {
 				
-				Vector<Integer> steps = playersResult.getPossibleMoveDistances();
-				return this.checkDistanceSteps(player, playerID, steps, move.getFromPoint(), distance);
+				return this.checkDistanceSteps(player, playerID, move.getFromPoint(), distance);
 			}
 		}
 		
@@ -262,40 +260,54 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 			int minDistance = (playerID == 1) ? (IBackgammonBoard.BAR_INDEX - fromPoint) : (fromPoint + 1);
 			DiceResult playersResult = player.getCurrentDiceResult();
 			
-			if (playersResult.baseResultContainsDistanceOrGreater(minDistance)) {
-				return true;
+			Integer baseResult = playersResult.baseResultContainsDistanceOrGreater(minDistance);
+			if (baseResult != 0) {
+				return this.checkDistanceSteps(player, playerID, fromPoint, baseResult);
 			
-			} else if (playersResult.composedResultContainsDistanceOrGreater(minDistance)) {
+			} else {
 				
-				Vector<Integer> composedSteps = playersResult.getComposedResultGreaterOrEqual(minDistance);
-				return this.checkDistanceStepsOrGreater(player, playerID, composedSteps, fromPoint, minDistance);
+				Integer composedResult = playersResult.composedResultContainsDistanceOrGreater(minDistance);
+				if (composedResult != 0) {
+					return this.checkDistanceSteps(player, playerID, fromPoint, composedResult);
+				}
 			}
 		}
 		
 		return false;
 	}
 	
-	protected boolean checkDistanceSteps(Player player, int playerID, Vector<Integer> moveSteps, int startIndex, int distance) {
+	protected boolean checkDistanceSteps(Player player, int playerID, int startIndex, int distance) {
 		
 		int currentIndex = (startIndex == IBackgammonBoard.BAR_INDEX && playerID == 1) ? (-1) : (startIndex);
+		int aimIndex = (playerID == 1) ? (currentIndex + distance) : (currentIndex - distance);
 		DiceResult playersResult = player.getCurrentDiceResult();
-		boolean isDoublet = playersResult.size()>2;
+		boolean isDoublet = playersResult.size() > 2;
 		boolean isLegal = false;
 		
 		if (isDoublet) {
 			
+			Integer baseValue = playersResult.elementAt(0);
+			ICheckerList currentPoint;
+			do {
+				currentIndex = (playerID == 1) ? (currentIndex += baseValue) : (currentIndex -= baseValue);
+				currentPoint = this.getFieldOnBoard(currentIndex);
+				if (currentPoint == null || currentPoint.getClass().equals(Point.class) == false || currentPoint.isBlockedForPlayer(player)) {
+					break;
+				}
+				
+				if (currentIndex == aimIndex) {
+					isLegal = true;
+				}
+			} while (!isLegal || (playerID == 1) ? (currentIndex >= aimIndex || currentIndex >= IBackgammonBoard.BAR_INDEX - 1) : (currentIndex <= aimIndex || currentIndex <= 0));
 			
-			
-			
-		
 		} else {
 			
 			int tempIndex;
 			for (int indexOfStep = 0; indexOfStep < 2; indexOfStep++) {
 				if (isLegal == false) {
-					tempIndex = (playerID == 1) ? (currentIndex += moveSteps.elementAt(indexOfStep)) : (currentIndex -= moveSteps.elementAt(indexOfStep));
+					tempIndex = (playerID == 1) ? (currentIndex += playersResult.elementAt(indexOfStep)) : (currentIndex -= playersResult.elementAt(indexOfStep));
 					ICheckerList point = this.getFieldOnBoard(tempIndex);
-					if (point.getClass().equals(Point.class) && !point.isBlockedForPlayer(player)) {
+					if (point != null && point.getClass().equals(Point.class) && !point.isBlockedForPlayer(player)) {
 						isLegal = true;
 					}
 				}
@@ -305,9 +317,6 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		return isLegal;
 	}
 	
-	protected boolean checkDistanceStepsOrGreater(Player player, int playerID, Vector<Integer> moveSteps, int startIndex, int distance) {
-		
-	}
 	
 	
 	public boolean hasCheckersOnBar(Player player) {

@@ -59,41 +59,28 @@ public class DiceResult extends Vector<Integer> {
 	public boolean baseResultContainsDistance(Integer distance) {
 		return this.contains(distance);
 	}
-	public boolean baseResultContainsDistanceOrGreater(Integer distance) {
+	public Integer baseResultContainsDistanceOrGreater(Integer distance) {
 		
 		for (Integer number : this) {
 			if (number >= distance) {
-				return true;
+				return number;
 			}
 		}
 		
-		return false;
+		return 0;
 	}
 	public boolean composedResultContainsDistance(Integer distance) {
 		return this.getPossibleMoveDistances().contains(distance);
 	}
-	public boolean composedResultContainsDistanceOrGreater(Integer distance) {
+	public Integer composedResultContainsDistanceOrGreater(Integer distance) {
 		
 		for (Integer number : this.getPossibleMoveDistances()) {
 			if (number >= distance) {
-				return true;
+				return number;
 			}
 		}
 		
-		return false;
-	}
-	
-	
-	//Greater or equal
-	public Vector<Integer> getComposedResultGreaterOrEqual(Integer distance) {
-		
-		for (Integer aDistance : this.getPossibleMoveDistances()) {
-			if (aDistance >= distance) {
-				return this.getNumbersForComposedDistance(aDistance);
-			}
-		}
-		
-		return new Vector<Integer>();
+		return 0;
 	}
 	
 	
