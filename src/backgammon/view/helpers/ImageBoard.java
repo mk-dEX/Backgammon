@@ -245,15 +245,15 @@ public class ImageBoard extends JPanel {
 
 		if(player == 2)
 		{
-			return new BPosition(100, 100);
+			return new BPosition(35, 60);
 		}
 		else if(player == 1)
 		{
-			return new BPosition(200, 200);
+			return new BPosition(35, 530);
 		}
 		else
 		{
-			return new BPosition(300, 300);
+			return new BPosition(35, 280);
 		}
 	}
 	

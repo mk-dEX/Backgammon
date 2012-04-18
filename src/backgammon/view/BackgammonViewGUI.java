@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
@@ -108,6 +110,9 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		 * hist.setResizable(false); hist.setLocationRelativeTo(null);
 		 * hist.setVisible(false); this.hist = hist;
 		 */
+		
+		//Testexecption
+		//this.showException(null);
 	}
 
 	/**
@@ -283,19 +288,75 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 		if (e.getSource() == this.newGame) {
 			this.board.dispose();
-			this.controller.exitGame();
+			System.exit(0);
 		}
 		if (e.getSource() == this.startGame) {
-			this.startGame.setVisible(false);
-			this.controller.initGame();
+			
+			this.board.dispose();
+			this.controller.exitGame();
 		}
 
 	}
 
 	@Override
 	public int handleExceptionEvent(ExceptionEvent event) {
-		// TODO Auto-generated method stub
+		
+		this.showException(event);
+		
 		return 0;
+	}
+
+	private void showException(ExceptionEvent event) {
+
+		String msg = "";
+		if(event == null)
+		{
+			msg = "Es ist ein TestFehler aufgetreten.";
+		}
+		else if(event.getError() == ExceptionEvent.errorType.CHECKER_MOVE)
+		{
+			msg = "Es ist ein Fehler beim Ziehen eines Checkers aufgetreten.";
+		}
+		else if(event.getError() == ExceptionEvent.errorType.DICE)
+		{
+			msg = "Es ist ein Fehler Würfeln aufgetreten.";
+		}
+		else if(event.getError() == ExceptionEvent.errorType.INIT)
+		{
+			msg = "Es ist ein Fehler bei der Initialisierung aufgetreten.";
+		}
+		
+		
+		Object[] options = 
+			{
+				"Neues Spiel",
+				"Programm beenden"
+			};
+		int n = JOptionPane.showOptionDialog
+		(
+			this.board,
+			msg,
+			"Es ist ein Fehler aufgetreten",
+			JOptionPane.YES_NO_OPTION,
+			JOptionPane.ERROR_MESSAGE,
+			null,     //do not use a custom Icon
+			options,  //the titles of buttons
+			options[0]
+		); //default button title
+		
+		if(n == 0)
+		{
+			//Spiel neu starten
+			this.board.dispose();
+			this.controller.exitGame();
+		}
+		else
+		{
+			//Programm beenden
+			this.board.dispose();
+			System.exit(1);
+		}
+		
 	}
 
 }

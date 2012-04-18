@@ -174,7 +174,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 						if (!isBlocked) {
 							Move newPossibleMove = this.createNewMove(player, playerID, pointIndex, newIndex);
 							possibleMoves.add(newPossibleMove);
-						}	
+						}
 					}
 				}
 			}
