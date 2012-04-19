@@ -2,7 +2,7 @@ package backgammon.event;
 
 public class InfoEvent extends BackgammonEvent {
 
-	public enum infoType {
+	public static enum infoType {
 		
 	}
 	

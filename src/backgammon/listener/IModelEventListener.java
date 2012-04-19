@@ -4,5 +4,5 @@ import backgammon.event.BackgammonEvent;
 
 public interface IModelEventListener {
 
-	public int handleBackgammonEvent(BackgammonEvent event);
+	public void handleBackgammonEvent(BackgammonEvent event);
 }

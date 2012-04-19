@@ -3,6 +3,7 @@ package backgammon.model;
 import java.util.Vector;
 import backgammon.app.GameSettings;
 import backgammon.event.ActivePlayerInfoEvent;
+import backgammon.event.BackgammonEvent;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
@@ -67,7 +68,7 @@ public class DefaultDataModel implements IDataController {
 			
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 0, indexTo)) : 
-					(new Move(playerID, 25, indexFrom, maxIndex - 0, indexTo));
+					(new Move(playerID, 26, indexFrom, maxIndex - 0, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;		
@@ -78,14 +79,14 @@ public class DefaultDataModel implements IDataController {
 
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 11, indexTo)) : 
-					(new Move(playerID, 25, indexFrom, maxIndex - 11, indexTo));
+					(new Move(playerID, 26, indexFrom, maxIndex - 11, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
 			
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 18, indexTo)) : 
-					(new Move(playerID, 25, indexFrom, maxIndex - 18, indexTo));
+					(new Move(playerID, 26, indexFrom, maxIndex - 18, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;
@@ -96,7 +97,7 @@ public class DefaultDataModel implements IDataController {
 
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 16, indexTo)) : 
-					(new Move(playerID, 25, indexFrom, maxIndex - 16, indexTo));
+					(new Move(playerID, 26, indexFrom, maxIndex - 16, indexTo));
 			try { this.executeResultingMoves(tempRegisteredMove); }
 			catch (Exception e) { throw e; }
 			indexFrom--;	
@@ -176,65 +177,44 @@ public class DefaultDataModel implements IDataController {
 	
 	
 	//push
-	protected void executeResultingMoves(Vector<Move> resultingMoves) throws Exception {
+	protected void executeResultingMoves(Vector<Move> resultingMoves) {
 		
 		if (resultingMoves.isEmpty() == false) {
 			for (Move oneResultingMove : resultingMoves) {
-				try { this.executeResultingMoves(oneResultingMove); }
-				catch (Exception e) { throw e; }
+				this.executeResultingMoves(oneResultingMove);
 			}
 		}
 		else {
-			try {
-				CheckerMoveResultEvent failureMoveEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.ILLEGAL_MOVE, null);
-				this.pushCheckerMoveEvent(failureMoveEvent);
-				
-			} catch (Exception e) { throw e; }
+			CheckerMoveResultEvent failureMoveEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.ILLEGAL_MOVE, null);
+			this.pushCheckerMoveEvent(failureMoveEvent);
 		}
 	}
 	
-	protected void executeResultingMoves(Move singleMove) throws Exception {
-		try {
-			Move theMove = singleMove;
+	protected void executeResultingMoves(Move singleMove) {
 
-			boolean correctMove = this.gameBoard.commitMove( singleMove );
-			
-			CheckerMoveResultEvent moveResult;
-			if (correctMove) {
-				moveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.CORRECT_MOVE, theMove);
-			} else {
-				moveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.ILLEGAL_MOVE, theMove);
-			}
-			this.pushCheckerMoveEvent(moveResult);
+		Move theMove = singleMove;
+		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
+		
+		theMove = this.gameBoard.commitMove( thePlayer, theMove );
+		
+		CheckerMoveResultEvent moveResult;
+		if (theMove != null) {
+			moveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.CORRECT_MOVE, theMove);
+		} else {
+			moveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.infoType.ILLEGAL_MOVE, theMove);
 		}
-		catch (Exception e) { throw e; }
+		this.pushCheckerMoveEvent(moveResult);
 	}
 	
-	protected void pushCheckerMoveEvent(CheckerMoveEvent checkerMoveEvent) throws Exception {
-		if (this.listener == null || (this.listener.handleCheckerMoveEvent(checkerMoveEvent)) < 0)
-			throw new Exception();
-	}
-	
-	protected void pushDiceEvent(DiceEvent.diceType type, int playerID, DiceResult result) throws Exception {
-		
-		DiceEvent diceEvent = new DiceEvent(DiceEvent.diceType.DICE, playerID, result);
-		
-		if (this.listener == null || (this.listener.handleDiceEvent(diceEvent)) < 0)
-			throw new Exception();
-	}
-	
-	protected void pushActivePlayerInfoEvent() throws Exception {
-		if (this.listener == null || (this.listener.handleActivePlayerInfoEvent(new ActivePlayerInfoEvent(this.currentPlayer.getName(), this.currentPlayer.isHuman()))) < 0)
-			throw new Exception();
-	}
-	
-	protected void pushExceptionEvent(ExceptionEvent event) {
-		if (this.listener == null || (this.listener.handleExceptionEvent(event)) < 0) {
-			System.out.println("error: pushExceptionEvent");
-			System.exit(1);
+	protected void pushEvent(BackgammonEvent event) {
+		if (this.listener == null) {
+			System.out.println("Sending event to GUI failed");
+		}
+		else {
+			this.listener.handleBackgammonEvent(event);
 		}
 	}
-
+	
 	
 	
 //	IDataModel
@@ -251,13 +231,15 @@ public class DefaultDataModel implements IDataController {
 		DiceResult diceResult = null;
 		try { diceResult = this.getDiceResult(null, true); } 
 		catch (Exception e) { 
-			ExceptionEvent event = new ExceptionEvent(ExceptionEvent.errorType.DICE, e);
-			this.pushExceptionEvent(event);
+			ExceptionEvent event = new ExceptionEvent(ExceptionEvent.errorType.DICE_ROLL_DID_FAIL, e);
+			this.pushEvent(event);
 			return;
 		}
 		
 		// push dice event to GUI
-		try { this.pushDiceEvent(diceType.DICE, 0, diceResult); }
+		try {
+			DiceEvent event = new DiceEvent(Dice
+			this.pushDiceEvent(diceType.DICE, 0, diceResult); }
 		catch (Exception e) { e.printStackTrace(); }
 		
 		// get current player from dice result
