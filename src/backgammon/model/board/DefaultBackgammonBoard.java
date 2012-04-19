@@ -7,7 +7,7 @@ import backgammon.model.player.Player;
 
 public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
-	private ICheckerList[] points = new Point[IBackgammonBoard.NUMBER_OF_CHECKERS_PER_PLAYER];
+	private ICheckerList[] points = new Point[IBackgammonBoard.BAR_INDEX];
 	private ICheckerList bar;
 	private ICheckerList[] outs = new Out[2];
 	
