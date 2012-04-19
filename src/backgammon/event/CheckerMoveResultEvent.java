@@ -13,7 +13,7 @@ public class CheckerMoveResultEvent extends CheckerMoveEvent {
 	
 	private moveResult result;
 	
-	public CheckerMoveResultEvent(moveResult resultOfTheMove, Move move) {
+	public CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult resultOfTheMove, Move move) {
 		super(move);
 		this.result = resultOfTheMove;
 	}
