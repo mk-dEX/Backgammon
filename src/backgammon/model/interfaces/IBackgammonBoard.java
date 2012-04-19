@@ -14,7 +14,7 @@ public interface IBackgammonBoard {
 	
 	public Vector<Move> getPossiblePlayerMoves(Player player, int playerID);
 	public Vector<Move> getMoveResults(Player player, Move originalMove);
-	public boolean commitMove(Move m);
+	public Move commitMove(Player player, Move m);
 	public boolean hasCheckersOnBar(Player player);
 	public boolean allCheckersInHouse(Player player, int playerID);
 	public Vector<Integer> playerHasBlots(Player player);

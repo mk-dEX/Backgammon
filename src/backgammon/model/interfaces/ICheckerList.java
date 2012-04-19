@@ -7,7 +7,9 @@ public interface ICheckerList {
 	public int addChecker(Player player);
 	public int removeChecker(Player player);
 	
+	public int getTopCheckerIndex();
 	public int getTopCheckerIndexForPlayer(Player player);
+	public int getCheckerCount();
 	public int getCheckerCountForPlayer(Player player);
 	
 	public boolean hasCheckersOfPlayer(Player player);
