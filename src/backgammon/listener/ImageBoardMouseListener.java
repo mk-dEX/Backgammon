@@ -59,6 +59,8 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 
 		// System.out.println("Press");
 
+		ImageBoard.clearInfo();
+		
 		if (!this.setCheckerFromEvent(e))
 			return;
 
