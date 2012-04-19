@@ -196,20 +196,21 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 		this.newGame = new JButton("Neues Spiel");
 		this.newGame.setPreferredSize(new Dimension(125, 25));
-		tmp.add(newGame, BorderLayout.WEST);
+		tmp.add(newGame, BorderLayout.NORTH);
 		newGame.addActionListener(this);
-
-		this.showHistory = new JButton("History");
-		this.showHistory.setPreferredSize(new Dimension(125, 25));
-		tmp.add(showHistory, BorderLayout.EAST);
 
 		this.exitProgram = new JButton("Spiel Beenden");
 		this.exitProgram.setPreferredSize(new Dimension(125, 25));
-		tmp.add(this.exitProgram, BorderLayout.SOUTH);
+		tmp.add(this.exitProgram, BorderLayout.NORTH);
 		this.exitProgram.addActionListener(this);
 
+		this.showHistory = new JButton("History");
+		this.showHistory.setPreferredSize(new Dimension(250, 25));
+		this.showHistory.setVisible(false);
+		tmp.add(showHistory, BorderLayout.SOUTH);
+		
 		this.startGame = new JButton("Spiel starten");
-		this.startGame.setPreferredSize(new Dimension(125, 25));
+		this.startGame.setPreferredSize(new Dimension(250, 25));
 		tmp.add(startGame, BorderLayout.SOUTH);
 		this.startGame.addActionListener(this);
 
@@ -294,6 +295,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 			// this.board.dispose();
 			this.startGame.setVisible(false);
+			this.showHistory.setVisible(true);
 			this.controller.initGame();
 		}
 		if (e.getSource() == this.exitProgram) {

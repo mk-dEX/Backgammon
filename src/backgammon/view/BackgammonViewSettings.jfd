@@ -131,7 +131,7 @@
               </void> 
               <void method="setProperty"> 
                <string>width</string> 
-               <int>70</int> 
+               <int>130</int> 
               </void> 
              </object> 
             </void> 
@@ -156,7 +156,7 @@
               <null/> 
               <void method="setProperty"> 
                <string>width</string> 
-               <int>85</int> 
+               <int>135</int> 
               </void> 
               <void method="setProperty"> 
                <string>height</string> 
@@ -193,7 +193,7 @@
               <null/> 
               <void method="setProperty"> 
                <string>width</string> 
-               <int>110</int> 
+               <int>135</int> 
               </void> 
               <void method="setProperty"> 
                <string>height</string> 
