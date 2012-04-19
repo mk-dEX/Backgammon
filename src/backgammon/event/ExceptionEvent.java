@@ -3,7 +3,6 @@ package backgammon.event;
 public class ExceptionEvent extends BackgammonEvent {
 
 	public static enum errorType {
-		INIT_CHECKERS_DID_FAIL,
 		DICE_ROLL_DID_FAIL,
 		CHECKER_MOVE_DID_FAIL
 	}
