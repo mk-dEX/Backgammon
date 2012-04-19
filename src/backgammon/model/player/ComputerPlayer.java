@@ -19,6 +19,10 @@ public class ComputerPlayer extends HumanPlayer {
 		return false;
 	}
 	
+	public GameSettings.KIMode getMode() {
+		return this.mode;
+	}
+	
 	public Vector<Move> move() {
 		return null;
 	}
