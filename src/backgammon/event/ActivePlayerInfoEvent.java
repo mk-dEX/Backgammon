@@ -1,18 +1,20 @@
 package backgammon.event;
 
+import backgammon.model.player.Player;
+
 public class ActivePlayerInfoEvent extends BackgammonEvent {
 
-	private String name;
+	private Player activePlayer;
 	private boolean isHuman;
 	
-	public ActivePlayerInfoEvent(String playerName, boolean isHuman) {
+	public ActivePlayerInfoEvent(Player currentPlayer, boolean isHuman) {
 		super(BackgammonEvent.type.ACTIVE_PLAYER_INFO);
-		this.name = playerName;
+		this.activePlayer = currentPlayer;
 		this.isHuman = isHuman;
 	}
 	
-	public String getName() {
-		return this.name;
+	public Player getActivePlayer() {
+		return this.activePlayer;
 	}
 	
 	public boolean isHuman() {
