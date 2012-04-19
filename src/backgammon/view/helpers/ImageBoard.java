@@ -29,6 +29,7 @@ public class ImageBoard extends JPanel {
 	private Vector<BDice> dice;
 	private CheckerMoveAnimationManager checkerAnimation;
 	private DiceMoveAnimationManager diceAnimation;
+	private Thread thread = null;
 	private static String info = "";
 
 	public ImageBoard(BackgammonViewGUI backgammonViewGUI, String img) {
@@ -41,8 +42,6 @@ public class ImageBoard extends JPanel {
 		this.PositionMatrix = getPoisitionMatrix();
 		this.checkerAnimation = new CheckerMoveAnimationManager(this);
 		this.diceAnimation = new DiceMoveAnimationManager(this);
-
-		this.setStartPosition();
 	}
 
 	public ImageBoard(String img) {
@@ -61,8 +60,6 @@ public class ImageBoard extends JPanel {
 		setSize(size);
 		setLayout(null);
 		
-		this.showInfo("TEST");
-
 	}
 	public void destroyThreads()
 	{
@@ -80,6 +77,7 @@ public class ImageBoard extends JPanel {
 			tmp = new BChecker(BChecker.Place.OUT, player, point, index);
 
 		this.checker.add(tmp);
+		
 		return tmp;
 	}
 
@@ -140,7 +138,10 @@ public class ImageBoard extends JPanel {
 	public void showInfo(String info)
 	{
 		ImageBoard.info = info;
-		Thread thread = new Thread(new Runnable() {
+		if(this.thread != null)
+			this.thread = null;
+		
+		this.thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try 
@@ -164,15 +165,6 @@ public class ImageBoard extends JPanel {
 				return checker;
 		}
 		return null;
-	}
-
-	private void setStartPosition() {
-		for (int i = 0; i < 15; i++) {
-			// set for each site
-			this.addChecker(1, 25, i);
-			this.addChecker(2, 25, i);
-		}
-
 	}
 
 	public void moveChecker(Move move) {

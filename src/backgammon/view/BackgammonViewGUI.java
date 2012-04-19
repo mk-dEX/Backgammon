@@ -91,10 +91,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		// Init MainFrame
 		JFrame temp = new JFrame(title);
 		this.board = temp;
-
+		
 		// Get Board
 		this.imageBoard = this.drawBoard();
-
+		
 		this.board.getContentPane().setLayout(new BorderLayout());
 		this.board.setResizable(false);
 		// Add Board
