@@ -125,67 +125,78 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
 	public Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {
 		//TODO
+		
 		Vector<Move> possibleMoves = new Vector<Move>();
 		
-/*		//Bar zuerst prüfen
-		//Wenn Checker auf bar, dann field checker nicht prüfen(!), außer noch züge übrig ohne checker auf bar
-		
-		Vector<Checker> checkersOfBar = this.bar.getCheckersForPlayer(player);
-		if (!checkersOfBar.isEmpty()) {
+		boolean playerHasCheckersOnBar = (this.bar.getCheckerCountForPlayer(player) > 0);
+		boolean barFieldMoveIsPossible = false;
+		if (playerHasCheckersOnBar) {
 			
-			int fromIndex = IBackgammonBoard.BAR_INDEX;
-			//TODO nur ein würfelergebnis kann zum wiedereinsetzen verwendet werden
-			//TODO evtl in eigene Methode auslagern?
+			Move tempBarFieldMove = new Move(playerID, IBackgammonBoard.BAR_INDEX, 0, 0, 0);
+			int tempToPoint;
+			for (Integer possibleDistance : player.getCurrentDiceResult().getPossibleMoveDistances()) {
+				
+				tempToPoint = (playerID == 1) ? (possibleDistance - 1) : (IBackgammonBoard.BAR_INDEX - possibleDistance);
+				tempBarFieldMove.setToPoint(tempToPoint);
+				barFieldMoveIsPossible = this.checkBarFieldMove(player, tempBarFieldMove);
+				if (barFieldMoveIsPossible) {
+					int newFromIndex = this.bar.getTopCheckerIndexForPlayer(player);
+					int newToIndex = this.getFieldOnBoard(tempToPoint).getCheckerCountForPlayer(player);
+					tempBarFieldMove.setFromIndex(newFromIndex);
+					tempBarFieldMove.setToIndex(newToIndex);
+					possibleMoves.add(tempBarFieldMove);
+				}
+			}
+			barFieldMoveIsPossible = (possibleMoves.isEmpty() == false);
 		}
 		
+		if (barFieldMoveIsPossible == false) {
 		
-		// Iteration over all points
-		for (int pointIndex = 0; pointIndex < this.numberOfPoints; pointIndex++) {
-			
-			// Get all checkers for current point
-			// Continue if there are checkers
-			Vector<Checker> checkersOfPoint = this.points[pointIndex].getCheckersForPlayer(player);
-			if (!checkersOfPoint.isEmpty()) {
-				
-				// Get all possible move distances
-				// Continue if there are available move distances
-				Vector<Integer> possibleMovesForChecker = player.getCurrentDiceResult().getPossibleMoveDistances();
-				if (!possibleMovesForChecker.isEmpty()) {
-					
-					// Iteration over all available move distances
-					for (Integer distance : possibleMovesForChecker) {
-						
-						// The calculated index is current index + distance available by dice roll (or combination)
-						// - is used if playerID equals 2
-						int newIndex = (playerID == 1) ? (pointIndex + distance) : (pointIndex - distance);
-						
-						boolean isInField = (0 <= newIndex) && (newIndex < this.numberOfPoints);
-						boolean isOut1 = (playerID == 1) && (this.numberOfPoints <= newIndex);
-						boolean isOut2 = (playerID == 2) && (newIndex < 0);
-						
-						
-						//TODO checkers nur to out wenn alle im eigenen haus -> abfragen!!
-						//-> ganz am anfang der methode abfragen und als boolean speichern
-						if (isOut1) newIndex = IBackgammonBoard.OUT_PLAYER1_INDEX;
-						if (isOut2) newIndex = IBackgammonBoard.OUT_PLAYER2_INDEX;
-						
-						// If current new index is greater than max index or lower than 0, continue with next distance
-						if (!isInField && !isOut1 && !isOut2)
-							continue;		
-						
-						// If aim field is not blocked, the move is possible and will be added to the list
-						boolean isBlocked = this.points[newIndex].isBlockedForPlayer(player);
-						if (!isBlocked) {
-							Move newPossibleMove = this.createNewMove(player, playerID, pointIndex, newIndex);
-							possibleMoves.add(newPossibleMove);
+			// Iteration over all points
+			for (int pointIndex = 0; pointIndex < this.numberOfPoints; pointIndex++) {
+
+				// Get all checkers for current point
+				// Continue if there are checkers
+				Vector<Checker> checkersOfPoint = this.points[pointIndex].getCheckersForPlayer(player);
+				if (!checkersOfPoint.isEmpty()) {
+
+					// Get all possible move distances
+					// Continue if there are available move distances
+					Vector<Integer> possibleMovesForChecker = player.getCurrentDiceResult().getPossibleMoveDistances();
+					if (!possibleMovesForChecker.isEmpty()) {
+
+						// Iteration over all available move distances
+						for (Integer distance : possibleMovesForChecker) {
+
+							// The calculated index is current index + distance available by dice roll (or combination)
+							// - is used if playerID equals 2
+							int newIndex = (playerID == 1) ? (pointIndex + distance) : (pointIndex - distance);
+
+							boolean isInField = (0 <= newIndex) && (newIndex < this.numberOfPoints);
+							boolean isOut1 = (playerID == 1) && (this.numberOfPoints <= newIndex);
+							boolean isOut2 = (playerID == 2) && (newIndex < 0);
+
+
+							//TODO checkers nur to out wenn alle im eigenen haus -> abfragen!!
+							//-> ganz am anfang der methode abfragen und als boolean speichern
+							if (isOut1) newIndex = IBackgammonBoard.OUT_PLAYER1_INDEX;
+							if (isOut2) newIndex = IBackgammonBoard.OUT_PLAYER2_INDEX;
+
+							// If current new index is greater than max index or lower than 0, continue with next distance
+							if (!isInField && !isOut1 && !isOut2)
+								continue;		
+
+							// If aim field is not blocked, the move is possible and will be added to the list
+							boolean isBlocked = this.points[newIndex].isBlockedForPlayer(player);
+							if (!isBlocked) {
+								Move newPossibleMove = this.createNewMove(player, playerID, pointIndex, newIndex);
+								possibleMoves.add(newPossibleMove);
+							}
 						}
 					}
 				}
 			}
 		}
-
-		
-		*/
 		
 		return possibleMoves;
 	}
@@ -200,7 +211,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		int toPoint = move.getToPoint();
 		int playerID = move.getID();
 		
-		if (this.hasCheckersOnBar(player)) {
+		if (this.bar.getCheckerCountForPlayer(player) > 0) {
 			return false;
 		}
 		
@@ -326,9 +337,6 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
 	
 	
-	public boolean hasCheckersOnBar(Player player) {
-		return (this.bar.getCheckerCountForPlayer(player) == 0);
-	}
 	
 	public boolean allCheckersInHouse(Player player, int playerID) {
 		
@@ -340,7 +348,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 			count += this.points[currentIndex].getCheckerCountForPlayer(player);
 		}
 		
-		return (count == this.numberOfCheckersOfOnePlayer) ? (true) : (false);
+		return (count == this.numberOfCheckersOfOnePlayer);
 	}
 	
 	public Vector<Integer> playerHasBlots(Player player) {
