@@ -127,7 +127,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		//TODO
 		Vector<Move> possibleMoves = new Vector<Move>();
 		
-		//Bar zuerst prüfen
+/*		//Bar zuerst prüfen
 		//Wenn Checker auf bar, dann field checker nicht prüfen(!), außer noch züge übrig ohne checker auf bar
 		
 		Vector<Checker> checkersOfBar = this.bar.getCheckersForPlayer(player);
@@ -185,7 +185,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		}
 
 		
-		
+		*/
 		
 		return possibleMoves;
 	}
