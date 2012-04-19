@@ -1,17 +1,18 @@
 package backgammon.event;
 
-public class ExceptionEvent {
+public class ExceptionEvent extends BackgammonEvent {
 
 	public static enum errorType {
-		INIT,
-		DICE,
-		CHECKER_MOVE
+		INIT_CHECKERS_DID_FAIL,
+		DICE_ROLL_DID_FAIL,
+		CHECKER_MOVE_DID_FAIL
 	}
 	
 	private errorType error;
 	private Exception exception;
 	
 	public ExceptionEvent(ExceptionEvent.errorType type) {
+		super(BackgammonEvent.type.EXCEPTION);
 		this.error = type;
 	}
 	

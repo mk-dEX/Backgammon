@@ -2,7 +2,7 @@ package backgammon.event;
 
 import backgammon.model.player.DiceResult;
 
-public class DiceEvent {
+public class DiceEvent extends BackgammonEvent {
 
 	public static enum diceType {
 		DICE,
@@ -14,6 +14,7 @@ public class DiceEvent {
 	private DiceResult diceResult;
 	
 	public DiceEvent(diceType type, int playerID, DiceResult diceResult) {
+		super(BackgammonEvent.type.DICE);
 		this.type = type;
 		this.playerID = playerID;
 		this.diceResult = diceResult;
@@ -30,5 +31,4 @@ public class DiceEvent {
 	public DiceResult getDiceResult() {
 		return this.diceResult;
 	}
-	
 }

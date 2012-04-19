@@ -5,20 +5,20 @@ import backgammon.model.player.Move;
 
 public class CheckerMoveResultEvent extends CheckerMoveEvent {
 
-	public static enum infoType {
+	public static enum moveResult {
 		CORRECT_MOVE,
 		ILLEGAL_MOVE,
-		COMPUTER_DID_FINISH
+		COMPUTER_DID_FINISH_MOVE
 	};
 	
-	private infoType type;
+	private moveResult result;
 	
-	public CheckerMoveResultEvent(infoType type, Move move) {
+	public CheckerMoveResultEvent(moveResult resultOfTheMove, Move move) {
 		super(move);
-		this.type = type;
+		this.result = resultOfTheMove;
 	}
 	
-	public infoType getInfoEventType() {
-		return this.type;
+	public moveResult getResult() {
+		return this.result;
 	}
 }
