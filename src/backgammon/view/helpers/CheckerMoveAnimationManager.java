@@ -17,7 +17,7 @@ public class CheckerMoveAnimationManager implements Runnable {
 	private int currentY;
 	private int finalX;
 	private int finalY;
-	private Thread thread;
+	public Thread thread;
 	private long startTime;
 	private ArrayList<AnimationEntry> animationqueue;
 	private Boolean isAnimating = false;
@@ -168,5 +168,9 @@ public class CheckerMoveAnimationManager implements Runnable {
 			this.toPoint = tP;
 			this.toIndex = tI;
 		}
+	}
+
+	public void destroyThread() {
+		this.thread = null;
 	}
 }

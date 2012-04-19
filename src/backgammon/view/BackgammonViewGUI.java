@@ -54,6 +54,8 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	private JButton startGame;
 
+	private JButton exitProgram;
+
 	/**
 	 * Normal Constructor
 	 * 
@@ -78,7 +80,13 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 						+ this.controller.getCurrentGameSettings()
 								.getPathCheckerPlayer2())).getImage();
 	}
-
+	
+	public void destroyGUI()
+	{
+		this.imageBoard.destroyThreads();
+		//Aufräumen
+	}
+	
 	public void initGUI(String title) {
 		// Init MainFrame
 		JFrame temp = new JFrame(title);
@@ -187,22 +195,21 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		JPanel tmp = new JPanel();
 
 		this.newGame = new JButton("Neues Spiel");
+		this.newGame.setPreferredSize(new Dimension(125, 25));
 		tmp.add(newGame, BorderLayout.WEST);
 		newGame.addActionListener(this);
 
 		this.showHistory = new JButton("History");
+		this.showHistory.setPreferredSize(new Dimension(125, 25));
 		tmp.add(showHistory, BorderLayout.EAST);
 
-		JButton exitProgram = new JButton("Spiel Beenden");
-		tmp.add(exitProgram, BorderLayout.SOUTH);
-		exitProgram.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		this.exitProgram = new JButton("Spiel Beenden");
+		this.exitProgram.setPreferredSize(new Dimension(125, 25));
+		tmp.add(this.exitProgram, BorderLayout.SOUTH);
+		this.exitProgram.addActionListener(this);
 
 		this.startGame = new JButton("Spiel starten");
+		this.startGame.setPreferredSize(new Dimension(125, 25));
 		tmp.add(startGame, BorderLayout.SOUTH);
 		startGame.addActionListener(this);
 
@@ -288,12 +295,17 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 		if (e.getSource() == this.newGame) {
 			this.board.dispose();
-			System.exit(0);
+			this.controller.exitGame();
 		}
 		if (e.getSource() == this.startGame) {
+					
+//			this.board.dispose();
+			this.controller.initGame();
+		}
+		if (e.getSource() == this.exitProgram) {
 			
-			this.board.dispose();
-			this.controller.exitGame();
+			this.destroyGUI();
+			this.controller.initGame();
 		}
 
 	}

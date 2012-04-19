@@ -59,7 +59,11 @@ public class ImageBoard extends JPanel {
 		setLayout(null);
 
 	}
-
+	public void destroyThreads()
+	{
+		this.checkerAnimation.destroyThread();
+		this.diceAnimation.destroyThread();
+	}
 	public BChecker addChecker(int player, int point, int index) {
 		BChecker tmp = null;
 
@@ -284,14 +288,49 @@ public class ImageBoard extends JPanel {
 	}
 
 	public static int getIndex(int point, int index) {
-
+		
 		if (point >= 12) {
-			return index * 20;
+			
+			if(point == 25)
+				return -(index*20);
+			if(point == 26)
+				return (index*20);
+			//Pyramidenmodus
+			// 5 unten, dann 4, dann 3 , dann 2, dann 1 
+			return ImageBoard.getPyramid(index);
 		} else {
-			return -(index * 20);
+			//Pyramidenmodus
+			// 5 unten, dann 4, dann 3 , dann 2, dann 1 
+			return -(ImageBoard.getPyramid(index));
 		}
 	}
-
+	private static int getPyramid(int index)
+	{
+		switch(index)
+		{
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				return (index*42);
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+				return ((index%5)*42)+21;
+			case 9:
+			case 10:
+			case 11:
+				return (((index+1)%5)*42);
+			case 12:
+			case 13:
+				return((index%5)*42)+63;
+			case 14:
+				return (((index+2)%5)*42);
+		}
+		return 0;
+	}
 	public static BPosition getBarPosition(int player) {
 		if (player == 1)
 			return new BPosition(485, 440);

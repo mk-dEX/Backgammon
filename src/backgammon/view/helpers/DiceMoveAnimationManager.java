@@ -160,4 +160,9 @@ public class DiceMoveAnimationManager implements Runnable {
 			return generator.nextInt(6) + 1;
 		}
 	}
+
+	public void destroyThread() {
+		this.thread = null;
+		
+	}
 }

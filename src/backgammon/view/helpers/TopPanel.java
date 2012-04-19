@@ -7,6 +7,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
@@ -20,6 +21,8 @@ public class TopPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private Image img;
+
+	private JLabel info;
 
 	public TopPanel(String checkerpfad, String name) {
 		DefaultComponentFactory compFactory = DefaultComponentFactory
@@ -43,6 +46,10 @@ public class TopPanel extends JPanel {
 		// Add Checkerimage
 		this.img = new ImageIcon(getClass().getResource("/img/" + checkerpfad))
 				.getImage();
+		
+		//Add InfoTex
+		this.info = new JLabel();
+		this.info.set
 
 	}
 
