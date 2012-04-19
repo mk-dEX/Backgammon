@@ -9,8 +9,12 @@ import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.ExceptionEvent;
 import backgammon.listener.IModelEventListener;
+import backgammon.model.board.Bar;
 import backgammon.model.board.DefaultBackgammonBoard;
+import backgammon.model.board.Out;
+import backgammon.model.board.Point;
 import backgammon.model.interfaces.IBackgammonBoard;
+import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IDataController;
 import backgammon.model.player.ComputerPlayer;
 import backgammon.model.player.DiceResult;
@@ -162,12 +166,12 @@ public class DefaultDataModel implements IDataController {
 			return possibleMoves;
 		}
 		
-		possibleMoves = this.gameBoard.getPossiblePlayerMoves(this.currentPlayer, this.getPlayerID(this.currentPlayer));
+		possibleMoves = this.getPossiblePlayerMoves(this.currentPlayer, this.getPlayerID(this.currentPlayer));
 		return possibleMoves;
 	}
 	
 	protected Vector<Move> getResultingMoves(Move originalMove) {
-		return this.gameBoard.getMoveResults(this.currentPlayer, originalMove);
+		return this.getMoveResults(this.currentPlayer, originalMove);
 	}
 	
 	
@@ -190,7 +194,7 @@ public class DefaultDataModel implements IDataController {
 		Move theMove = singleMove;
 		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
 		
-		theMove = this.gameBoard.commitMove( thePlayer, theMove );
+		theMove = this.commitMove( thePlayer, theMove );
 		
 		CheckerMoveResultEvent singleMoveResult;
 		if (theMove != null) {
@@ -208,6 +212,285 @@ public class DefaultDataModel implements IDataController {
 		else {
 			this.listener.handleBackgammonEvent(event);
 		}
+	}
+	
+	
+	
+//	Board Connection
+	
+	protected Vector<Move> getMoveResults(Player player, Move originalMove) {
+		
+		Vector<Move> moveResults = new Vector<Move>();
+		
+		ICheckerList fromFieldItem = this.gameBoard.getFieldOnBoard(originalMove.getFromPoint());
+		ICheckerList toFieldItem = this.gameBoard.getFieldOnBoard(originalMove.getToPoint());
+		if (fromFieldItem == null || toFieldItem == null || toFieldItem.isBlockedForPlayer(player)) {
+			return moveResults;
+		}
+		
+		Class<? extends ICheckerList> fromFieldItemClass = fromFieldItem.getClass();
+		Class<? extends ICheckerList> toFieldItemClass = toFieldItem.getClass();
+		boolean isLegal = false;
+		
+		if (fromFieldItemClass.equals(Point.class) && toFieldItemClass.equals(Out.class)) {
+			
+			isLegal = this.checkFieldOutMove(player, originalMove);
+			
+		} else if (fromFieldItemClass.equals(Bar.class) && toFieldItemClass.equals(Point.class)) {
+			
+			isLegal = this.checkBarFieldMove(player, originalMove);
+			
+		} else if (fromFieldItemClass.equals(Point.class) && toFieldItemClass.equals(Point.class)) {
+			
+			isLegal = this.checkInnerFieldMove(player, originalMove);
+		
+		} else {
+			
+			isLegal = false;
+		}
+	
+		
+		if (isLegal) {
+			
+			Move legalMove = new Move(originalMove.getID(), originalMove.getFromPoint(), originalMove.getFromIndex(), originalMove.getToPoint(), originalMove.getToIndex());
+			moveResults.add(legalMove);
+			
+			boolean toHasOtherCheckers = (toFieldItem.isBlot() && !toFieldItem.hasCheckersOfPlayer(player));
+			if (toHasOtherCheckers) {
+				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
+				int otherFromPoint = originalMove.getToPoint();
+				int otherToPoint = (otherPlayerID == 1) ? (IBackgammonBoard.OUT_PLAYER1_INDEX) : (IBackgammonBoard.OUT_PLAYER2_INDEX);
+				Move removeOtherChecker = new Move(otherPlayerID, otherFromPoint, -1, otherToPoint, -1);
+				
+				moveResults.add(removeOtherChecker);
+			}
+		}
+			
+		return moveResults;
+	}
+	
+	protected Move commitMove(Player player, Move m) {
+		
+		Move move = m;
+		int fromPoint = move.getFromPoint();
+		int toPoint = move.getToPoint();
+		
+		ICheckerList fromField = this.gameBoard.getFieldOnBoard(fromPoint);
+		ICheckerList toField = this.gameBoard.getFieldOnBoard(toPoint);
+		
+		if (fromField == null || toField == null) {
+			return null;
+		}
+		
+		if (move.getFromIndex() == -1) {
+			move.setFromIndex(fromField.getTopCheckerIndexForPlayer(player));
+		}
+		
+		fromField.removeChecker(player);
+		toField.addChecker(player);
+		
+		if (move.getToIndex() == -1) {
+			move.setToIndex(toField.getTopCheckerIndexForPlayer(player));
+		}
+
+		return move;
+	}
+	
+	protected Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {
+		
+		Vector<Move> possibleMoves = new Vector<Move>();
+		
+		boolean playerHasCheckersOnBar = (this.gameBoard.getFieldOnBoard(IBackgammonBoard.BAR_INDEX).getCheckerCountForPlayer(player) > 0);
+		boolean barFieldMoveIsPossible = false;
+		if (playerHasCheckersOnBar) {
+			
+			Move tempBarFieldMove = new Move(playerID, IBackgammonBoard.BAR_INDEX, 0, 0, 0);
+			int tempToPoint;
+			for (Integer possibleDistance : player.getCurrentDiceResult().getPossibleMoveDistances()) {
+				
+				tempToPoint = (playerID == 1) ? (possibleDistance - 1) : (IBackgammonBoard.BAR_INDEX - possibleDistance);
+				tempBarFieldMove.setToPoint(tempToPoint);
+				barFieldMoveIsPossible = this.checkBarFieldMove(player, tempBarFieldMove);
+				if (barFieldMoveIsPossible) {
+					int newFromIndex = this.gameBoard.getFieldOnBoard(IBackgammonBoard.BAR_INDEX).getTopCheckerIndexForPlayer(player);
+					int newToIndex = this.gameBoard.getFieldOnBoard(tempToPoint).getCheckerCountForPlayer(player);
+					tempBarFieldMove.setFromIndex(newFromIndex);
+					tempBarFieldMove.setToIndex(newToIndex);
+					possibleMoves.add(tempBarFieldMove);
+				}
+			}
+			barFieldMoveIsPossible = (possibleMoves.isEmpty() == false);
+		}
+		
+		if (barFieldMoveIsPossible == false) {
+			
+			for (int pointIndex = 0; pointIndex < IBackgammonBoard.NUMBER_OF_POINTS; pointIndex++) {
+				
+				boolean pointContainsCheckers = (this.gameBoard.getFieldOnBoard(pointIndex).getCheckerCountForPlayer(player) > 0);
+				if (pointContainsCheckers) {
+					
+					boolean moveIsPossible = false;
+					Move tempMove = new Move(playerID, pointIndex, 0, 0, 0);
+					int tempToPoint;
+					for (Integer possibleDistance : player.getCurrentDiceResult().getPossibleMoveDistances()) {
+						
+						tempToPoint = (playerID == 1) ? (pointIndex += possibleDistance) : (pointIndex -= possibleDistance);
+						boolean isPoint = ((0 <= tempToPoint) && (tempToPoint < IBackgammonBoard.BAR_INDEX));
+						boolean isOut = ((playerID == 1) ? (tempToPoint >= IBackgammonBoard.BAR_INDEX) : (tempToPoint < 0));
+						boolean toPointIsLegal = (isPoint || isOut);
+						
+						if (toPointIsLegal == false)
+							continue;
+						
+						tempMove.setToPoint(tempToPoint);
+						moveIsPossible = (isPoint) ? (this.checkInnerFieldMove(player, tempMove)) : (this.checkFieldOutMove(player, tempMove));
+						if (moveIsPossible) {
+							int newFromIndex = this.gameBoard.getFieldOnBoard(pointIndex).getTopCheckerIndexForPlayer(player);
+							int newToIndex = this.gameBoard.getFieldOnBoard(tempToPoint).getCheckerCountForPlayer(player);
+							tempMove.setFromIndex(newFromIndex);
+							tempMove.setToIndex(newToIndex);
+							possibleMoves.add(tempMove);
+						}
+					}
+				}
+			}
+		}
+		
+		return possibleMoves;
+	}
+	
+	
+	
+//	Checks
+	
+	protected boolean checkInnerFieldMove(Player player, Move move) {
+		
+		int fromPoint = move.getFromPoint();
+		int toPoint = move.getToPoint();
+		int playerID = move.getID();
+		
+		if (this.gameBoard.getFieldOnBoard(IBackgammonBoard.BAR_INDEX).getCheckerCountForPlayer(player) > 0) {
+			return false;
+		}
+		
+		boolean isLegalDirection = (playerID == 1) ? (fromPoint < toPoint) : (fromPoint > toPoint);
+		if (isLegalDirection) {
+			
+			int distance = (playerID == 1) ? (toPoint - fromPoint) : (fromPoint - toPoint);
+			DiceResult playersResult = player.getCurrentDiceResult();
+			if (playersResult.baseResultContainsDistance(distance)) {
+				return true;
+			
+			} else if (playersResult.composedResultContainsDistance(distance)) {
+				
+				return this.checkDistanceSteps(player, playerID, fromPoint, distance);
+			}
+		}
+		
+		return false;
+	}
+	
+	protected boolean checkBarFieldMove(Player player, Move move) {
+		
+		int toPoint = move.getToPoint();
+		int playerID = move.getID();
+		
+		int startMin = (playerID == 1) ? (0) : (IBackgammonBoard.BAR_INDEX - 6);
+		int startMax = (playerID == 1) ? (5) : (IBackgammonBoard.BAR_INDEX - 1);
+		boolean toIsAtStart = (startMin <= toPoint) && (toPoint <= startMax);
+		
+		if (toIsAtStart) {
+			
+			int distance = (playerID == 1) ? (toPoint + 1) : (IBackgammonBoard.BAR_INDEX - toPoint);
+			DiceResult playersResult = player.getCurrentDiceResult();
+			if (playersResult.baseResultContainsDistance(distance)) {
+				return true;
+			
+			} else if (playersResult.composedResultContainsDistance(distance)) {
+				
+				return this.checkDistanceSteps(player, playerID, move.getFromPoint(), distance);
+			}
+		}
+		
+		return false;
+	}
+
+	protected boolean checkFieldOutMove(Player player, Move move) {
+		
+		int fromPoint = move.getFromPoint();
+		int toPoint = move.getToPoint();
+		int playerID = move.getID();
+		
+		if (this.gameBoard.allCheckersInHouse(player, playerID) == false) {
+			return false;
+		}
+		
+		int outIndex = (playerID == 1) ? (IBackgammonBoard.OUT_PLAYER1_INDEX) : (IBackgammonBoard.OUT_PLAYER2_INDEX);
+		boolean toIsOut = (toPoint == outIndex);
+		
+		if (toIsOut) {
+			
+			int minDistance = (playerID == 1) ? (IBackgammonBoard.BAR_INDEX - fromPoint) : (fromPoint + 1);
+			DiceResult playersResult = player.getCurrentDiceResult();
+			
+			Integer baseResult = playersResult.baseResultContainsDistanceOrGreater(minDistance);
+			if (baseResult != 0) {
+				return this.checkDistanceSteps(player, playerID, fromPoint, baseResult);
+			
+			} else {
+				
+				Integer composedResult = playersResult.composedResultContainsDistanceOrGreater(minDistance);
+				if (composedResult != 0) {
+					return this.checkDistanceSteps(player, playerID, fromPoint, composedResult);
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	protected boolean checkDistanceSteps(Player player, int playerID, int startIndex, int distance) {
+		
+		int currentIndex = (startIndex == IBackgammonBoard.BAR_INDEX && playerID == 1) ? (-1) : (startIndex);
+		int aimIndex = (playerID == 1) ? (currentIndex + distance) : (currentIndex - distance);
+		DiceResult playersResult = player.getCurrentDiceResult();
+		boolean isDoublet = playersResult.size() > 2;
+		boolean isLegal = false;
+		
+		
+		if (isDoublet) {
+			
+			Integer baseValue = playersResult.elementAt(0);
+			ICheckerList currentPoint;
+			do {
+				currentIndex = (playerID == 1) ? (currentIndex += baseValue) : (currentIndex -= baseValue);
+				currentPoint = this.gameBoard.getFieldOnBoard(currentIndex);
+				
+				if (currentIndex == aimIndex) {
+					isLegal = true;
+				
+				} else if (currentPoint == null || currentPoint.getClass().equals(Point.class) == false || currentPoint.isBlockedForPlayer(player)) { 
+					break; 
+				}
+				
+			} while (!isLegal || (playerID == 1) ? (currentIndex >= aimIndex || currentIndex >= IBackgammonBoard.BAR_INDEX - 1) : (currentIndex <= aimIndex || currentIndex <= 0));
+			
+		} else {
+			
+			int tempIndex;
+			for (int indexOfStep = 0; indexOfStep < 2; indexOfStep++) {
+				if (isLegal == false) {
+					tempIndex = (playerID == 1) ? (currentIndex += playersResult.elementAt(indexOfStep)) : (currentIndex -= playersResult.elementAt(indexOfStep));
+					ICheckerList point = this.gameBoard.getFieldOnBoard(tempIndex);
+					if (point != null && point.getClass().equals(Point.class) && !point.isBlockedForPlayer(player)) {
+						isLegal = true;
+					
+					}
+				}
+			}
+		}
+		
+		return isLegal;
 	}
 	
 	
