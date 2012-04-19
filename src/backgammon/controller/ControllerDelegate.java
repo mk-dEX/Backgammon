@@ -14,6 +14,7 @@ public class ControllerDelegate implements IControllerDelegate {
 	private GameAgent rootController;
 	private GameSettings gameSettings;
 	private IDataModel model;
+	private BackgammonViewGUI gameView;
 	
 	public ControllerDelegate(GameAgent aRootController, GameSettings currentSettings) {
 		
@@ -21,10 +22,10 @@ public class ControllerDelegate implements IControllerDelegate {
 		this.gameSettings = currentSettings;
 		
 		this.model = new DefaultDataModel(this.gameSettings);
-		BackgammonViewGUI gameView = new BackgammonViewGUI(this);
+		this.gameView = new BackgammonViewGUI(this);
 		
 		this.model.addDataModelListener(gameView);
-		gameView.initGUI(this.workingTitle);
+		this.gameView.initGUI(this.workingTitle);
 		
 		this.model.initGameCheckers();
 	}
@@ -41,6 +42,8 @@ public class ControllerDelegate implements IControllerDelegate {
 	
 	@Override
 	public void exitGame() {
+		this.gameView = null;
+		this.model = null;
 		this.rootController.startUpdateSettings();
 	}
 
