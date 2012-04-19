@@ -211,7 +211,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		this.startGame = new JButton("Spiel starten");
 		this.startGame.setPreferredSize(new Dimension(125, 25));
 		tmp.add(startGame, BorderLayout.SOUTH);
-		startGame.addActionListener(this);
+		this.startGame.addActionListener(this);
 
 		return tmp;
 	}
@@ -300,12 +300,13 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		if (e.getSource() == this.startGame) {
 					
 //			this.board.dispose();
+			this.startGame.setVisible(false);
 			this.controller.initGame();
 		}
 		if (e.getSource() == this.exitProgram) {
 			
 			this.destroyGUI();
-			this.controller.initGame();
+			System.exit(0);
 		}
 
 	}

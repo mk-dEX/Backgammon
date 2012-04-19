@@ -86,7 +86,10 @@ public class ImageBoard extends JPanel {
 		this.drawDice(g);
 	}
 
-	
+	public void showInfo(String info)
+	{
+		
+	}
 	public Vector<BChecker> getChecker() {
 		return this.checker;
 	}
