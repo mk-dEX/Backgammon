@@ -268,6 +268,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		boolean isDoublet = playersResult.size() > 2;
 		boolean isLegal = false;
 		
+		
 		if (isDoublet) {
 			
 			Integer baseValue = playersResult.elementAt(0);
@@ -275,13 +276,14 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 			do {
 				currentIndex = (playerID == 1) ? (currentIndex += baseValue) : (currentIndex -= baseValue);
 				currentPoint = this.getFieldOnBoard(currentIndex);
-				if (currentPoint == null || currentPoint.getClass().equals(Point.class) == false || currentPoint.isBlockedForPlayer(player)) {
-					break;
-				}
 				
 				if (currentIndex == aimIndex) {
 					isLegal = true;
+				
+				} else if (currentPoint == null || currentPoint.getClass().equals(Point.class) == false || currentPoint.isBlockedForPlayer(player)) { 
+					break; 
 				}
+				
 			} while (!isLegal || (playerID == 1) ? (currentIndex >= aimIndex || currentIndex >= IBackgammonBoard.BAR_INDEX - 1) : (currentIndex <= aimIndex || currentIndex <= 0));
 			
 		} else {
@@ -293,6 +295,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 					ICheckerList point = this.getFieldOnBoard(tempIndex);
 					if (point != null && point.getClass().equals(Point.class) && !point.isBlockedForPlayer(player)) {
 						isLegal = true;
+					
 					}
 				}
 			}
