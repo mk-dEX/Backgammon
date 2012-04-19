@@ -22,7 +22,6 @@ public class TopPanel extends JPanel {
 
 	private Image img;
 
-	private JLabel info;
 
 	public TopPanel(String checkerpfad, String name) {
 		DefaultComponentFactory compFactory = DefaultComponentFactory
@@ -30,7 +29,7 @@ public class TopPanel extends JPanel {
 		JComponent seperator = compFactory.createSeparator(name);
 
 		// Add Seperator
-		this.add(seperator, BorderLayout.NORTH);
+		this.add(seperator, BorderLayout.SOUTH);
 
 		// set Dimensions
 		Dimension pl_bars = new Dimension();
@@ -46,11 +45,6 @@ public class TopPanel extends JPanel {
 		// Add Checkerimage
 		this.img = new ImageIcon(getClass().getResource("/img/" + checkerpfad))
 				.getImage();
-		
-		//Add InfoTex
-		this.info = new JLabel();
-		this.info.set
-
 	}
 
 	public void paintComponent(Graphics g) {
