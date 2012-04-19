@@ -5,7 +5,7 @@ import backgammon.model.player.Player;
 
 public class Out implements ICheckerList {
 
-	private int size = 0;
+	private int size = 15;
 	
 	@Override
 	public int addChecker(Player player) {
@@ -17,11 +17,19 @@ public class Out implements ICheckerList {
 		return ((this.size > 0) ? (--this.size) : (0));
 	}
 
+	public int getTopCheckerIndex() {
+		return (this.size - 1);
+	}
+	
 	@Override
 	public int getTopCheckerIndexForPlayer(Player player) {
 		return (this.size - 1);
 	}
 
+	public int getCheckerCount() {
+		return this.size;
+	}
+	
 	@Override
 	public int getCheckerCountForPlayer(Player player) {
 		return this.size;

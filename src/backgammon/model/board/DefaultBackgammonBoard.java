@@ -9,7 +9,7 @@ import backgammon.model.player.Player;
 
 public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
-	private final int numberOfPoints = IBackgammonBoard.BAR_INDEX - 1;
+	private final int numberOfPoints = IBackgammonBoard.BAR_INDEX;
 	private final int numberOfCheckersOfOnePlayer = 15;
 	
 	private ICheckerList[] points = new Point[this.numberOfPoints];
@@ -96,11 +96,31 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		return moveResults;
 	}
 	
-	public boolean commitMove(Move m) {
-		//TODO fill in index fields by return values
-		//TODO should return Move object (?)
-		//TODO set aim index of Move
-		return true;
+	public Move commitMove(Player player, Move m) {
+		
+		Move move = m;
+		int fromPoint = move.getFromPoint();
+		int toPoint = move.getToPoint();
+		
+		ICheckerList fromField = this.getFieldOnBoard(fromPoint);
+		ICheckerList toField = this.getFieldOnBoard(toPoint);
+		
+		if (fromField == null || toField == null) {
+			return null;
+		}
+		
+		if (move.getFromIndex() == -1) {
+			move.setFromIndex(fromField.getTopCheckerIndexForPlayer(player));
+		}
+		
+		fromField.removeChecker(player);
+		toField.addChecker(player);
+		
+		if (move.getToIndex() == -1) {
+			move.setToIndex(toField.getTopCheckerIndexForPlayer(player));
+		}
+
+		return move;
 	}
 	
 	public Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {

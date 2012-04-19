@@ -30,6 +30,10 @@ public class Point implements ICheckerList {
 		return this.size;
 	}
 
+	public int getTopCheckerIndex() {
+		return (this.size - 1);
+	}
+	
 	public int getTopCheckerIndexForPlayer(Player player) {
 		
 		if (player.equals(this.owner)) {
@@ -37,6 +41,10 @@ public class Point implements ICheckerList {
 		}
 		
 		return -1;
+	}
+	
+	public int getCheckerCount() {
+		return (this.size);
 	}
 	
 	public int getCheckerCountForPlayer(Player player) {

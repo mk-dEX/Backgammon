@@ -35,6 +35,10 @@ public class Bar implements ICheckerList {
 		return 0;
 	}
 
+	public int getTopCheckerIndex() {
+		return ((this.sizeOfPlayer1Checkers >= this.sizeOfPlayer2Checkers) ? (this.sizeOfPlayer1Checkers - 1) : (this.sizeOfPlayer2Checkers - 1));
+	}
+	
 	@Override
 	public int getTopCheckerIndexForPlayer(Player player) {
 		
@@ -43,6 +47,10 @@ public class Bar implements ICheckerList {
 		else if (player.equals(this.player2))
 			return this.sizeOfPlayer2Checkers - 1;
 		return -1;
+	}
+	
+	public int getCheckerCount() {
+		return (this.sizeOfPlayer1Checkers + this.sizeOfPlayer2Checkers);
 	}
 	
 	@Override
