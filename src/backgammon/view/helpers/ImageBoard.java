@@ -1,6 +1,8 @@
 package backgammon.view.helpers;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Calendar;
@@ -27,6 +29,7 @@ public class ImageBoard extends JPanel {
 	private Vector<BDice> dice;
 	private CheckerMoveAnimationManager checkerAnimation;
 	private DiceMoveAnimationManager diceAnimation;
+	private static String info = "";
 
 	public ImageBoard(BackgammonViewGUI backgammonViewGUI, String img) {
 
@@ -57,6 +60,8 @@ public class ImageBoard extends JPanel {
 		setMaximumSize(size);
 		setSize(size);
 		setLayout(null);
+		
+		this.showInfo("TEST");
 
 	}
 	public void destroyThreads()
@@ -64,7 +69,7 @@ public class ImageBoard extends JPanel {
 		this.checkerAnimation.destroyThread();
 		this.diceAnimation.destroyThread();
 	}
-	public BChecker addChecker(int player, int point, int index) {
+	private BChecker addChecker(int player, int point, int index) {
 		BChecker tmp = null;
 
 		if (point <= 23)
@@ -81,14 +86,73 @@ public class ImageBoard extends JPanel {
 	public void paintComponent(Graphics g) {
 
 		g.drawImage(img, 0, 0, null);
-
+		
 		this.drawChecker(g);
 		this.drawDice(g);
+		
+		//Info zeichnen
+		if(!ImageBoard.info.isEmpty())
+		{
+			this.drawInfo(g);
+		}
 	}
 
+	private void drawInfo(Graphics g) {
+		
+		Image iimg = new ImageIcon(getClass().getResource("/img/info.png")).getImage();
+		
+		String z1 = "",z2 = "",z3 = "";
+		
+		if(ImageBoard.info.length() > 25)
+		{	
+			int leerInd = (ImageBoard.info.substring(0, 24).lastIndexOf(" ")+25)%25;
+			z1 = ImageBoard.info.substring(0, leerInd);
+			
+			if(ImageBoard.info.length() > 50)
+			{
+				int leerInd2 = leerInd;
+				
+				System.out.println(ImageBoard.info.substring(leerInd2,25+leerInd2));
+				
+				leerInd = ImageBoard.info.substring(leerInd2,25+leerInd2).lastIndexOf(" ");
+				z2 = ImageBoard.info.substring(leerInd2+1, leerInd2 + leerInd);
+				z3 = ImageBoard.info.substring(leerInd2 + leerInd+1);
+			}
+			else
+				z2 = ImageBoard.info.substring(25+leerInd+1);
+		}
+		else
+			z1 = ImageBoard.info;
+		
+		g.drawImage(iimg, 0, 0, null);
+		g.setFont(new Font("SansSerif", Font.BOLD, 13));
+		g.setColor(Color.BLACK);
+		g.drawString(z1, 25, 40);
+		g.drawString(z2, 25, 55);
+		g.drawString(z3, 25, 70);
+
+	}
+
+	public static void clearInfo()
+	{
+		ImageBoard.info = "";
+	}
 	public void showInfo(String info)
 	{
-		
+		ImageBoard.info = info;
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try 
+				{
+					Thread.sleep(2500);
+				} catch (InterruptedException e) 
+				{
+				}
+				ImageBoard.clearInfo();
+			}
+		});
+	    thread.start();
 	}
 	public Vector<BChecker> getChecker() {
 		return this.checker;
