@@ -17,6 +17,10 @@ public class InfoThread implements Runnable{
 			//do nothing
 		}
 		
+		
+		if(Thread.interrupted())
+			return;
+		
 		//delete Message
 		this.board.clearInfo();
 		

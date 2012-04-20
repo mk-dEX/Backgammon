@@ -139,7 +139,7 @@ public class ImageBoard extends JPanel {
 	{
 		this.info = info;
 		if(this.thread != null)
-			this.thread = null;
+			this.thread.interrupt();
 		
 		this.thread = new Thread(new InfoThread(this));
 	    this.thread.start();

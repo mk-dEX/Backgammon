@@ -114,6 +114,9 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 		
 		if(this.setPointFromEvent(f))
 		{	
+			System.out.println(Integer.toString(oldX) + " - " + Integer.toString(ImageBoardMouseListener.checker.getPoint()));
+			System.out.println(Integer.toString(oldY) + " - " + Integer.toString(ImageBoardMouseListener.checker.getIndex()));
+			
 			Move move = new Move(ImageBoardMouseListener.checker.getPlayer(), oldX, oldY, ImageBoardMouseListener.checker.getPoint(), ImageBoardMouseListener.checker.getIndex());	
 			CheckerMoveEvent moveEvent = new CheckerMoveEvent(move);			
 			ImageBoardMouseListener.checker = null;
@@ -210,6 +213,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 				{	
 					this.parent.getCheckerAnimation().addMoveAnimation(
 							ImageBoardMouseListener.checker, i, index + 1);
+					ImageBoardMouseListener.checker.setPointIndex(i, index);
 				}
 			}
 			i++;
@@ -232,6 +236,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 				{	
 					this.parent.getCheckerAnimation().addMoveAnimation(
 							ImageBoardMouseListener.checker, point, index + 1);
+					ImageBoardMouseListener.checker.setPointIndex(i, index);
 				}
 			}
 			i++;
