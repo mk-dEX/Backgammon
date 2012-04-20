@@ -374,12 +374,12 @@ public class ImageBoard extends JPanel {
 			case 9:
 			case 10:
 			case 11:
-				return (((index+1)%5)*42);
+				return (((index)%5)*42+63);
 			case 12:
 			case 13:
 				return((index%5)*42)+63;
 			case 14:
-				return (((index+2)%5)*42);
+				return (((index)%5)*42+105);
 		}
 		return 0;
 	}
