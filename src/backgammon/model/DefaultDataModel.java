@@ -171,9 +171,9 @@ public class DefaultDataModel implements IDataController {
 		return possibleMoves;
 	}
 	
-	protected Vector<Move> getResultingMoves(Move originalMove) {
+/*	protected Vector<Move> getResultingMoves(Move originalMove) {
 		return this.getMoveResults(this.currentPlayer, originalMove);
-	}
+	}*/
 	
 	
 	//push
@@ -590,7 +590,7 @@ public class DefaultDataModel implements IDataController {
 		
 		Move finishedMove = moveEvent.getMove();
 		
-		Vector<Move> moveResults = this.getResultingMoves(finishedMove);
+		Vector<Move> moveResults = this.getMoveResults(this.currentPlayer, finishedMove);
 		this.executeResultingMoves(moveResults, finishedMove);
 	}
 	
