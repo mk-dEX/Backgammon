@@ -30,7 +30,7 @@ public class ImageBoard extends JPanel {
 	private CheckerMoveAnimationManager checkerAnimation;
 	private DiceMoveAnimationManager diceAnimation;
 	private Thread thread = null;
-	private static String info = "";
+	private String info = "";
 
 	public ImageBoard(BackgammonViewGUI backgammonViewGUI, String img) {
 
@@ -89,7 +89,7 @@ public class ImageBoard extends JPanel {
 		this.drawDice(g);
 		
 		//Info zeichnen
-		if(!ImageBoard.info.isEmpty())
+		if(!this.info.isEmpty())
 		{
 			this.drawInfo(g);
 		}
@@ -101,26 +101,26 @@ public class ImageBoard extends JPanel {
 		
 		String z1 = "",z2 = "",z3 = "";
 		
-		if(ImageBoard.info.length() > 25)
+		if(this.info.length() > 25)
 		{	
-			int leerInd = (ImageBoard.info.substring(0, 24).lastIndexOf(" ")+25)%25;
-			z1 = ImageBoard.info.substring(0, leerInd);
+			int leerInd = (this.info.substring(0, 24).lastIndexOf(" ")+25)%25;
+			z1 = this.info.substring(0, leerInd);
 			
-			if(ImageBoard.info.length() > 50)
+			if(this.info.length() > 50)
 			{
 				int leerInd2 = leerInd;
 				
-				System.out.println(ImageBoard.info.substring(leerInd2,25+leerInd2));
+				System.out.println(this.info.substring(leerInd2,25+leerInd2));
 				
-				leerInd = ImageBoard.info.substring(leerInd2,25+leerInd2).lastIndexOf(" ");
-				z2 = ImageBoard.info.substring(leerInd2+1, leerInd2 + leerInd);
-				z3 = ImageBoard.info.substring(leerInd2 + leerInd+1);
+				leerInd = this.info.substring(leerInd2,25+leerInd2).lastIndexOf(" ");
+				z2 = this.info.substring(leerInd2+1, leerInd2 + leerInd);
+				z3 = this.info.substring(leerInd2 + leerInd+1);
 			}
 			else
-				z2 = ImageBoard.info.substring(25+leerInd+1);
+				z2 = this.info.substring(leerInd+1);
 		}
 		else
-			z1 = ImageBoard.info;
+			z1 = this.info;
 		
 		g.drawImage(iimg, 0, 0, null);
 		g.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -131,29 +131,18 @@ public class ImageBoard extends JPanel {
 
 	}
 
-	public static void clearInfo()
+	public void clearInfo()
 	{
-		ImageBoard.info = "";
+		this.info = "";
 	}
 	public void showInfo(String info)
 	{
-		ImageBoard.info = info;
-		if(this.thread != null)
-			this.thread = null;
+		this.info = info;
+//		if(this.thread != null)
+	//		this.thread = null;
 		
-		this.thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try 
-				{
-					Thread.sleep(2500);
-				} catch (InterruptedException e) 
-				{
-				}
-				ImageBoard.clearInfo();
-			}
-		});
-	    thread.start();
+		this.thread = new Thread(new InfoThread(this));
+	    this.thread.start();
 	}
 	public Vector<BChecker> getChecker() {
 		return this.checker;
@@ -169,6 +158,9 @@ public class ImageBoard extends JPanel {
 
 	public void moveChecker(Move move) {
 		// BChecker bChecker, int toPoint, int toIndex)
+		
+		//System.out.println(Integer.toString(move.getToPoint()));
+		
 		BChecker tmp = findChecker(move.getFromPoint(), move.getFromIndex());
 
 		if (tmp == null) {
@@ -482,5 +474,9 @@ public class ImageBoard extends JPanel {
 
 	public BackgammonViewGUI getView() {
 		return view;
+	}
+
+	public DiceMoveAnimationManager getDiceAnimation() {
+		return this.diceAnimation;
 	}
 }

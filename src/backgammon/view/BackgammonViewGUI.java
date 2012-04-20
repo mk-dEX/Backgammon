@@ -308,13 +308,15 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	public void handleBackgammonEvent(BackgammonEvent event) {
 
+		System.out.println(event.getEventType().toString());
+		
 		if (event.getEventType() == BackgammonEvent.type.ACTIVE_PLAYER_INFO) {
 			this.handleActivePlayerEvent((ActivePlayerInfoEvent) event);
 			// Aktiven Spieler anzeigen
-		} else if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE) {
-			this.handleCheckerMoveEvent((CheckerMoveEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT) {
 			this.handleCheckerMoveResultEvent((CheckerMoveResultEvent) event);
+		} else if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE) {
+			this.handleCheckerMoveEvent((CheckerMoveEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.EXCEPTION) {
 			this.handleException((ExceptionEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.INFO) {
@@ -333,16 +335,20 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		{
 			//Info
 			this.imageBoard.showInfo("Der Zug ist leider nicht gültig.");
+			this.moveChecker(event.getMove());
 		}
 		else if (event.getResult() == CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)
 		{
-			//Computer ist fertig, also nächsten MOve anstossen, vorher 1sek warten.
+			//Computer ist fertig, also nächsten Move anstossen, vorher 1sek warten.
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				//Do nothing
-			}
-			
+			}	
+		}
+		else if(event.getResult() == CheckerMoveResultEvent.moveResult.INIT)
+		{
+			this.moveChecker(event.getMove());
 		}
 		
 	}

@@ -32,6 +32,7 @@ public class DefaultDataModel implements IDataController {
 	private Player currentPlayer;
 	private IBackgammonBoard gameBoard;
 
+	protected boolean initialized = false;
 	
 	public DefaultDataModel(GameSettings currentSettings) {
 		this.settings = currentSettings;
@@ -198,7 +199,8 @@ public class DefaultDataModel implements IDataController {
 		
 		CheckerMoveResultEvent singleMoveResult;
 		if (theMove != null) {
-			singleMoveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.CORRECT_MOVE, theMove);
+			CheckerMoveResultEvent.moveResult moveResult = (initialized) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
+			singleMoveResult = new CheckerMoveResultEvent(moveResult, theMove);
 		} else {
 			singleMoveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, theMove);
 		}
@@ -527,6 +529,7 @@ public class DefaultDataModel implements IDataController {
 	public void initGameCheckers() {
 		this.initCheckersOfPlayer(1);
 		this.initCheckersOfPlayer(2);
+		this.initialized = true;
 	}
 	
 	@Override

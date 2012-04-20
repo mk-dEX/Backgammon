@@ -37,7 +37,10 @@ public class CheckerMoveAnimationManager implements Runnable {
 			this.startAnimation();
 
 	}
-
+	public boolean isAnimating()
+	{
+		return this.isAnimating;
+	}
 	private void startAnimation() {
 		// is not animating, so get the first item in the list an animate it
 		this.isAnimating = true;

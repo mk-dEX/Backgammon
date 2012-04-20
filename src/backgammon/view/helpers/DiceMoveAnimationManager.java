@@ -166,4 +166,8 @@ public class DiceMoveAnimationManager implements Runnable {
 		
 	}
 
+	public boolean isAnimating() {
+		return this.animating;
+	}
+
 }
