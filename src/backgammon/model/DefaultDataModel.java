@@ -219,6 +219,9 @@ public class DefaultDataModel implements IDataController {
 			System.out.println("Der Vektor " + valuesRemovedFromDiceResult + " wurde aus dem Würfelergebnis entfernt");
 			System.out.println("Neue mögliche Distanzen sind " + this.currentPlayer.getCurrentDiceResult().getPossibleMoveDistances());
 			
+			DiceEvent diceNumbersUsedEvent = new DiceEvent(originalMove.getID(), this.currentPlayer.getCurrentDiceResult(), valuesRemovedFromDiceResult);
+			this.pushEvent(diceNumbersUsedEvent);
+			
 			for (Move oneResultingMove : resultingMoves) {
 				this.executeResultingMove(oneResultingMove);
 			}
