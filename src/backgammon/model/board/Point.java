@@ -68,6 +68,6 @@ public class Point implements ICheckerList {
 	}
 	
 	public boolean isBlockedForPlayer(Player player) {
-		return (this.size > 1 && player.equals(this.owner));
+		return (this.size > 1 && player.equals(this.owner) == false);
 	}
 }
