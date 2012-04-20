@@ -272,17 +272,17 @@ public class BackgammonViewSettings extends JFrame {
 					modus_normal.setText("Normal");
 					modus_normal.setSelected(true);
 					layeredPane1.add(modus_normal, JLayeredPane.DEFAULT_LAYER);
-					modus_normal.setBounds(10, 20, 70, modus_normal.getPreferredSize().height);
+					modus_normal.setBounds(10, 20, 130, modus_normal.getPreferredSize().height);
 
 					//---- modus_trictrac ----
 					modus_trictrac.setText("Tric Trac");
 					layeredPane1.add(modus_trictrac, JLayeredPane.DEFAULT_LAYER);
-					modus_trictrac.setBounds(10, 45, 85, 23);
+					modus_trictrac.setBounds(10, 45, 135, 23);
 
 					//---- modus_wurfzabel ----
 					modus_wurfzabel.setText("Wurfzabel");
 					layeredPane1.add(modus_wurfzabel, JLayeredPane.DEFAULT_LAYER);
-					modus_wurfzabel.setBounds(10, 70, 110, 23);
+					modus_wurfzabel.setBounds(10, 70, 135, 23);
 				}
 				panel1.add(layeredPane1);
 				layeredPane1.setBounds(10, 5, 155, 100);

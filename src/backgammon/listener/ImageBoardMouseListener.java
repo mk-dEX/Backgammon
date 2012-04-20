@@ -52,14 +52,26 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
+	
+		
+		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 
 		// System.out.println("Press");
+		
+		//Falls noch animiert wird, Checker sperren
+		if(this.parent.getCheckerAnimation().isAnimating() ||
+		   this.parent.getDiceAnimation().isAnimating())
+			{
+				ImageBoardMouseListener.checker = null;
+				return;
+			}
+		
 
-		ImageBoard.clearInfo();
+		this.parent.clearInfo();
 		
 		if (!this.setCheckerFromEvent(e))
 			return;
@@ -69,6 +81,8 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 			// System.out.println("Start dragging");
 			ImageBoardMouseListener.dragging = true;
 			this.parent.setFocus(ImageBoardMouseListener.checker);
+			//Set position
+			ImageBoardMouseListener.checker.setCoords(e.getX(), e.getY());
 		} else {
 			ImageBoardMouseListener.checker = null;
 		}
@@ -77,6 +91,14 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 
 	@Override
 	public void mouseReleased(MouseEvent f) {
+		
+		//Falls noch animiert wird, Checker sperren
+		if(this.parent.getCheckerAnimation().isAnimating() ||
+		   this.parent.getDiceAnimation().isAnimating())
+			{
+				ImageBoardMouseListener.checker = null;
+				return;
+			}
 		
 		if(ImageBoardMouseListener.dragging == false)
 			return;
@@ -101,6 +123,14 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 
 	public void mouseDragged(MouseEvent e) {
 
+		//Falls noch animiert wird, Checker sperren
+		if(this.parent.getCheckerAnimation().isAnimating() ||
+		   this.parent.getDiceAnimation().isAnimating())
+			{
+				ImageBoardMouseListener.checker = null;
+				return;
+			}
+		
 		if (!ImageBoardMouseListener.dragging) {
 			return;
 		}
