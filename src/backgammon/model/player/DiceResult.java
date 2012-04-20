@@ -93,16 +93,29 @@ public class DiceResult extends Vector<Integer> {
  		
  		return numbersToBeRemoved;
 	}
+ 	
+	@SuppressWarnings("unchecked")
 	private Vector<Integer> getNumbersForComposedDistance(Integer distance) {
 		Vector<Integer> theNumbers = new Vector<Integer>();
-		Integer baseValue = this.elementAt(0);
-		if (baseValue.intValue() == 0)
-			return theNumbers;
-		int iteratorCounterMax = distance / baseValue;
 		
+		if (this.size() == 2) {
+			Integer firstPossibleElement = this.elementAt(0);
+			Integer secondPossibleElement = this.elementAt(1);
+			if (firstPossibleElement.intValue() + secondPossibleElement.intValue() == distance.intValue()) {
+				theNumbers = (Vector<Integer>)this.clone();
+			}
+		}
 		
-		for (int removeCounter = 0; removeCounter < iteratorCounterMax; removeCounter++) {
-			theNumbers.add(baseValue);
+		if (theNumbers.isEmpty()) {
+			Integer baseValue = this.elementAt(0);
+			if (baseValue.intValue() == 0)
+				return theNumbers;
+			int iteratorCounterMax = distance / baseValue;
+
+
+			for (int removeCounter = 0; removeCounter < iteratorCounterMax; removeCounter++) {
+				theNumbers.add(baseValue);
+			}
 		}
 		
 		return theNumbers;
