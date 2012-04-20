@@ -336,7 +336,7 @@ public class DefaultDataModel implements IDataController {
 					int tempToPoint;
 					for (Integer possibleDistance : player.getCurrentDiceResult().getPossibleMoveDistances()) {
 						
-						tempToPoint = (playerID == 1) ? (pointIndex += possibleDistance) : (pointIndex -= possibleDistance);
+						tempToPoint = (playerID == 1) ? (pointIndex + possibleDistance) : (pointIndex - possibleDistance);
 						boolean isPoint = ((0 <= tempToPoint) && (tempToPoint < IBackgammonBoard.BAR_INDEX));
 						boolean isOut = ((playerID == 1) ? (tempToPoint >= IBackgammonBoard.BAR_INDEX) : (tempToPoint < 0));
 						boolean toPointIsLegal = (isPoint || isOut);

@@ -141,8 +141,8 @@ public class ImageBoard extends JPanel {
 //		if(this.thread != null)
 	//		this.thread = null;
 		
-		this.thread = new Thread(new InfoThread(this));
-	    this.thread.start();
+//		this.thread = new Thread(new InfoThread(this));
+//	    this.thread.start();
 	}
 	public Vector<BChecker> getChecker() {
 		return this.checker;
