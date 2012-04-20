@@ -236,7 +236,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 				{	
 					this.parent.getCheckerAnimation().addMoveAnimation(
 							ImageBoardMouseListener.checker, point, index + 1);
-					ImageBoardMouseListener.checker.setPointIndex(i, index+1);
+					ImageBoardMouseListener.checker.setPointIndex(point, index+1);
 				}
 			}
 			i++;
