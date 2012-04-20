@@ -24,13 +24,13 @@ import backgammon.model.player.Player;
 
 public class DefaultDataModel implements IDataController {
 
-	private IModelEventListener listener;
-	private GameSettings settings;
+	protected IModelEventListener listener;
+	protected GameSettings settings;
 
-	private Player player1;
-	private Player player2;
-	private Player currentPlayer;
-	private IBackgammonBoard gameBoard;
+	protected Player player1;
+	protected Player player2;
+	protected Player currentPlayer;
+	protected IBackgammonBoard gameBoard;
 
 	protected boolean initialized = false;
 	
@@ -170,10 +170,6 @@ public class DefaultDataModel implements IDataController {
 		possibleMoves = this.getPossiblePlayerMoves(this.currentPlayer, this.getPlayerID(this.currentPlayer));
 		return possibleMoves;
 	}
-	
-/*	protected Vector<Move> getResultingMoves(Move originalMove) {
-		return this.getMoveResults(this.currentPlayer, originalMove);
-	}*/
 	
 	
 	//push
