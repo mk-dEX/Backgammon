@@ -171,11 +171,54 @@ public class DefaultDataModel implements IDataController {
 		return possibleMoves;
 	}
 	
+	protected int getDistanceForMove(Move move) {
+		
+		int distance = 0;
+		int playerID = move.getID();
+		int fromPoint = move.getFromPoint();
+		int toPoint = move.getToPoint();
+		
+		ICheckerList fromFieldItem = this.gameBoard.getFieldOnBoard(fromPoint);
+		ICheckerList toFieldItem = this.gameBoard.getFieldOnBoard(toPoint);
+		
+		if (fromFieldItem != null && toFieldItem != null) {
+			
+			Class<? extends ICheckerList> fromClass = fromFieldItem.getClass();
+			Class<? extends ICheckerList> toClass = toFieldItem.getClass();
+			
+			if (fromClass.equals(Point.class) && toClass.equals(Point.class)) {
+				
+				distance = (playerID == 1) ? (toPoint - fromPoint) : (fromPoint - toPoint);
+
+			} else if (fromClass.equals(Point.class) && toClass.equals(Out.class)) {
+				
+				int minDistance = (playerID == 1) ? (IBackgammonBoard.BAR_INDEX - fromPoint) : (fromPoint + 1);
+				DiceResult playersResult = this.currentPlayer.getCurrentDiceResult();
+				
+				distance = playersResult.baseResultContainsDistanceOrGreater(minDistance);
+				if (distance == 0) {
+					distance = playersResult.composedResultContainsDistanceOrGreater(minDistance);
+				}
+
+			} else if (fromClass.equals(Bar.class) && toClass.equals(Point.class)) {
+				
+				distance = (playerID == 1) ? (toPoint + 1) : (IBackgammonBoard.BAR_INDEX - toPoint);
+			}
+		}
+		return distance;
+	}
+	
 	
 	//push
 	protected void executeResultingMoves(Vector<Move> resultingMoves, Move originalMove) {
 		
 		if (resultingMoves.isEmpty() == false) {
+			
+			int distanceUsedForOriginalMove = this.getDistanceForMove(originalMove);
+			Vector<Integer> valuesRemovedFromDiceResult = this.currentPlayer.getCurrentDiceResult().makeMove(distanceUsedForOriginalMove);
+			System.out.println("Der Vektor " + valuesRemovedFromDiceResult + " wurde aus dem Würfelergebnis entfernt");
+			System.out.println("Neue mögliche Distanzen sind " + this.currentPlayer.getCurrentDiceResult().getPossibleMoveDistances());
+			
 			for (Move oneResultingMove : resultingMoves) {
 				this.executeResultingMove(oneResultingMove);
 			}
@@ -196,7 +239,7 @@ public class DefaultDataModel implements IDataController {
 		CheckerMoveResultEvent singleMoveResult;
 		if (theMove != null) {
 			CheckerMoveResultEvent.moveResult moveResult = (initialized) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
-			singleMoveResult = new CheckerMoveResultEvent(moveResult, theMove);
+			singleMoveResult = new CheckerMoveResultEvent(moveResult, theMove);			
 		} else {
 			singleMoveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, theMove);
 		}
