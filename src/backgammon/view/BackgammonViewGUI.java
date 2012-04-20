@@ -335,6 +335,11 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		{
 			//Info
 			this.imageBoard.showInfo("Der Zug ist leider nicht gültig.");
+			
+			//invert direction
+			event.getMove().invertDirection();
+
+			//move
 			this.moveChecker(event.getMove());
 		}
 		else if (event.getResult() == CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)

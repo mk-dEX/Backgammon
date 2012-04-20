@@ -56,4 +56,14 @@ public class Move {
 	public int getToIndex() {
 		return toIndex;
 	}
+	public void invertDirection()
+	{
+		int tmp = this.fromIndex;
+		this.fromIndex = this.toIndex;
+		this.toIndex = tmp;
+		
+		tmp = this.fromPoint;
+		this.fromPoint = this.toPoint;
+		this.toPoint = tmp;
+	}
 }
