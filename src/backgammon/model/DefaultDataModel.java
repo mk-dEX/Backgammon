@@ -575,6 +575,11 @@ public class DefaultDataModel implements IDataController {
 		DiceEvent diceResultEvent = new DiceEvent(DiceEvent.diceType.DICE, 0, diceResult); 
 		this.pushEvent(diceResultEvent);
 		
+		DiceResult tempDoubleDiceResult = new DiceResult();
+		tempDoubleDiceResult.add(new Integer(2));
+		DiceEvent doubleDiceEvent = new DiceEvent(DiceEvent.diceType.DOUBLE_DICE, 0, tempDoubleDiceResult);
+		this.pushEvent(doubleDiceEvent);
+		
 		// get current player from dice result
 		this.currentPlayer = (diceResult.elementAt(0) > diceResult.elementAt(1)) ? (this.player1) : (this.player2);
 		this.currentPlayer.setCurrentDiceResult(diceResult);
