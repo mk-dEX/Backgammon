@@ -316,7 +316,7 @@ public class DefaultDataModel implements IDataController {
 			if (toHasOtherCheckers) {
 				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
 				int otherFromPoint = originalMove.getToPoint();
-				int otherToPoint = (otherPlayerID == 1) ? (IBackgammonBoard.OUT_PLAYER1_INDEX) : (IBackgammonBoard.OUT_PLAYER2_INDEX);
+				int otherToPoint = IBackgammonBoard.BAR_INDEX;
 				Move removeOtherChecker = new Move(otherPlayerID, otherFromPoint, 0, otherToPoint, -1);
 				
 				moveResults.add(removeOtherChecker);
