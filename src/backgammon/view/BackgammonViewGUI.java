@@ -361,6 +361,8 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	private void handleCheckerMoveResultEvent(CheckerMoveResultEvent event) {
 
+		System.out.println(event.getResult().toString());
+		
 		//Illegal move
 		if(event.getResult() == CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE)
 		{
@@ -385,6 +387,12 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		else if(event.getResult() == CheckerMoveResultEvent.moveResult.INIT)
 		{
 			this.moveChecker(event.getMove());
+		}
+		else if(event.getResult() == CheckerMoveResultEvent.moveResult.CORRECT_MOVE)
+		{
+			//gucken ob wir noch mehr moves machen müssen.
+			if(event.getMove() != null)
+				this.moveChecker(event.getMove());
 		}
 		
 	}
