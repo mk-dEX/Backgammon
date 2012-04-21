@@ -304,7 +304,7 @@ public class DefaultDataModel implements IDataController {
 				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
 				int otherFromPoint = originalMove.getToPoint();
 				int otherToPoint = (otherPlayerID == 1) ? (IBackgammonBoard.OUT_PLAYER1_INDEX) : (IBackgammonBoard.OUT_PLAYER2_INDEX);
-				Move removeOtherChecker = new Move(otherPlayerID, otherFromPoint, -1, otherToPoint, -1);
+				Move removeOtherChecker = new Move(otherPlayerID, otherFromPoint, 0, otherToPoint, -1);
 				
 				moveResults.add(removeOtherChecker);
 			}
@@ -327,7 +327,7 @@ public class DefaultDataModel implements IDataController {
 		}
 		
 		if (move.getFromIndex() == -1) {
-			move.setFromIndex(fromField.getTopCheckerIndexForPlayer(player));
+			move.setFromIndex(fromField.getTopCheckerIndex());
 		}
 		
 		fromField.removeChecker(player);

@@ -11,9 +11,7 @@ public class Point implements ICheckerList {
 	public int addChecker(Player player) {
 		
 		this.size++;
-		if (this.owner == null) {
-			this.owner = player;
-		}
+		this.owner = player;
 		
 		return this.size;
 	}
