@@ -247,11 +247,12 @@ public class DefaultDataModel implements IDataController {
 			CheckerMoveResultEvent.moveResult moveResult = (initialized) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
 			singleMoveResult = new CheckerMoveResultEvent(moveResult, theMove);
 			
-			HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
-			this.moveHistory.add(currentMoveHistoryItem);
-			
-			CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
-			this.pushEvent(historyMoveStoredEvent);
+			if (this.currentPlayer != null) {
+				HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
+				this.moveHistory.add(currentMoveHistoryItem);
+				CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
+				this.pushEvent(historyMoveStoredEvent);
+			}
 			
 		} else {
 			singleMoveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, theMove);
