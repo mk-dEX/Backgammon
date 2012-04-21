@@ -9,6 +9,7 @@ public class CheckerMoveResultEvent extends CheckerMoveEvent {
 		INIT,
 		CORRECT_MOVE,
 		ILLEGAL_MOVE,
+		HISTORY_MOVE,
 		COMPUTER_DID_FINISH_MOVE
 	};
 	

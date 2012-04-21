@@ -18,6 +18,7 @@ import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IDataController;
 import backgammon.model.player.ComputerPlayer;
 import backgammon.model.player.DiceResult;
+import backgammon.model.player.HistoryMove;
 import backgammon.model.player.HumanPlayer;
 import backgammon.model.player.Move;
 import backgammon.model.player.Player;
@@ -31,6 +32,8 @@ public class DefaultDataModel implements IDataController {
 	protected Player player2;
 	protected Player currentPlayer;
 	protected IBackgammonBoard gameBoard;
+	
+	protected Vector<HistoryMove> moveHistory = new Vector<HistoryMove>();
 
 	protected boolean initialized = false;
 	
@@ -242,7 +245,14 @@ public class DefaultDataModel implements IDataController {
 		CheckerMoveResultEvent singleMoveResult;
 		if (theMove != null) {
 			CheckerMoveResultEvent.moveResult moveResult = (initialized) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
-			singleMoveResult = new CheckerMoveResultEvent(moveResult, theMove);			
+			singleMoveResult = new CheckerMoveResultEvent(moveResult, theMove);
+			
+			HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
+			this.moveHistory.add(currentMoveHistoryItem);
+			
+			CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
+			this.pushEvent(historyMoveStoredEvent);
+			
 		} else {
 			singleMoveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, theMove);
 		}

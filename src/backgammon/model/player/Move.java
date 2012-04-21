@@ -2,12 +2,12 @@ package backgammon.model.player;
 
 public class Move {
 
-	private int id;
+	protected int id;
 	
-	private int fromPoint;
-	private int toPoint;
-	private int fromIndex;
-	private int toIndex;
+	protected int fromPoint;
+	protected int toPoint;
+	protected int fromIndex;
+	protected int toIndex;
 	
 	public Move(int id, int fromX, int fromY ,int toX, int toY) {
 		this.id = id;
