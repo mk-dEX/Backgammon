@@ -31,6 +31,7 @@ public class ImageBoard extends JPanel {
 	private DiceMoveAnimationManager diceAnimation;
 	private Thread thread = null;
 	private String info = "";
+	private BDice dDice = null; //DoubleDice
 
 	public ImageBoard(BackgammonViewGUI backgammonViewGUI, String img) {
 
@@ -202,6 +203,14 @@ public class ImageBoard extends JPanel {
 		        g.drawImage(used, this.getDices().get(i).getX() - 24, this.getDices().get(i).getY() - 24, this);
 	        }
 	        	
+		}
+		
+		//DoubleDice
+		if(this.dDice != null)
+		{
+			Image used =  new ImageIcon(getClass().getResource("/img/double"+this.dDice.getValue()+".png")).getImage();
+
+	        g.drawImage(used, this.getDoubleDicePosition(this.dDice.getPlayer()).getX() - 24, this.getDoubleDicePosition(this.dDice.getPlayer()).getY() - 24, this);
 		}
 	}
 
@@ -466,5 +475,10 @@ public class ImageBoard extends JPanel {
 
 	public DiceMoveAnimationManager getDiceAnimation() {
 		return this.diceAnimation;
+	}
+
+	public void setDoubleDice(int playerID, Integer i) {
+		this.dDice = new BDice(playerID, i);
+		
 	}
 }

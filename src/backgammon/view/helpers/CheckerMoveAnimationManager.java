@@ -65,11 +65,6 @@ public class CheckerMoveAnimationManager implements Runnable {
 		if (this.thread != null)
 			this.thread = null;
 
-		// System.out.println(Integer.toString(finalX));
-		// System.out.println(Integer.toString(finalY));
-		//System.out.println(Integer.toString(toPoint));
-		//System.out.println(Integer.toString(toIndex));
-
 		this.checker.setPointIndex(this.toPoint, this.toIndex);
 		this.board.repaint();
 

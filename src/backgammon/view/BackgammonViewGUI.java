@@ -280,8 +280,8 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 						.getDiceResult().get(1), 2);
 			}
 		} else if (event.getDiceType() == diceType.DOUBLE_DICE) {
-			this.imageBoard.addDice(event.getPlayerID(), event.getDiceResult()
-					.get(0), 0);
+			this.imageBoard.setDoubleDice(event.getPlayerID(), event.getDiceResult()
+					.get(0));
 		}
 		else if(event.getDiceType() == diceType.NUMBERS_USED)
 		{
