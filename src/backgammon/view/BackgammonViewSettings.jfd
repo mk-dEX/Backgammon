@@ -44,6 +44,13 @@
        <string>$locationPolicy</string> 
        <int>0</int> 
       </void> 
+      <void method="setProperty"> 
+       <string>iconImage</string> 
+       <object class="com.jformdesigner.model.SwingIcon"> 
+        <int>0</int> 
+        <string>/img/double16.png</string> 
+       </object> 
+      </void> 
       <void method="auxiliary"> 
        <void method="setProperty"> 
         <string>JavaCodeGenerator.variableLocal</string> 

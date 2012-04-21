@@ -251,6 +251,7 @@ public class BackgammonViewSettings extends JFrame {
 		setResizable(false);
 		setTitle("Spieleinstellungen");
 		setVisible(true);
+		setIconImage(new ImageIcon(getClass().getResource("/img/double16.png")).getImage());
 		Container contentPane = getContentPane();
 		contentPane.setLayout(null);
 
