@@ -76,7 +76,7 @@ public class DefaultDataModel implements IDataController {
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 0, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 0, indexTo));
-			this.executeResultingMove(tempRegisteredMove);
+			this.executeResultingMove(tempRegisteredMove, true);
 			indexFrom--;		
 		}
 
@@ -86,13 +86,13 @@ public class DefaultDataModel implements IDataController {
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 11, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 11, indexTo));
-			this.executeResultingMove(tempRegisteredMove);
+			this.executeResultingMove(tempRegisteredMove, true);
 			indexFrom--;
 			
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 18, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 18, indexTo));
-			this.executeResultingMove(tempRegisteredMove);
+			this.executeResultingMove(tempRegisteredMove, true);
 			indexFrom--;
 		}
 
@@ -102,7 +102,7 @@ public class DefaultDataModel implements IDataController {
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 16, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 16, indexTo));
-			this.executeResultingMove(tempRegisteredMove);
+			this.executeResultingMove(tempRegisteredMove, true);
 			indexFrom--;	
 		}
 	}
@@ -225,8 +225,10 @@ public class DefaultDataModel implements IDataController {
 			DiceEvent diceNumbersUsedEvent = new DiceEvent(originalMove.getID(), this.currentPlayer.getCurrentDiceResult(), valuesRemovedFromDiceResult);
 			this.pushEvent(diceNumbersUsedEvent);
 			
+			boolean addMove = false;
 			for (Move oneResultingMove : resultingMoves) {
-				this.executeResultingMove(oneResultingMove);
+				addMove = resultingMoves.size() > 1;
+				this.executeResultingMove(oneResultingMove, addMove);
 			}
 		}
 		else {
@@ -235,7 +237,7 @@ public class DefaultDataModel implements IDataController {
 		}
 	}
 	
-	protected void executeResultingMove(Move singleMove) {
+	protected void executeResultingMove(Move singleMove, boolean addMoveToEvent) {
 
 		Move theMove = singleMove;
 		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
@@ -245,7 +247,7 @@ public class DefaultDataModel implements IDataController {
 		CheckerMoveResultEvent singleMoveResult;
 		if (theMove != null) {
 			CheckerMoveResultEvent.moveResult moveResult = (initialized) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
-			singleMoveResult = new CheckerMoveResultEvent(moveResult, theMove);
+			singleMoveResult = new CheckerMoveResultEvent(moveResult, (addMoveToEvent) ? (theMove) : (null));
 			
 			if (this.currentPlayer != null) {
 				HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
