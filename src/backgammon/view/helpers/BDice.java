@@ -8,6 +8,8 @@ public class BDice {
 	private int y;
 	private int rvalue;
 	private int rotation;
+	private boolean used = false;
+	
 	public static enum diceType {
 		DICE,
 		DOUBLE_DICE
@@ -49,6 +51,14 @@ public class BDice {
 	}
 	public void setRotation(int i) {
 		this.rotation = i;
+	}
+	public Boolean isUsed()
+	{
+		return this.used;
+	}
+	public void setUsed()
+	{
+		this.used = true;
 	}
 
 }

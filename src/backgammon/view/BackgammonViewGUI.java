@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,6 +24,7 @@ import backgammon.event.ActivePlayerInfoEvent;
 import backgammon.event.ExceptionEvent;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.player.Move;
+import backgammon.view.helpers.BDice;
 import backgammon.view.helpers.ImageBoard;
 import backgammon.view.helpers.TopPanel;
 
@@ -261,10 +263,12 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	private int handleDiceEvent(DiceEvent event) {
 
-		// Würfel leeren
-		this.imageBoard.getDices().clear();
-
+		
 		if (event.getDiceType() == diceType.DICE) {
+			
+			// Würfel leeren
+			this.imageBoard.getDices().clear();
+			
 			// System.out.println("Ich würfel");
 			if (event.getPlayerID() == 0) {
 				this.imageBoard.addDice(1, event.getDiceResult().get(0), 1);
@@ -278,6 +282,33 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		} else if (event.getDiceType() == diceType.DOUBLE_DICE) {
 			this.imageBoard.addDice(event.getPlayerID(), event.getDiceResult()
 					.get(0), 0);
+		}
+		else if(event.getDiceType() == diceType.NUMBERS_USED)
+		{
+			
+			Vector<Integer> tmpList = new Vector<Integer>(event.getNumersUsed());
+			//Den Würfel grau machen oder rot durchkreuzen
+			//würfel suchen
+			for (int i = 0; i < this.imageBoard.getDices().size(); i++) {
+				
+				BDice tmpDice = this.imageBoard.getDices().get(i);
+				
+				if(tmpList.size() == 0)
+					return 0;
+				
+				if(tmpDice.getValue() == tmpList.get(0))
+				{
+					//gefunden
+					if(!tmpDice.isUsed())
+					{
+						tmpDice.setUsed();
+						tmpList.remove(0);
+					}
+				}
+		        	
+			}
+			
+			
 		}
 		return 0;
 	}

@@ -189,34 +189,22 @@ public class ImageBoard extends JPanel {
 	private void drawDice(Graphics g) {
 		for (int i = 0; i < this.getDices().size(); i++) {
 				
-				rotate(g.create(),this.getDices().get(i));
+			Image img = this.view.getDice( this.getDices().get(i).getPlayer(), this.getDices().get(i).getRValue());
+
+	        g.drawImage(img, this.getDices().get(i).getX() - 24, this.getDices().get(i).getY() - 24, this);
+	        
+	        
+	        //is used?
+	        if(this.getDices().get(i).isUsed())
+	        {
+	        	Image used =  new ImageIcon(getClass().getResource("/img/diceused.png")).getImage();
+
+		        g.drawImage(used, this.getDices().get(i).getX() - 24, this.getDices().get(i).getY() - 24, this);
+	        }
+	        	
 		}
 	}
 
-	private void rotate(Graphics g, BDice d) {
-		
-		//Graphics2D g2d = (Graphics2D) g;
-		 
-		// Rotieren
-		Image img = this.view.getDice(d.getPlayer(), d.getRValue());
-		/*
-        int w = 48;
-        int h = 48;
-        int x = (this.getWidth() - w) / 2;
-        int y = (this.getHeight() - h) / 2;
-        //center of rotation is center of the Image:
-        int xRot = x + w / 2;
-        int yRot = y + h / 2;
-		
-		AffineTransform rotation = g2d.getTransform();
-        rotation.rotate(Math.toRadians(d.getRotation()), 24, 24);
-        //draw Image with rotation:
-        g2d.setTransform(rotation);
-        */
-        g.drawImage(img, d.getX() - 24, d.getY() - 24, this);
-        //g2d.dispose();
-		
-	}
 
 	public static Vector<BPosition> getPoisitionMatrix() {
 		Vector<BPosition> tmp = new Vector<BPosition>();
