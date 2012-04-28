@@ -309,18 +309,23 @@ public class DefaultDataModel implements IDataController {
 		
 		if (isLegal) {
 			
-			Move legalMove = new Move(originalMove.getID(), originalMove.getFromPoint(), originalMove.getFromIndex(), originalMove.getToPoint(), originalMove.getToIndex());
-			moveResults.add(legalMove);
+			Move legalMove = originalMove;
+			Move resultingMove = null;
 			
 			boolean toHasOtherCheckers = (toFieldItem.isBlot() && !toFieldItem.hasCheckersOfPlayer(player));
 			if (toHasOtherCheckers) {
 				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
 				int otherFromPoint = originalMove.getToPoint();
 				int otherToPoint = IBackgammonBoard.BAR_INDEX;
-				Move removeOtherChecker = new Move(otherPlayerID, otherFromPoint, 0, otherToPoint, -1);
+				resultingMove = new Move(otherPlayerID, otherFromPoint, 0, otherToPoint, -1);
 				
-				moveResults.add(removeOtherChecker);
+				legalMove.setToIndex(0);
 			}
+			
+			moveResults.add(legalMove);
+			if (resultingMove != null)
+				moveResults.add(resultingMove);
+			
 		}
 			
 		return moveResults;
