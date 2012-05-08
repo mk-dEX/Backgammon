@@ -223,9 +223,8 @@ public class DefaultDataModel implements IDataController {
 			DiceEvent diceNumbersUsedEvent = new DiceEvent(originalMove.getID(), this.currentPlayer.getCurrentDiceResult(), valuesRemovedFromDiceResult);
 			this.pushEvent(diceNumbersUsedEvent);
 			
-			boolean addMove = false;
+			boolean addMove = resultingMoves.size() > 1 || !this.currentPlayer.isHuman();
 			for (Move oneResultingMove : resultingMoves) {
-				addMove = resultingMoves.size() > 1;
 				this.executeResultingMove(oneResultingMove, addMove);
 			}
 		}
@@ -273,7 +272,7 @@ public class DefaultDataModel implements IDataController {
 	
 //	Board Connection
 	
-	protected Vector<Move> getMoveResults(Player player, Move originalMove) {
+	public Vector<Move> getMoveResults(Player player, Move originalMove) {
 		
 		Vector<Move> moveResults = new Vector<Move>();
 		
@@ -564,6 +563,20 @@ public class DefaultDataModel implements IDataController {
 		return isLegal;
 	}
 	
+
+	
+//	KI Move
+	
+	protected void handleComputerMove() {
+		while (this.currentPlayerHasMovesLeft()) {
+			Vector<Move> computerPlayerMoveAndResulting = ((ComputerPlayer)this.currentPlayer).move();
+			this.executeResultingMoves(computerPlayerMoveAndResulting, computerPlayerMoveAndResulting.elementAt(0));
+		}
+		
+		CheckerMoveResultEvent computerDidFinishEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE, null);
+		this.pushEvent(computerDidFinishEvent);
+	}
+	
 	
 	
 //	IDataModel
@@ -600,6 +613,10 @@ public class DefaultDataModel implements IDataController {
 		
 		ActivePlayerInfoEvent activePlayerEvent = new ActivePlayerInfoEvent(this.currentPlayer, this.currentPlayer.isHuman());
 		this.pushEvent(activePlayerEvent);
+		
+		if (!this.currentPlayer.isHuman()) {
+			this.handleComputerMove();
+		}
 	}
 	
 	@Override
@@ -644,12 +661,7 @@ public class DefaultDataModel implements IDataController {
 			this.currentPlayer.setCurrentDiceResult(diceResult);
 			
 			if (!this.currentPlayer.isHuman()) {
-				
-				Vector<Move> computerPlayerMoves = ((ComputerPlayer)this.currentPlayer).move();
-				this.executeResultingMoves(computerPlayerMoves, null);
-				
-				CheckerMoveResultEvent computerDidFinishEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE, null);
-				this.pushEvent(computerDidFinishEvent);
+				this.handleComputerMove();
 			}
 		}
 	}
@@ -683,12 +695,17 @@ public class DefaultDataModel implements IDataController {
 		// TODO Auto-generated method stub
 		
 	}	
+
+
 	
+//	IDataController
 	
-	
-// IDataController
-	
-	public IBackgammonBoard getBackgammonBoard() {
+	public Vector<Move> getPossiblePlayerMoves(Player player) {
+		int playerID = this.getPlayerID(player);
+		return this.getPossiblePlayerMoves(player, playerID);
+	}
+
+	public IBackgammonBoard getBoard() {
 		return this.gameBoard;
 	}
 }
