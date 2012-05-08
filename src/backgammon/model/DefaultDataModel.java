@@ -380,7 +380,7 @@ public class DefaultDataModel implements IDataController {
 				barFieldMoveIsPossible = this.checkBarFieldMove(player, tempBarFieldMove);
 				if (barFieldMoveIsPossible) {
 					int newFromIndex = this.gameBoard.getFieldOnBoard(IBackgammonBoard.BAR_INDEX).getTopCheckerIndexForPlayer(player);
-					int newToIndex = this.gameBoard.getFieldOnBoard(tempToPoint).getCheckerCountForPlayer(player);
+					int newToIndex = toFieldItem.getCheckerCountForPlayer(player);
 					tempBarFieldMove.setFromIndex(newFromIndex);
 					tempBarFieldMove.setToIndex(newToIndex);
 					possibleMoves.add(tempBarFieldMove);
