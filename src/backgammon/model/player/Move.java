@@ -56,7 +56,7 @@ public class Move {
 	}
 
 	public int getToIndex() {
-		return toIndex;
+		return this.toIndex;
 	}
 	public void invertDirection()
 	{
