@@ -309,23 +309,19 @@ public class DefaultDataModel implements IDataController {
 		
 		if (isLegal) {
 			
-			Move legalMove = originalMove;
-			Move resultingMove = null;
+			moveResults.add(originalMove);
 			
 			boolean toHasOtherCheckers = (toFieldItem.isBlot() && !toFieldItem.hasCheckersOfPlayer(player));
 			if (toHasOtherCheckers) {
+				
+				moveResults.elementAt(0).setEqual(true);
+				
 				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
 				int otherFromPoint = originalMove.getToPoint();
 				int otherToPoint = IBackgammonBoard.BAR_INDEX;
-				resultingMove = new Move(otherPlayerID, otherFromPoint, 0, otherToPoint, -1);
-				
-				legalMove.setToIndex(0);
-			}
-			
-			moveResults.add(legalMove);
-			if (resultingMove != null)
+				Move resultingMove = new Move(otherPlayerID, otherFromPoint, 0, otherToPoint, -1);
 				moveResults.add(resultingMove);
-			
+			}
 		}
 			
 		return moveResults;
@@ -353,6 +349,13 @@ public class DefaultDataModel implements IDataController {
 		
 		if (move.getToIndex() == -1) {
 			move.setToIndex(toField.getTopCheckerIndexForPlayer(player));
+		}
+		
+		if (move.equalize()) {
+			move.setFromPoint(m.getToPoint());
+			move.setToPoint(m.getToPoint());
+			move.setFromIndex(1);
+			move.setToIndex(0);
 		}
 
 		return move;
@@ -531,11 +534,11 @@ public class DefaultDataModel implements IDataController {
 				if (currentIndex == aimIndex) {
 					isLegal = true;
 				
-				} else if (currentPoint == null || currentPoint.getClass().equals(Point.class) == false || currentPoint.isBlockedForPlayer(player)) { 
-					break; 
+				} else if (currentPoint != null && currentPoint.isBlockedForPlayer(player)) { 
+					break;
 				}
 				
-			} while (!isLegal || (playerID == 1) ? (currentIndex >= aimIndex || currentIndex >= IBackgammonBoard.BAR_INDEX - 1) : (currentIndex <= aimIndex || currentIndex <= 0));
+			} while (!isLegal && (playerID == 1) ? (currentIndex <= aimIndex) : (currentIndex >= aimIndex));
 			
 		} else {
 			
@@ -544,9 +547,8 @@ public class DefaultDataModel implements IDataController {
 				if (isLegal == false) {
 					tempIndex = (playerID == 1) ? (currentIndex += playersResult.elementAt(indexOfStep)) : (currentIndex -= playersResult.elementAt(indexOfStep));
 					ICheckerList point = this.gameBoard.getFieldOnBoard(tempIndex);
-					if (point != null && point.getClass().equals(Point.class) && !point.isBlockedForPlayer(player)) {
+					if (point != null && !point.isBlockedForPlayer(player)) {
 						isLegal = true;
-					
 					}
 				}
 			}
@@ -605,6 +607,10 @@ public class DefaultDataModel implements IDataController {
 		
 		boolean nextMove = false;
 		Vector<Move> possibleMovesOfCurrentPlayer = this.getPossibleMovesOfCurrentPlayer();
+		
+		for (Move move : possibleMovesOfCurrentPlayer) {
+			System.out.println(move);
+		}
 		
 		if (possibleMovesOfCurrentPlayer.isEmpty()) {
 			this.currentPlayer = (this.currentPlayer.equals(this.player1)) ? (this.player2) : (this.player1);

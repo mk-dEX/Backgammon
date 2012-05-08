@@ -339,7 +339,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	public void handleBackgammonEvent(BackgammonEvent event) {
 
-		System.out.println(event.getEventType().toString());
+		//System.out.println(event.getEventType().toString());
 		
 		if (event.getEventType() == BackgammonEvent.type.ACTIVE_PLAYER_INFO) {
 			this.handleActivePlayerEvent((ActivePlayerInfoEvent) event);
@@ -361,7 +361,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	private void handleCheckerMoveResultEvent(CheckerMoveResultEvent event) {
 
-		System.out.println(event.getResult().toString());
+		//System.out.println(event.getResult().toString());
 		
 		//Illegal move
 		if(event.getResult() == CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE)

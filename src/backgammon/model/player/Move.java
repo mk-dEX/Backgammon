@@ -9,6 +9,8 @@ public class Move {
 	protected int fromIndex;
 	protected int toIndex;
 	
+	protected boolean equalize = false;
+	
 	public Move(int id, int fromX, int fromY ,int toX, int toY) {
 		this.id = id;
 		this.fromPoint = fromX;
@@ -65,5 +67,18 @@ public class Move {
 		tmp = this.fromPoint;
 		this.fromPoint = this.toPoint;
 		this.toPoint = tmp;
+	}
+	
+	public void setEqual(boolean enable) {
+		this.equalize = enable;
+	}
+	
+	public boolean equalize() {
+		return this.equalize;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.id + "] : (" + this.fromPoint + ":" + this.fromIndex + ") -> (" + this.toPoint + ":" + this.toIndex + ")";
 	}
 }
