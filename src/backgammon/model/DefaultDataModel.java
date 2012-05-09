@@ -734,7 +734,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	public void doDebugMove(CheckerMoveEvent debugMoveEvent) {
-		//TODO
+		//TODO Ÿber startMove / endMove aufrufen! debug flag abfragen und currentPlayer speichern usw.
 	}
 	
 	@Override
