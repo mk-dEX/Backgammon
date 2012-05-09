@@ -234,17 +234,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 				this.executeResultingMove(oneResultingMove, addMove);
 			}
 			
-			int currentPlayerID = this.getPlayerID(this.currentPlayer);
-			int checkerCount = (currentPlayerID == 1) ? (this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER1_INDEX).getCheckerCount()) : (this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER2_INDEX).getCheckerCount());
-			if (checkerCount == 15) {
-				String playerName = this.currentPlayer.getName();
-				int points = 0;
-				
-				points *= this.doubleValue;
-				
-				InfoEvent winEvent = new InfoEvent(infoType.WIN, currentPlayerID, playerName, points);
-				this.pushEvent(winEvent);
-			}
+			this.checkWin();
 		}
 		else {
 			CheckerMoveResultEvent failureMoveEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, originalMove);
@@ -456,6 +446,46 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return possibleMoves;
 	}
 	
+	protected void checkWin() {
+		
+		int currentPlayerID = this.getPlayerID(this.currentPlayer);
+		int outCheckerCountPlayer1 = this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER1_INDEX).getCheckerCount();
+		int outCheckerCountPlayer2 = this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER2_INDEX).getCheckerCount();
+		int currentPlayerOutCheckerCount = (currentPlayerID == 1) ? (outCheckerCountPlayer1) : (outCheckerCountPlayer2);
+		if (currentPlayerOutCheckerCount == 15) {
+			
+			String playerName = this.currentPlayer.getName();
+			int points = 1;
+			
+			int otherOutCheckerCount = (currentPlayerID == 1) ? (outCheckerCountPlayer2) : (outCheckerCountPlayer1);
+			if (otherOutCheckerCount == 0) {
+				
+				points = 2;
+				
+				int otherPlayerID = (currentPlayerID == 1) ? (2) : (1);
+				Player otherPlayer = this.getPlayer(otherPlayerID);
+				int otherBarCheckerCount = this.gameBoard.getFieldOnBoard(IBackgammonBoard.BAR_INDEX).getCheckerCountForPlayer(otherPlayer);
+				if (otherBarCheckerCount == 0) {
+					points = 3;
+				}
+				else {
+					int startHome = (currentPlayerID == 1) ? (0) : (IBackgammonBoard.BAR_INDEX - 6);
+					int endHome = (currentPlayerID == 1) ? (5) : (IBackgammonBoard.BAR_INDEX - 1);
+					for (int currentPoint = startHome; currentPoint <= endHome; currentPoint++) {
+						if (this.gameBoard.getFieldOnBoard(currentPoint).getCheckerCountForPlayer(otherPlayer) > 0) {
+							points = 3;
+							break;
+						}
+					}
+				}
+			}
+			
+			points *= this.doubleValue;
+			
+			InfoEvent winEvent = new InfoEvent(infoType.WIN, currentPlayerID, playerName, points);
+			this.pushEvent(winEvent);
+		}
+	}
 	
 	
 //	Checks
