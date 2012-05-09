@@ -31,6 +31,9 @@ public class DefaultDataModel implements IDataController {
 	protected Player player1;
 	protected Player player2;
 	protected Player currentPlayer;
+	protected Player playerWithDouble;
+	protected int doubleValue = 2;
+	
 	protected IBackgammonBoard gameBoard;
 	
 	protected Vector<HistoryMove> moveHistory = new Vector<HistoryMove>();
@@ -686,8 +689,12 @@ public class DefaultDataModel implements IDataController {
 	
 	@Override
 	public void startDoubleOffer(int playerID) {
-		// TODO Auto-generated method stub
 		
+		Player requestingPlayer = this.getPlayer(playerID);
+		
+		if (requestingPlayer != this.playerWithDouble) {
+			//TODO
+		}
 	}
 	
 	@Override

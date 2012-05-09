@@ -35,9 +35,10 @@ public class ComputerPlayer extends HumanPlayer {
 		return toPointItem.isBlotOfPlayer(this);
 	}
 	
-	private boolean causesBlot(int fromPoint) {
+	private boolean causesBlot(int fromPoint, int toPoint) {
 		ICheckerList fromPointItem = this.rootDataController.getBoard().getFieldOnBoard(fromPoint);
-		return fromPointItem.getCheckerCount() == 2;
+		ICheckerList toPointItem = this.rootDataController.getBoard().getFieldOnBoard(toPoint);
+		return fromPointItem.getCheckerCount() == 2 || toPointItem.getCheckerCountForPlayer(this) == 0;
 	}
 	
 	private boolean movesToHouse(int toPoint, int playerID) {
@@ -64,6 +65,7 @@ public class ComputerPlayer extends HumanPlayer {
 		for (Move possibleMove : possibleMoves) {
 			
 			if (playerID == 0) playerID = possibleMove.getID();
+			int fromPoint = possibleMove.getFromPoint();
 			int toPoint = possibleMove.getToPoint();
 
 			if (this.movesOut(toPoint, playerID)) {
@@ -72,27 +74,28 @@ public class ComputerPlayer extends HumanPlayer {
 			}
 			
 			boolean movesToHouse = this.movesToHouse(toPoint, playerID);
+			boolean causesBlot = this.causesBlot(fromPoint, toPoint);
 			
 			boolean kicksOtherPlayer = this.kicksOtherPlayer(toPoint);
 			if (kicksOtherPlayer && movesToHouse) {
 				if (this.mode == KIMode.AGGRESSIVE) {
 					bestMove = possibleMove;
-					break;
 				}
 				aggressiveMoves.add(0, possibleMove);
 			}
 			else if (kicksOtherPlayer)
 				aggressiveMoves.add(possibleMove);
+			else if (movesToHouse && !causesBlot)
+				aggressiveMoves.add(possibleMove);
 			
 			boolean protectsBlot = this.protectsBlot(toPoint);
-			if (protectsBlot && movesToHouse) {
+			if (protectsBlot && !causesBlot) {
 				if (this.mode == KIMode.PASSIVE) {
 					bestMove = possibleMove;
-					break;
 				}
 				passiveMoves.add(0, possibleMove);
 			}
-			else if (protectsBlot || movesToHouse)
+			else if (protectsBlot || !causesBlot)
 				passiveMoves.add(possibleMove);
 				
 		}
