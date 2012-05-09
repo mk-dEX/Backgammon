@@ -74,6 +74,7 @@ public class CheckerMoveAnimationManager implements Runnable {
 			this.startAnimation();
 		}
 		this.isAnimating = false;
+		this.board.getView().eventFinished();
 	}
 
 	private void calculatePositions() {
