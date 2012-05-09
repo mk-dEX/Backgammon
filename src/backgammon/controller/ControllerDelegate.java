@@ -61,6 +61,11 @@ public class ControllerDelegate implements IControllerDelegate {
 	public void endMove(CheckerMoveEvent moveEvent) {
 		this.model.endMove(moveEvent);
 	}
+	
+	@Override
+	public void doDebugMove(CheckerMoveEvent debugMoveEvent) {
+		this.model.doDebugMove(debugMoveEvent);
+	}
 
 	@Override
 	public void startDoubleOffer(int playerID) {
@@ -70,5 +75,10 @@ public class ControllerDelegate implements IControllerDelegate {
 	@Override
 	public void offerAccepted(boolean didAccept) {
 		this.model.offerAccepted(didAccept);
+	}
+	
+	@Override
+	public boolean gameStarted() {
+		return this.model.gameStarted();
 	}
 }

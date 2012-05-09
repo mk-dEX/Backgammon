@@ -733,6 +733,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		this.executeResultingMoves(moveResults, finishedMove);
 	}
 	
+	public void doDebugMove(CheckerMoveEvent debugMoveEvent) {
+		//TODO
+	}
+	
 	@Override
 	public void startDoubleOffer(int playerID) {
 		
@@ -749,6 +753,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		
 	}	
 
+	public boolean gameStarted() {
+		return this.currentPlayer != null;
+	}
+	
 
 	
 //	IDataController
