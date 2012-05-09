@@ -373,6 +373,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
 			this.handleDiceEvent((DiceEvent) event);
 		}
+		this.board.repaint();
 		
 	}
 
@@ -399,6 +400,13 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		else if (event.getResult() == CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)
 		{
 			//Computer ist fertig, also nächsten Move anstossen, vorher 1sek warten.
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				//Do nothing
+			}
 			this.controller.initNextPlayerMove();
 		}
 		else if(event.getResult() == CheckerMoveResultEvent.moveResult.INIT)
@@ -409,6 +417,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		{
 			if(event.getMove() != null)
 				this.moveChecker(event.getMove());
+		}
+		else if(event.getResult() == CheckerMoveResultEvent.moveResult.HISTORY_MOVE)
+		{
+			//
 		}
 		
 	}
@@ -423,6 +435,8 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			this.useDelay = false;
 		
 		String name = event.getActivePlayer().getName();
+		
+		
 		this.imageBoard.showInfo(name+" ist an der Reihe");
 		
 		
