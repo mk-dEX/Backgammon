@@ -319,7 +319,8 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			boolean toHasOtherCheckers = (toFieldItem.isBlot() && !toFieldItem.hasCheckersOfPlayer(player));
 			if (toHasOtherCheckers) {
 				
-				moveResults.elementAt(0).setEqual(true);
+				if (this.currentPlayer.isHuman())
+					moveResults.elementAt(0).setEqual(true);
 				
 				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
 				int otherFromPoint = originalMove.getToPoint();
