@@ -8,6 +8,8 @@ import backgammon.event.CheckerMoveEvent;
 import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.ExceptionEvent;
+import backgammon.event.InfoEvent;
+import backgammon.event.InfoEvent.infoType;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.Bar;
 import backgammon.model.board.DefaultBackgammonBoard;
@@ -16,6 +18,7 @@ import backgammon.model.board.Point;
 import backgammon.model.interfaces.IBackgammonBoard;
 import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.interfaces.IDataController;
+import backgammon.model.interfaces.IDataModel;
 import backgammon.model.player.ComputerPlayer;
 import backgammon.model.player.DiceResult;
 import backgammon.model.player.HistoryMove;
@@ -23,7 +26,7 @@ import backgammon.model.player.HumanPlayer;
 import backgammon.model.player.Move;
 import backgammon.model.player.Player;
 
-public class DefaultDataModel implements IDataController {
+public class DefaultDataModel implements IDataController, IDataModel {
 
 	protected IModelEventListener listener;
 	protected GameSettings settings;
@@ -229,6 +232,18 @@ public class DefaultDataModel implements IDataController {
 			boolean addMove = resultingMoves.size() > 1 || !this.currentPlayer.isHuman();
 			for (Move oneResultingMove : resultingMoves) {
 				this.executeResultingMove(oneResultingMove, addMove);
+			}
+			
+			int currentPlayerID = this.getPlayerID(this.currentPlayer);
+			int checkerCount = (currentPlayerID == 1) ? (this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER1_INDEX).getCheckerCount()) : (this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER2_INDEX).getCheckerCount());
+			if (checkerCount == 15) {
+				String playerName = this.currentPlayer.getName();
+				int points = 0;
+				
+				points *= this.doubleValue;
+				
+				InfoEvent winEvent = new InfoEvent(infoType.WIN, currentPlayerID, playerName, points);
+				this.pushEvent(winEvent);
 			}
 		}
 		else {
