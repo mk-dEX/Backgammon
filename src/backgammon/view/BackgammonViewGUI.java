@@ -59,6 +59,12 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	private JButton exitProgram;
 
+	private boolean useDelay = false;
+
+	private boolean eventInProgress = false;
+
+	private Vector<BackgammonEvent> eventList = new Vector<BackgammonEvent>();
+
 	/**
 	 * Normal Constructor
 	 * 
@@ -247,22 +253,11 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		return this.controller;
 	}
 
-	private int handleCheckerMoveEvent(CheckerMoveEvent event) {
-
-		/*
-		 * if (event.getMove().isSetMove())
-		 * this.imageBoard.addChecker(event.getMove().getID(), event.getMove()
-		 * .getFromPoint(), event.getMove().getFromIndex()); else {
-		 */
-		// this.imageBoard.addChecker(event.getMove().getID(),
-		// event.getMove().getFromPoint(), event.getMove().getFromIndex());
-		this.moveChecker(event.getMove());
-		// }
-		return 0;
-	}
 
 	private int handleDiceEvent(DiceEvent event) {
-
+		
+		if(this.useDelay)
+			this.eventInProgress = true;
 		
 		if (event.getDiceType() == diceType.DICE) {
 			
@@ -310,6 +305,8 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			
 			
 		}
+		
+		
 		return 0;
 	}
 
@@ -339,15 +336,35 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	public void handleBackgammonEvent(BackgammonEvent event) {
 
-		//System.out.println(event.getEventType().toString());
+		this.eventList.add(event);
+	
+		if(this.useDelay &&	this.eventInProgress)
+			return;
+		else 
+			handleInternBackgammonEvent();
+		
+	}
+
+	
+
+	private void handleInternBackgammonEvent() {
+		
+		if(this.eventList.isEmpty())
+			return;
+		
+		if(this.useDelay &&	this.eventInProgress)
+			return;
+		
+		BackgammonEvent event = this.eventList.get(0);
+		this.eventList.remove(0);
+		
+		System.out.println(event.getEventType().toString());
 		
 		if (event.getEventType() == BackgammonEvent.type.ACTIVE_PLAYER_INFO) {
 			this.handleActivePlayerEvent((ActivePlayerInfoEvent) event);
 			// Aktiven Spieler anzeigen
 		} else if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT) {
 			this.handleCheckerMoveResultEvent((CheckerMoveResultEvent) event);
-		} else if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE) {
-			this.handleCheckerMoveEvent((CheckerMoveEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.EXCEPTION) {
 			this.handleException((ExceptionEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.INFO) {
@@ -356,12 +373,16 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
 			this.handleDiceEvent((DiceEvent) event);
 		}
-
+		
 	}
 
 	private void handleCheckerMoveResultEvent(CheckerMoveResultEvent event) {
 
 		//System.out.println(event.getResult().toString());
+		
+		if(this.useDelay)
+			this.eventInProgress = true;
+
 		
 		//Illegal move
 		if(event.getResult() == CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE)
@@ -378,11 +399,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		else if (event.getResult() == CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)
 		{
 			//Computer ist fertig, also nächsten Move anstossen, vorher 1sek warten.
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				//Do nothing
-			}	
+			this.controller.initNextPlayerMove();
 		}
 		else if(event.getResult() == CheckerMoveResultEvent.moveResult.INIT)
 		{
@@ -390,7 +407,6 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		}
 		else if(event.getResult() == CheckerMoveResultEvent.moveResult.CORRECT_MOVE)
 		{
-			//gucken ob wir noch mehr moves machen müssen.
 			if(event.getMove() != null)
 				this.moveChecker(event.getMove());
 		}
@@ -399,9 +415,17 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	private void handleActivePlayerEvent(ActivePlayerInfoEvent event) {
 		
-		String name = event.getActivePlayer().getName();
+		if(!event.isHuman())
+		{
+			this.useDelay = true;
+		}
+		else
+			this.useDelay = false;
 		
+		String name = event.getActivePlayer().getName();
 		this.imageBoard.showInfo(name+" ist an der Reihe");
+		
+		
 		
 	}
 
@@ -457,5 +481,12 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			System.exit(1);
 		}
 		
+	}
+	public void eventFinished()
+	{
+		this.eventInProgress = false;
+		
+		if(!this.eventList.isEmpty())
+			this.handleInternBackgammonEvent();
 	}
 }

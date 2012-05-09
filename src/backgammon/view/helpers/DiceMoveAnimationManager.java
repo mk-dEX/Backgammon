@@ -82,6 +82,16 @@ public class DiceMoveAnimationManager implements Runnable {
 			this.startAnimation();
 		}
 		animating = false;
+		
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch (Exception e) {
+			//Do nothing
+		}
+		
+		this.board.getView().eventFinished();
 	}
 
 	@Override
