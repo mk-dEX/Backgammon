@@ -41,13 +41,15 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		
 		int beginIndex = (playerID == 1) ? (IBackgammonBoard.BAR_INDEX - 6) : (0);
 		int endIndex = (playerID == 1) ? (IBackgammonBoard.BAR_INDEX - 1) : (5);
-		int count = 0;
+		int countHouse = 0;
 		
 		for (int currentIndex = beginIndex; currentIndex <= endIndex; currentIndex++) {
-			count += this.points[currentIndex].getCheckerCountForPlayer(player);
+			countHouse += this.points[currentIndex].getCheckerCountForPlayer(player);
 		}
 		
-		return (count == IBackgammonBoard.NUMBER_OF_CHECKERS_PER_PLAYER);
+		int countOut = (playerID == 1) ? (this.outs[0].getCheckerCount()) : (this.outs[1].getCheckerCount());
+		
+		return ((countHouse + countOut) == IBackgammonBoard.NUMBER_OF_CHECKERS_PER_PLAYER);
 	}
 	
 	public Vector<Integer> playerHasBlots(Player player) {

@@ -221,6 +221,8 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	//push
 	protected void executeResultingMoves(Vector<Move> resultingMoves, Move originalMove) {
 		
+		//TODO isDebugMove beachten!
+		
 		if (resultingMoves.isEmpty() == false) {
 			
 			int distanceUsedForOriginalMove = this.getDistanceForMove(originalMove);
@@ -244,6 +246,8 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	protected void executeResultingMove(Move singleMove, boolean addMoveToEvent) {
 
+		//TODO isDebugMove beachten!
+		
 		Move theMove = singleMove;
 		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
 		
@@ -280,7 +284,9 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 //	Board Connection
 	
-	public Vector<Move> getMoveResults(Player player, Move originalMove) {
+	public Vector<Move> getMoveResults(Player player, Move originalMove, boolean isDebugMove) {
+		
+		//TODO isDebugMove beachten!
 		
 		Vector<Move> moveResults = new Vector<Move>();
 		
@@ -319,7 +325,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			boolean toHasOtherCheckers = (toFieldItem.isBlot() && !toFieldItem.hasCheckersOfPlayer(player));
 			if (toHasOtherCheckers) {
 				
-				if (this.currentPlayer.isHuman())
+				if (this.currentPlayer == null || this.currentPlayer.isHuman())
 					moveResults.elementAt(0).setEqual(true);
 				
 				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
@@ -487,6 +493,13 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			this.pushEvent(winEvent);
 		}
 	}
+	
+	protected void doDebugMove(CheckerMoveEvent debugMoveEvent) {
+		//TODO
+		
+		
+	}
+	
 	
 	
 //	Checks
@@ -721,20 +734,22 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		if (selectedPlayer == null)
 			return false;
 		
-		return (this.isCurrentPlayer(selectedPlayer) && selectedPlayer.isHuman());
+		return (this.isCurrentPlayer(selectedPlayer) && selectedPlayer.isHuman()) || !this.gameStarted();
 	}
 	
 	@Override
 	public void endMove(CheckerMoveEvent moveEvent) {
 		
+		if (!this.gameStarted()) {
+			this.doDebugMove(moveEvent);
+			return;
+		}
+		//TODO wenn isDebugMove Ÿberall beachtet wird, dann geht auch normaler Methodenablauf, ohne doDebugMove
+		
 		Move finishedMove = moveEvent.getMove();
 		
-		Vector<Move> moveResults = this.getMoveResults(this.currentPlayer, finishedMove);
+		Vector<Move> moveResults = this.getMoveResults(this.currentPlayer, finishedMove, false);
 		this.executeResultingMoves(moveResults, finishedMove);
-	}
-	
-	public void doDebugMove(CheckerMoveEvent debugMoveEvent) {
-		//TODO Ÿber startMove / endMove aufrufen! debug flag abfragen und currentPlayer speichern usw.
 	}
 	
 	@Override

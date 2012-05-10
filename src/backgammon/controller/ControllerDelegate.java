@@ -61,11 +61,6 @@ public class ControllerDelegate implements IControllerDelegate {
 	public void endMove(CheckerMoveEvent moveEvent) {
 		this.model.endMove(moveEvent);
 	}
-	
-	@Override
-	public void doDebugMove(CheckerMoveEvent debugMoveEvent) {
-		this.model.doDebugMove(debugMoveEvent);
-	}
 
 	@Override
 	public void startDoubleOffer(int playerID) {

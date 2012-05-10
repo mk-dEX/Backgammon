@@ -18,7 +18,6 @@ public interface IControllerDelegate {
 	public boolean startMove(int playerID);
 	/*multiple CheckerMoveResultEvent*/
 	public void endMove(CheckerMoveEvent moveEvent);
-	public void doDebugMove(CheckerMoveEvent debugMoveEvent);
 	
 	/*DiceEvent*/
 	public void startDoubleOffer(int playerID);

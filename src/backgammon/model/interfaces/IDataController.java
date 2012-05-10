@@ -6,7 +6,7 @@ import backgammon.model.player.Move;
 
 public interface IDataController {
 	
-	public Vector<Move> getMoveResults(Player player, Move originalMove);
+	public Vector<Move> getMoveResults(Player player, Move originalMove, boolean isDebugMove);
 	public Vector<Move> getPossiblePlayerMoves(Player player);
 	public IBackgammonBoard getBoard();
 }

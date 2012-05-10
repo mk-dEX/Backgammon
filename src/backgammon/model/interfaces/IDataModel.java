@@ -12,7 +12,6 @@ public interface IDataModel {
 	public void initNextPlayerMove();
 	public boolean startMove(int playerID);
 	public void endMove(CheckerMoveEvent moveEvent);
-	public void doDebugMove(CheckerMoveEvent debugMoveEvent);
 	
 	public void startDoubleOffer(int playerID);
 	public void offerAccepted(boolean didAccept);
