@@ -9,6 +9,7 @@ import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.ExceptionEvent;
 import backgammon.event.InfoEvent;
+import backgammon.event.PossiblePlayerMovesEvent;
 import backgammon.event.InfoEvent.infoType;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.board.Bar;
@@ -82,7 +83,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 0, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 0, indexTo));
-			this.executeResultingMove(tempRegisteredMove, true);
+			this.executeResultingMove(tempRegisteredMove, true, false);
 			indexFrom--;		
 		}
 
@@ -92,13 +93,13 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 11, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 11, indexTo));
-			this.executeResultingMove(tempRegisteredMove, true);
+			this.executeResultingMove(tempRegisteredMove, true, false);
 			indexFrom--;
 			
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 18, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 18, indexTo));
-			this.executeResultingMove(tempRegisteredMove, true);
+			this.executeResultingMove(tempRegisteredMove, true, false);
 			indexFrom--;
 		}
 
@@ -108,7 +109,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			tempRegisteredMove = (playerID == 1) ? 
 					(new Move(playerID, 25, indexFrom, 16, indexTo)) : 
 					(new Move(playerID, 26, indexFrom, maxIndex - 16, indexTo));
-			this.executeResultingMove(tempRegisteredMove, true);
+			this.executeResultingMove(tempRegisteredMove, true, false);
 			indexFrom--;	
 		}
 	}
@@ -219,24 +220,32 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	
 	//push
-	protected void executeResultingMoves(Vector<Move> resultingMoves, Move originalMove) {
-		
-		//TODO isDebugMove beachten!
+	protected void executeResultingMoves(Vector<Move> resultingMoves, Move originalMove, boolean isDebugMove) {
 		
 		if (resultingMoves.isEmpty() == false) {
 			
-			int distanceUsedForOriginalMove = this.getDistanceForMove(originalMove);
-			Vector<Integer> valuesRemovedFromDiceResult = this.currentPlayer.getCurrentDiceResult().makeMove(distanceUsedForOriginalMove);
+			if (!isDebugMove) {
+				int distanceUsedForOriginalMove = this.getDistanceForMove(originalMove);
+				Vector<Integer> valuesRemovedFromDiceResult = this.currentPlayer.getCurrentDiceResult().makeMove(distanceUsedForOriginalMove);
 			
-			DiceEvent diceNumbersUsedEvent = new DiceEvent(originalMove.getID(), this.currentPlayer.getCurrentDiceResult(), valuesRemovedFromDiceResult);
-			this.pushEvent(diceNumbersUsedEvent);
-			
-			boolean addMove = resultingMoves.size() > 1 || !this.currentPlayer.isHuman();
-			for (Move oneResultingMove : resultingMoves) {
-				this.executeResultingMove(oneResultingMove, addMove);
+				DiceEvent diceNumbersUsedEvent = new DiceEvent(originalMove.getID(), this.currentPlayer.getCurrentDiceResult(), valuesRemovedFromDiceResult);
+				this.pushEvent(diceNumbersUsedEvent);
 			}
 			
-			this.checkWin();
+			
+			boolean addMove;
+			
+			if (isDebugMove) {
+				addMove = resultingMoves.size() > 1;
+			} else {
+				addMove = (!this.currentPlayer.isHuman() || resultingMoves.size() > 1) ? (true) : (false);
+			}
+			
+			for (Move oneResultingMove : resultingMoves) {
+				this.executeResultingMove(oneResultingMove, addMove, isDebugMove);
+			}
+			
+			this.checkWin(false, 0);
 		}
 		else {
 			CheckerMoveResultEvent failureMoveEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, originalMove);
@@ -244,9 +253,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		}
 	}
 	
-	protected void executeResultingMove(Move singleMove, boolean addMoveToEvent) {
-
-		//TODO isDebugMove beachten!
+	protected void executeResultingMove(Move singleMove, boolean addMoveToEvent, boolean isDebugMove) {
 		
 		Move theMove = singleMove;
 		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
@@ -255,7 +262,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		
 		CheckerMoveResultEvent singleMoveResult;
 		if (theMove != null) {
-			CheckerMoveResultEvent.moveResult moveResult = (initialized) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
+			CheckerMoveResultEvent.moveResult moveResult = (initialized || isDebugMove) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
 			singleMoveResult = new CheckerMoveResultEvent(moveResult, (addMoveToEvent) ? (theMove) : (null));
 			
 			if (this.currentPlayer != null) {
@@ -286,8 +293,6 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	public Vector<Move> getMoveResults(Player player, Move originalMove, boolean isDebugMove) {
 		
-		//TODO isDebugMove beachten!
-		
 		Vector<Move> moveResults = new Vector<Move>();
 		
 		ICheckerList fromFieldItem = this.gameBoard.getFieldOnBoard(originalMove.getFromPoint());
@@ -300,7 +305,23 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		Class<? extends ICheckerList> toFieldItemClass = toFieldItem.getClass();
 		boolean isLegal = false;
 		
-		if (fromFieldItemClass.equals(Point.class) && toFieldItemClass.equals(Out.class)) {
+		
+		if (isDebugMove) {
+			
+			if (toFieldItemClass.equals(Out.class)) {
+				
+				int playerID = originalMove.getID();
+				isLegal = (playerID == 1) ? 
+							(this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER1_INDEX) == toFieldItem) : 
+							(this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER2_INDEX) == toFieldItem);
+	
+			} else {
+				
+				isLegal = true;
+				
+			}
+			
+		} else if (fromFieldItemClass.equals(Point.class) && toFieldItemClass.equals(Out.class)) {
 			
 			isLegal = this.checkFieldOutMove(player, originalMove);
 			
@@ -325,7 +346,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			boolean toHasOtherCheckers = (toFieldItem.isBlot() && !toFieldItem.hasCheckersOfPlayer(player));
 			if (toHasOtherCheckers) {
 				
-				if (this.currentPlayer == null || this.currentPlayer.isHuman())
+				if (isDebugMove || this.currentPlayer.isHuman())
 					moveResults.elementAt(0).setEqual(true);
 				
 				int otherPlayerID = (originalMove.getID() == 1) ? (2) : (1);
@@ -453,7 +474,13 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return possibleMoves;
 	}
 	
-	protected void checkWin() {
+	protected void checkWin(boolean forceWin, int playerID) {
+		
+		//TODO bei double nicht angenommen automatisch verloren
+		
+		if (this.currentPlayer == null) {
+			return;
+		}
 		
 		int currentPlayerID = this.getPlayerID(this.currentPlayer);
 		int outCheckerCountPlayer1 = this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER1_INDEX).getCheckerCount();
@@ -492,12 +519,6 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			InfoEvent winEvent = new InfoEvent(infoType.WIN, currentPlayerID, playerName, points);
 			this.pushEvent(winEvent);
 		}
-	}
-	
-	protected void doDebugMove(CheckerMoveEvent debugMoveEvent) {
-		//TODO
-		
-		
 	}
 	
 	
@@ -632,7 +653,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	protected void handleComputerMove() {
 		while (this.currentPlayerHasMovesLeft()) {
 			Vector<Move> computerPlayerMoveAndResulting = ((ComputerPlayer)this.currentPlayer).move();
-			this.executeResultingMoves(computerPlayerMoveAndResulting, computerPlayerMoveAndResulting.elementAt(0));
+			this.executeResultingMoves(computerPlayerMoveAndResulting, computerPlayerMoveAndResulting.elementAt(0), false);
 		}
 		
 		CheckerMoveResultEvent computerDidFinishEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE, null);
@@ -729,27 +750,43 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 
 	@Override
-	public boolean startMove(int playerID) {
+	public boolean startMove(int playerID, int fromPoint) {
 		Player selectedPlayer = this.getPlayer(playerID);
 		if (selectedPlayer == null)
 			return false;
 		
-		return (this.isCurrentPlayer(selectedPlayer) && selectedPlayer.isHuman()) || !this.gameStarted();
+		boolean playerCanStartMove = (this.isCurrentPlayer(selectedPlayer) && selectedPlayer.isHuman()) || !this.gameStarted();
+		
+		if (playerCanStartMove && this.gameStarted()) {
+			Vector<Move> possibleMoves = this.getPossiblePlayerMoves(this.currentPlayer);
+			Vector<Move> possibleMovesForSelectedChecker = new Vector<Move>();
+			
+			for (Move move : possibleMoves) {
+				if (move.getFromPoint() == fromPoint) {
+					possibleMovesForSelectedChecker.add(move);
+				}
+			}
+			
+			PossiblePlayerMovesEvent possibleMovesEvent = new PossiblePlayerMovesEvent(possibleMovesForSelectedChecker);
+			this.pushEvent(possibleMovesEvent);
+		}
+		
+		return playerCanStartMove;
 	}
 	
 	@Override
 	public void endMove(CheckerMoveEvent moveEvent) {
 		
-		if (!this.gameStarted()) {
-			this.doDebugMove(moveEvent);
-			return;
-		}
-		//TODO wenn isDebugMove Ÿberall beachtet wird, dann geht auch normaler Methodenablauf, ohne doDebugMove
-		
 		Move finishedMove = moveEvent.getMove();
 		
-		Vector<Move> moveResults = this.getMoveResults(this.currentPlayer, finishedMove, false);
-		this.executeResultingMoves(moveResults, finishedMove);
+		int playerID = finishedMove.getID();
+		Player tempDebugMovePlayer = (!this.gameStarted()) ? (this.getPlayer(playerID)) : (this.currentPlayer);
+		
+		Vector<Move> moveResults = this.getMoveResults(tempDebugMovePlayer, finishedMove, !this.gameStarted());
+		this.executeResultingMoves(moveResults, finishedMove, !this.gameStarted());
+		
+		PossiblePlayerMovesEvent possibleMovesEvent = new PossiblePlayerMovesEvent(new Vector<Move>());
+		this.pushEvent(possibleMovesEvent);
 	}
 	
 	@Override
@@ -764,8 +801,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	@Override
 	public void offerAccepted(boolean didAccept) {
-		// TODO Auto-generated method stub
-		
+		if (didAccept) {
+			this.doubleValue *= 2;
+		}
+		//TODO
 	}	
 
 	public boolean gameStarted() {

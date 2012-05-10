@@ -8,7 +8,8 @@ public abstract class BackgammonEvent {
 		CHECKER_MOVE_RESULT,
 		DICE,
 		EXCEPTION,
-		INFO
+		INFO,
+		POSSIBLE_MOVES
 	}
 	
 	protected BackgammonEvent.type eventType;

@@ -10,7 +10,7 @@ public interface IDataModel {
 	public void initGame();
 	
 	public void initNextPlayerMove();
-	public boolean startMove(int playerID);
+	public boolean startMove(int playerID, int fromPoint);
 	public void endMove(CheckerMoveEvent moveEvent);
 	
 	public void startDoubleOffer(int playerID);

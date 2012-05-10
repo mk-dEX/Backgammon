@@ -15,7 +15,7 @@ public interface IControllerDelegate {
 	public void initNextPlayerMove();
 	
 	/* ist der angeklickte player an der Reihe? */
-	public boolean startMove(int playerID);
+	public boolean startMove(int playerID, int fromPoint);
 	/*multiple CheckerMoveResultEvent*/
 	public void endMove(CheckerMoveEvent moveEvent);
 	

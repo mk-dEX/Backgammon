@@ -123,7 +123,7 @@ public class ComputerPlayer extends HumanPlayer {
 		
 		System.out.println("Best Move: " + bestMove);
 		
-		moveResults = this.rootDataController.getMoveResults(this, bestMove);
+		moveResults = this.rootDataController.getMoveResults(this, bestMove, false);
 		
 		return moveResults;
 	}
