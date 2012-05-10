@@ -22,6 +22,7 @@ import backgammon.event.DiceEvent;
 import backgammon.event.DiceEvent.diceType;
 import backgammon.event.ActivePlayerInfoEvent;
 import backgammon.event.ExceptionEvent;
+import backgammon.event.PossiblePlayerMovesEvent;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.player.Move;
 import backgammon.view.helpers.BDice;
@@ -64,7 +65,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 	private boolean eventInProgress = false;
 
 	private Vector<BackgammonEvent> eventList = new Vector<BackgammonEvent>();
-
+	
 	/**
 	 * Normal Constructor
 	 * 
@@ -372,9 +373,16 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			//this.imageBoard.showInfo((InfoEvent) event.getInfo());
 		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
 			this.handleDiceEvent((DiceEvent) event);
+		} else if (event.getEventType() == BackgammonEvent.type.POSSIBLE_MOVES) {
+			this.handlePossibleMovesEvent((PossiblePlayerMovesEvent) event);
 		}
 		this.board.repaint();
 		
+	}
+
+	private void handlePossibleMovesEvent(PossiblePlayerMovesEvent event) {
+		
+		this.imageBoard.setPossibleMoves(event.getPossibleMoves());
 	}
 
 	private void handleCheckerMoveResultEvent(CheckerMoveResultEvent event) {
@@ -502,5 +510,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		
 		if(!this.eventList.isEmpty())
 			this.handleInternBackgammonEvent();
+	}
+
+	public Image getPossibleMove() {
+		return new ImageIcon(getClass().getResource(
+				"/img/possibleMoves.png")).getImage();
 	}
 }

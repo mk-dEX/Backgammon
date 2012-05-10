@@ -32,6 +32,7 @@ public class ImageBoard extends JPanel {
 	private Thread thread = null;
 	private String info = "";
 	private BDice dDice = null; //DoubleDice
+	private Vector<Move> possibleMoves = new Vector<Move>();
 
 	public ImageBoard(BackgammonViewGUI backgammonViewGUI, String img) {
 
@@ -88,12 +89,27 @@ public class ImageBoard extends JPanel {
 		
 		this.drawChecker(g);
 		this.drawDice(g);
+		this.drawPossibleMoves(g);
 		
 		//Info zeichnen
 		if(!this.info.isEmpty())
 		{
 			this.drawInfo(g);
 		}
+	}
+
+	private void drawPossibleMoves(Graphics g) {
+		
+		for (Move move : this.possibleMoves) {
+		
+		//Position bestimmen
+		int x = this.PositionMatrix.get(move.getToPoint()).getX();
+		int y = this.PositionMatrix.get(move.getToPoint()).getY() + ImageBoard.getIndex(move.getToPoint(), move.getToIndex());
+			
+			g.drawImage(this.view.getPossibleMove(),
+					x - 25, y - 25, null);
+		}
+		
 	}
 
 	private void drawInfo(Graphics g) {
@@ -480,5 +496,18 @@ public class ImageBoard extends JPanel {
 	public void setDoubleDice(int playerID, Integer i) {
 		this.dDice = new BDice(playerID, i);
 		
+	}
+
+	public void setPossibleMoves(Vector<Move> possibleMoves2) {
+		
+		//Leere Liste, pack alle moves in die Liste
+		this.possibleMoves.clear();
+		
+		this.possibleMoves = new Vector<Move>(possibleMoves2);
+		
+	}
+	public void clearPossibleMoves()
+	{
+		this.possibleMoves.clear();
 	}
 }
