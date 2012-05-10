@@ -77,7 +77,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 			return;
 
 		if (this.parent.getView().getController()
-				.startMove(ImageBoardMouseListener.checker.getPlayer())) {
+				.startMove(ImageBoardMouseListener.checker.getPlayer(), ImageBoardMouseListener.checker.getPoint())) {
 			// System.out.println("Start dragging");
 			ImageBoardMouseListener.dragging = true;
 			this.parent.setFocus(ImageBoardMouseListener.checker);

@@ -407,7 +407,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			catch (Exception e) {
 				//Do nothing
 			}
-			this.controller.initNextPlayerMove();
+			//this.controller.initNextPlayerMove();
 		}
 		else if(event.getResult() == CheckerMoveResultEvent.moveResult.INIT)
 		{
