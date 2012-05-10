@@ -284,6 +284,21 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		}
 		else {
 			this.listener.handleBackgammonEvent(event);
+			
+			if (event.getClass().equals(CheckerMoveResultEvent.class)) {
+				Move eventMove = ((CheckerMoveResultEvent)event).getMove();
+				if (eventMove != null) {
+					int playerID = eventMove.getID();
+					int fromPoint = eventMove.getFromPoint();
+					int fromIndex = eventMove.getFromIndex();
+					int toPoint = eventMove.getToPoint();
+					int toIndex = eventMove.getToIndex();
+					System.out.println("["+playerID+"] "+fromPoint+","+fromIndex+"->"+toPoint+","+toIndex);
+				
+				} else {
+					System.out.println("move -> null");
+				}
+			}
 		}
 	}
 	
