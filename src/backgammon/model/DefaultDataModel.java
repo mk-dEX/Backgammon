@@ -37,7 +37,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	protected Player player2;
 	protected Player currentPlayer;
 	protected Player playerWithDouble;
-	protected int doubleValue = 2;
+	protected int doubleValue = 1;
 	
 	protected IBackgammonBoard gameBoard;
 	
