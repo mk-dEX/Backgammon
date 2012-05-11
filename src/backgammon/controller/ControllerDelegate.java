@@ -9,7 +9,7 @@ import backgammon.view.BackgammonViewGUI;
 
 public class ControllerDelegate implements IControllerDelegate {
 	
-	private final String workingTitle = "Backgammon v0.1";
+	private final String workingTitle = "Backgammon v1.0";
 	
 	private GameAgent rootController;
 	private GameSettings gameSettings;
