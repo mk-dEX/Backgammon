@@ -505,6 +505,8 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		int currentPlayerOutCheckerCount = (currentPlayerID == 1) ? (outCheckerCountPlayer1) : (outCheckerCountPlayer2);
 		if (forceWin || currentPlayerOutCheckerCount == 15) {
 			
+			System.out.println(currentPlayerID + " hat " + currentPlayerOutCheckerCount + " Checker");
+			
 			String playerName = this.currentPlayer.getName();
 			int points = 1;
 			
@@ -758,7 +760,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		if (nextMove) {
 			
 			DiceResult diceResult = null;
-			try { diceResult = this.getDiceResult(this.currentPlayer, false); } 
+			try { 
+				do {
+					diceResult = this.getDiceResult(this.currentPlayer, false);
+				} while (this.getPlayerID(this.currentPlayer) == 1 &&  diceResult.elementAt(0).equals(diceResult.elementAt(1)));
+				
+			} 
 			catch (Exception e) { 
 				ExceptionEvent diceFailEvent = new ExceptionEvent(ExceptionEvent.errorType.DICE_ROLL_DID_FAIL, e);
 				this.pushEvent(diceFailEvent);
@@ -850,7 +857,14 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return this.currentPlayer != null;
 	}
 	
-
+	@Override
+	public int getCurrentPlayerID() {
+		if(this.currentPlayer == null)
+			return 0;
+		return this.getPlayerID(this.currentPlayer);
+	}
+	
+	
 	
 //	IDataController
 	
@@ -861,13 +875,5 @@ public class DefaultDataModel implements IDataController, IDataModel {
 
 	public IBackgammonBoard getBoard() {
 		return this.gameBoard;
-	}
-
-
-	@Override
-	public int getCurrentPlayerID() {
-		if(this.currentPlayer == null)
-			return 0;
-		return this.getPlayerID(this.currentPlayer);
 	}
 }
