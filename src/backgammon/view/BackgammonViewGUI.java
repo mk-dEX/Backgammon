@@ -21,6 +21,7 @@ import backgammon.event.DiceEvent;
 import backgammon.event.DiceEvent.diceType;
 import backgammon.event.ActivePlayerInfoEvent;
 import backgammon.event.ExceptionEvent;
+import backgammon.event.InfoEvent;
 import backgammon.event.PossiblePlayerMovesEvent;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.player.Move;
@@ -114,9 +115,9 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		// Make all visible
 		this.board.pack();
 		this.board.setVisible(true);
-		
+
 		this.hist = new HistoryPanel(this);
-		
+
 	}
 
 	/**
@@ -205,7 +206,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		this.showHistory.setVisible(false);
 		tmp.add(showHistory, BorderLayout.SOUTH);
 		this.showHistory.addActionListener(this);
-		
+
 		this.startGame = new JButton("Spiel starten");
 		this.startGame.setPreferredSize(new Dimension(250, 25));
 		tmp.add(startGame, BorderLayout.SOUTH);
@@ -255,8 +256,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 				this.imageBoard.addDice(2, event.getDiceResult().get(1), 2);
 			} else {
 				int i = 1;
-				for(int result : event.getDiceResult())
-				{
+				for (int result : event.getDiceResult()) {
 					this.imageBoard.addDice(event.getPlayerID(), result, i);
 					i++;
 				}
@@ -301,19 +301,19 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		// System.out.println("Test1");
 
 		if (e.getSource() == this.newGame) {
-			
+
 			this.board.dispose();
 			this.controller.exitGame();
 		}
 		if (e.getSource() == this.startGame) {
 
-			if(this.imageBoard.getAnimation().isAnimating())
+			if (this.imageBoard.getAnimation().isAnimating())
 				return;
-			
+
 			// this.board.dispose();
 			this.startGame.setVisible(false);
 			this.showHistory.setVisible(true);
-			
+
 			this.controller.initGame();
 		}
 		if (e.getSource() == this.exitProgram) {
@@ -322,7 +322,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			System.exit(0);
 		}
 		if (e.getSource() == this.showHistory) {
-			
+
 			this.hist.setVisible(true);
 		}
 
@@ -331,59 +331,54 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 	public void handleBackgammonEvent(BackgammonEvent event) {
 
 		System.out.println(event.getEventType().toString());
-		
-		//Event untersuchen
-		if(event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT)
-		{
+
+		// Event untersuchen
+		if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT) {
 			CheckerMoveResultEvent tmp = (CheckerMoveResultEvent) event;
-			if(tmp.getResult() != CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)
+			if (tmp.getResult() != CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)
 				this.importantEventList.add(event);
 			else
 				this.normalEventList.add(event);
-		} 
-		else if(event.getEventType() == BackgammonEvent.type.DICE)
-		{
+		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
 			DiceEvent tmp = (DiceEvent) event;
-			if(tmp.getDiceType() == DiceEvent.diceType.DICE)
+			if (tmp.getDiceType() == DiceEvent.diceType.DICE)
 				this.importantEventList.add(event);
 			else
 				this.normalEventList.add(event);
-		}
-		else
+		} else
 			this.normalEventList.add(event);
-			
+
 		this.handleNormalEventList();
 
 	}
 
 	private void handleImportantEventList() {
 
-		if(this.importantEventList.isEmpty())
+		if (this.importantEventList.isEmpty())
 			return;
-		
+
 		BackgammonEvent event = this.importantEventList.get(0);
 		this.importantEventList.remove(0);
-		
+
 		if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT) {
 			this.handleCheckerMoveResultEvent((CheckerMoveResultEvent) event);
-		}  else if (event.getEventType() == BackgammonEvent.type.DICE) {
+		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
 			this.handleDiceEvent((DiceEvent) event);
 		}
 		this.board.repaint();
-		
+
 	}
 
 	private void handleNormalEventList() {
-		
-		if(!this.importantEventList.isEmpty())
-		{
-			this.handleImportantEventList();	
+
+		if (!this.importantEventList.isEmpty()) {
+			this.handleImportantEventList();
 		}
-		
-		if(this.normalEventList.isEmpty())
+
+		if (this.normalEventList.isEmpty())
 			return;
-		
-		//Falls die Liste leer ist, dann nicht weitermachen
+
+		// Falls die Liste leer ist, dann nicht weitermachen
 		if (this.imageBoard.getAnimation().isAnimating())
 			return;
 
@@ -391,16 +386,15 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 		BackgammonEvent event = this.normalEventList.firstElement();
 		this.normalEventList.remove(0);
-		
-		
+
 		if (event.getEventType() == BackgammonEvent.type.ACTIVE_PLAYER_INFO) {
 			this.handleActivePlayerEvent((ActivePlayerInfoEvent) event);
 			// Aktiven Spieler anzeigen
 		} else if (event.getEventType() == BackgammonEvent.type.EXCEPTION) {
 			this.handleException((ExceptionEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.INFO) {
-			// Text übergeben statt Type?
-			// this.imageBoard.showInfo((InfoEvent) event.getInfo());
+
+			this.handleInfoEvent((InfoEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
 			this.handleDiceEvent((DiceEvent) event);
 		} else if (event.getEventType() == BackgammonEvent.type.POSSIBLE_MOVES) {
@@ -413,6 +407,36 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 		if (!this.normalEventList.isEmpty())
 			this.handleNormalEventList();
+	}
+
+	private void handleInfoEvent(InfoEvent event) {
+
+		if (event.getInfo() == InfoEvent.infoType.WIN) {
+
+			// Dialogbox wer gewonnen hat.
+			// Neues Spiel machen
+			// falls ok, dann anzeigen.
+			Object[] options = { "OK" };
+			int n = JOptionPane.showOptionDialog(
+					this.board,
+					event.getPlayerName() + " hat gewonnen mit "
+							+ event.getPoints() + " Punkten", "YEAH!",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+					null, // do not use a
+							// custom Icon
+					options, // the titles of buttons
+					options[0]); // default button title
+
+			if (n == 0) {
+				// annehmen
+				this.eventFinished();
+
+				this.board.dispose();
+				this.controller.exitGame();
+			}
+
+		}
+
 	}
 
 	private void handlePossibleMovesEvent(PossiblePlayerMovesEvent event) {
@@ -446,8 +470,8 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-			 this.controller.initNextPlayerMove();
+
+			this.controller.initNextPlayerMove();
 
 			// Event beenden
 			this.eventFinished();
@@ -459,7 +483,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			else
 				this.eventFinished();
 		} else if (event.getResult() == CheckerMoveResultEvent.moveResult.HISTORY_MOVE) {
-			
+
 			this.hist.addListEntry(event.getMove());
 			// Event beenden
 			this.eventFinished();
@@ -516,7 +540,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 	}
 
 	public void eventFinished() {
-		
+
 		this.handleNormalEventList();
 
 	}

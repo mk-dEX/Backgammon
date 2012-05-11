@@ -27,7 +27,7 @@ public class AnimationManager implements Runnable{
 
 	private AnimationEntry dice;
 	private int diceDuration = 1500;
-	private final int pause = 10;
+	private final int pause = 20;
 	private final int Rpause = 240;
 	private Thread thread;
 	private long startTime;
@@ -138,6 +138,11 @@ public class AnimationManager implements Runnable{
 			tmp2 = this.board.addChecker(tmp.move.getID(), tmp.move.getFromPoint(), tmp.move.getFromIndex());
 		}
 		// set all variables
+		
+		//set focus.
+		this.board.getChecker().remove(tmp2);
+		this.board.getChecker().add(tmp2);
+		
 		this.checker = tmp2;
 		this.toIndex = tmp.toIndex;
 		this.toPoint = tmp.toPoint;

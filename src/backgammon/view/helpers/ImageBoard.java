@@ -229,7 +229,7 @@ public class ImageBoard extends JPanel {
 		if(this.dDice != null)
 		{
 			Image used =  new ImageIcon(getClass().getResource("/img/double"+this.dDice.getValue()+".png")).getImage();
-
+			this.dDice.setCoords(this.getDoubleDicePosition(this.dDice.getPlayer()).getX(), this.getDoubleDicePosition(this.dDice.getPlayer()).getY());
 	        g.drawImage(used, this.getDoubleDicePosition(this.dDice.getPlayer()).getX() - 24, this.getDoubleDicePosition(this.dDice.getPlayer()).getY() - 24, this);
 		}
 	}
