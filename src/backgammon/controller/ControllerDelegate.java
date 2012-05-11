@@ -76,4 +76,9 @@ public class ControllerDelegate implements IControllerDelegate {
 	public boolean gameStarted() {
 		return this.model.gameStarted();
 	}
+
+	@Override
+	public int getCurrentPlayerID() {
+		return this.model.getCurrentPlayerID();
+	}
 }

@@ -4,8 +4,8 @@ public class BDice {
 	
 	private int p;
 	private int i;
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	private int rvalue;
 	private int rotation;
 	private boolean used = false;
@@ -27,15 +27,15 @@ public class BDice {
 	{
 		return this.i;
 	}
-	public void setCoords(int x, int y)
+	public void setCoords(double d, double e)
 	{
-		this.x = x;
-		this.y = y;
+		this.x = d;
+		this.y = e;
 	}
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	public void setRValue(int i)

@@ -838,4 +838,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	public IBackgammonBoard getBoard() {
 		return this.gameBoard;
 	}
+
+
+	@Override
+	public int getCurrentPlayerID() {
+		if(this.currentPlayer == null)
+			return 0;
+		return this.getPlayerID(this.currentPlayer);
+	}
 }

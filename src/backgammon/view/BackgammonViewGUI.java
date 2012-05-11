@@ -16,7 +16,6 @@ import javax.swing.border.EtchedBorder;
 
 import backgammon.controller.IControllerDelegate;
 import backgammon.event.BackgammonEvent;
-import backgammon.event.CheckerMoveEvent;
 import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
 import backgammon.event.DiceEvent.diceType;
@@ -26,6 +25,7 @@ import backgammon.event.PossiblePlayerMovesEvent;
 import backgammon.listener.IModelEventListener;
 import backgammon.model.player.Move;
 import backgammon.view.helpers.BDice;
+import backgammon.view.helpers.HistoryPanel;
 import backgammon.view.helpers.ImageBoard;
 import backgammon.view.helpers.TopPanel;
 
@@ -44,8 +44,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 	/**
 	 * The JFrame for the history
 	 */
-	@SuppressWarnings("unused")
-	private JFrame hist;
+	private HistoryPanel hist;
 
 	private Image pl1_checker;
 	private Image pl2_checker;
@@ -60,12 +59,9 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 	private JButton exitProgram;
 
-	private boolean useDelay = false;
+	private Vector<BackgammonEvent> normalEventList = new Vector<BackgammonEvent>();
+	private Vector<BackgammonEvent> importantEventList = new Vector<BackgammonEvent>();
 
-	private boolean eventInProgress = false;
-
-	private Vector<BackgammonEvent> eventList = new Vector<BackgammonEvent>();
-	
 	/**
 	 * Normal Constructor
 	 * 
@@ -100,10 +96,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		// Init MainFrame
 		JFrame temp = new JFrame(title);
 		this.board = temp;
-		
+
 		// Get Board
 		this.imageBoard = this.drawBoard();
-		
+
 		this.board.getContentPane().setLayout(new BorderLayout());
 		this.board.setResizable(false);
 		// Add Board
@@ -118,18 +114,9 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		// Make all visible
 		this.board.pack();
 		this.board.setVisible(true);
-
-		/*
-		 * JFrame hist = new JFrame("History");
-		 * 
-		 * hist.setSize(300,600);
-		 * hist.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		 * hist.setResizable(false); hist.setLocationRelativeTo(null);
-		 * hist.setVisible(false); this.hist = hist;
-		 */
-
-		// Testexecption
-		// this.showException(null);
+		
+		this.hist = new HistoryPanel(this);
+		
 	}
 
 	/**
@@ -217,6 +204,7 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		this.showHistory.setPreferredSize(new Dimension(250, 25));
 		this.showHistory.setVisible(false);
 		tmp.add(showHistory, BorderLayout.SOUTH);
+		this.showHistory.addActionListener(this);
 		
 		this.startGame = new JButton("Spiel starten");
 		this.startGame.setPreferredSize(new Dimension(250, 25));
@@ -254,61 +242,57 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		return this.controller;
 	}
 
+	private void handleDiceEvent(DiceEvent event) {
 
-	private int handleDiceEvent(DiceEvent event) {
-		
-		if(this.useDelay)
-			this.eventInProgress = true;
-		
 		if (event.getDiceType() == diceType.DICE) {
-			
+
 			// Würfel leeren
 			this.imageBoard.getDices().clear();
-			
+
 			// System.out.println("Ich würfel");
 			if (event.getPlayerID() == 0) {
-				this.imageBoard.addDice(1, event.getDiceResult().get(0), 1);
-				this.imageBoard.addDice(2, event.getDiceResult().get(1), 1);
+				this.imageBoard.addDice(1, event.getDiceResult().get(0), 3);
+				this.imageBoard.addDice(2, event.getDiceResult().get(1), 2);
 			} else {
-				this.imageBoard.addDice(event.getPlayerID(), event
-						.getDiceResult().get(0), 1);
-				this.imageBoard.addDice(event.getPlayerID(), event
-						.getDiceResult().get(1), 2);
+				int i = 1;
+				for(int result : event.getDiceResult())
+				{
+					this.imageBoard.addDice(event.getPlayerID(), result, i);
+					i++;
+				}
 			}
 		} else if (event.getDiceType() == diceType.DOUBLE_DICE) {
-			this.imageBoard.setDoubleDice(event.getPlayerID(), event.getDiceResult()
-					.get(0));
-		}
-		else if(event.getDiceType() == diceType.NUMBERS_USED)
-		{
-			
+			this.imageBoard.setDoubleDice(event.getPlayerID(), event
+					.getDiceResult().get(0));
+
+			// Event beenden
+			this.eventFinished();
+		} else if (event.getDiceType() == diceType.NUMBERS_USED) {
+
 			Vector<Integer> tmpList = new Vector<Integer>(event.getNumersUsed());
-			//Den Würfel grau machen oder rot durchkreuzen
-			//würfel suchen
+			// Den Würfel grau machen oder rot durchkreuzen
+			// würfel suchen
 			for (int i = 0; i < this.imageBoard.getDices().size(); i++) {
-				
+
 				BDice tmpDice = this.imageBoard.getDices().get(i);
-				
-				if(tmpList.size() == 0)
-					return 0;
-				
-				if(tmpDice.getValue() == tmpList.get(0))
-				{
-					//gefunden
-					if(!tmpDice.isUsed())
-					{
+
+				if (tmpList.size() == 0)
+					return;
+
+				if (tmpDice.getValue() == tmpList.get(0)) {
+					// gefunden
+					if (!tmpDice.isUsed()) {
 						tmpDice.setUsed();
 						tmpList.remove(0);
 					}
 				}
-		        	
+
 			}
-			
-			
+			// Event beenden
+			this.eventFinished();
+
 		}
-		
-		
-		return 0;
+
 	}
 
 	@Override
@@ -317,14 +301,19 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		// System.out.println("Test1");
 
 		if (e.getSource() == this.newGame) {
+			
 			this.board.dispose();
 			this.controller.exitGame();
 		}
 		if (e.getSource() == this.startGame) {
 
+			if(this.imageBoard.getAnimation().isAnimating())
+				return;
+			
 			// this.board.dispose();
 			this.startGame.setVisible(false);
 			this.showHistory.setVisible(true);
+			
 			this.controller.initGame();
 		}
 		if (e.getSource() == this.exitProgram) {
@@ -332,188 +321,208 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 			this.destroyGUI();
 			System.exit(0);
 		}
+		if (e.getSource() == this.showHistory) {
+			
+			this.hist.setVisible(true);
+		}
 
 	}
 
 	public void handleBackgammonEvent(BackgammonEvent event) {
 
-		this.eventList.add(event);
-	
-		if(this.useDelay &&	this.eventInProgress)
-			return;
-		else 
-			handleInternBackgammonEvent();
-		
-	}
-
-	
-
-	private void handleInternBackgammonEvent() {
-		
-		if(this.eventList.isEmpty())
-			return;
-		
-		if(this.useDelay &&	this.eventInProgress)
-			return;
-		
-		BackgammonEvent event = this.eventList.get(0);
-		this.eventList.remove(0);
-		
 		System.out.println(event.getEventType().toString());
 		
-		if (event.getEventType() == BackgammonEvent.type.ACTIVE_PLAYER_INFO) {
-			this.handleActivePlayerEvent((ActivePlayerInfoEvent) event);
-			// Aktiven Spieler anzeigen
-		} else if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT) {
+		//Event untersuchen
+		if(event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT)
+		{
+			CheckerMoveResultEvent tmp = (CheckerMoveResultEvent) event;
+			if(tmp.getResult() != CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)
+				this.importantEventList.add(event);
+			else
+				this.normalEventList.add(event);
+		} 
+		else if(event.getEventType() == BackgammonEvent.type.DICE)
+		{
+			DiceEvent tmp = (DiceEvent) event;
+			if(tmp.getDiceType() == DiceEvent.diceType.DICE)
+				this.importantEventList.add(event);
+			else
+				this.normalEventList.add(event);
+		}
+		else
+			this.normalEventList.add(event);
+			
+		this.handleNormalEventList();
+
+	}
+
+	private void handleImportantEventList() {
+
+		if(this.importantEventList.isEmpty())
+			return;
+		
+		BackgammonEvent event = this.importantEventList.get(0);
+		this.importantEventList.remove(0);
+		
+		if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT) {
 			this.handleCheckerMoveResultEvent((CheckerMoveResultEvent) event);
-		} else if (event.getEventType() == BackgammonEvent.type.EXCEPTION) {
-			this.handleException((ExceptionEvent) event);
-		} else if (event.getEventType() == BackgammonEvent.type.INFO) {
-			//Text übergeben statt Type?
-			//this.imageBoard.showInfo((InfoEvent) event.getInfo());
-		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
+		}  else if (event.getEventType() == BackgammonEvent.type.DICE) {
 			this.handleDiceEvent((DiceEvent) event);
-		} else if (event.getEventType() == BackgammonEvent.type.POSSIBLE_MOVES) {
-			this.handlePossibleMovesEvent((PossiblePlayerMovesEvent) event);
 		}
 		this.board.repaint();
 		
 	}
 
-	private void handlePossibleMovesEvent(PossiblePlayerMovesEvent event) {
+	private void handleNormalEventList() {
 		
+		if(!this.importantEventList.isEmpty())
+		{
+			this.handleImportantEventList();	
+		}
+		
+		if(this.normalEventList.isEmpty())
+			return;
+		
+		//Falls die Liste leer ist, dann nicht weitermachen
+		if (this.imageBoard.getAnimation().isAnimating())
+			return;
+
+		this.board.repaint();
+
+		BackgammonEvent event = this.normalEventList.firstElement();
+		this.normalEventList.remove(0);
+		
+		
+		if (event.getEventType() == BackgammonEvent.type.ACTIVE_PLAYER_INFO) {
+			this.handleActivePlayerEvent((ActivePlayerInfoEvent) event);
+			// Aktiven Spieler anzeigen
+		} else if (event.getEventType() == BackgammonEvent.type.EXCEPTION) {
+			this.handleException((ExceptionEvent) event);
+		} else if (event.getEventType() == BackgammonEvent.type.INFO) {
+			// Text übergeben statt Type?
+			// this.imageBoard.showInfo((InfoEvent) event.getInfo());
+		} else if (event.getEventType() == BackgammonEvent.type.DICE) {
+			this.handleDiceEvent((DiceEvent) event);
+		} else if (event.getEventType() == BackgammonEvent.type.POSSIBLE_MOVES) {
+			this.handlePossibleMovesEvent((PossiblePlayerMovesEvent) event);
+		} else if (event.getEventType() == BackgammonEvent.type.CHECKER_MOVE_RESULT) {
+			this.handleCheckerMoveResultEvent((CheckerMoveResultEvent) event);
+		}
+
+		this.board.repaint();
+
+		if (!this.normalEventList.isEmpty())
+			this.handleNormalEventList();
+	}
+
+	private void handlePossibleMovesEvent(PossiblePlayerMovesEvent event) {
+
 		this.imageBoard.setPossibleMoves(event.getPossibleMoves());
+
+		// Event beenden
+		this.eventFinished();
 	}
 
 	private void handleCheckerMoveResultEvent(CheckerMoveResultEvent event) {
 
-		//System.out.println(event.getResult().toString());
-		
-		if(this.useDelay)
-			this.eventInProgress = true;
+		// System.out.println(event.getResult().toString());
 
-		
-		//Illegal move
-		if(event.getResult() == CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE)
-		{
-			//Info
+		// Illegal move
+		if (event.getResult() == CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE) {
+			// Info
 			this.imageBoard.showInfo("Der Zug ist leider nicht gültig.");
-			
-			//invert direction
+
+			// invert direction
 			event.getMove().invertDirection();
 
-			//move
+			// move
 			this.moveChecker(event.getMove());
-		}
-		else if (event.getResult() == CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE)
-		{
-			//Computer ist fertig, also nächsten Move anstossen, vorher 1sek warten.
-			try
-			{
-				Thread.sleep(1000);
+		} else if (event.getResult() == CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE) {
+			// Computer ist fertig, also nächsten Move anstossen, vorher 1sek
+			// warten.
+			this.imageBoard.repaint();
+			try {
+				Thread.sleep(1500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			catch (Exception e) {
-				//Do nothing
-			}
-			//this.controller.initNextPlayerMove();
-		}
-		else if(event.getResult() == CheckerMoveResultEvent.moveResult.INIT)
-		{
+			
+			 this.controller.initNextPlayerMove();
+
+			// Event beenden
+			this.eventFinished();
+		} else if (event.getResult() == CheckerMoveResultEvent.moveResult.INIT) {
 			this.moveChecker(event.getMove());
-		}
-		else if(event.getResult() == CheckerMoveResultEvent.moveResult.CORRECT_MOVE)
-		{
-			if(event.getMove() != null)
+		} else if (event.getResult() == CheckerMoveResultEvent.moveResult.CORRECT_MOVE) {
+			if (event.getMove() != null)
 				this.moveChecker(event.getMove());
+			else
+				this.eventFinished();
+		} else if (event.getResult() == CheckerMoveResultEvent.moveResult.HISTORY_MOVE) {
+			
+			this.hist.addListEntry(event.getMove());
+			// Event beenden
+			this.eventFinished();
 		}
-		else if(event.getResult() == CheckerMoveResultEvent.moveResult.HISTORY_MOVE)
-		{
-			//
-		}
-		
+
 	}
 
 	private void handleActivePlayerEvent(ActivePlayerInfoEvent event) {
-		
-		if(!event.isHuman())
-		{
-			this.useDelay = true;
-		}
-		else
-			this.useDelay = false;
-		
+
 		String name = event.getActivePlayer().getName();
-		
-		
-		this.imageBoard.showInfo(name+" ist an der Reihe");
-		
-		
-		
+		this.imageBoard.showInfo(name + " ist an der Reihe");
+
+		// Event beenden
+		this.eventFinished();
+
 	}
 
-	private void handleException(ExceptionEvent event)
-	{
+	private void handleException(ExceptionEvent event) {
 		String msg = "";
-		if(event == null)
-		{
+		if (event == null) {
 			msg = "Es ist ein TestFehler aufgetreten.";
-		}
-		else if(event.getError() == ExceptionEvent.errorType.CHECKER_MOVE_DID_FAIL)
-		{
+		} else if (event.getError() == ExceptionEvent.errorType.CHECKER_MOVE_DID_FAIL) {
 			msg = "Es ist ein Fehler beim Ziehen eines Checkers aufgetreten.";
-		}
-		else if(event.getError() == ExceptionEvent.errorType.DICE_ROLL_DID_FAIL)
-		{
+		} else if (event.getError() == ExceptionEvent.errorType.DICE_ROLL_DID_FAIL) {
 			msg = "Es ist ein Fehler Würfeln aufgetreten.";
-		}
-		else
-		{
+		} else {
 			msg = "Es ist ein allgemeiner Fehler aufgetreten.";
 		}
-		
-		
-		Object[] options = 
-			{
-				"Neues Spiel",
-				"Programm beenden"
-			};
-		int n = JOptionPane.showOptionDialog
-		(
-			this.board,
-			msg,
-			"Es ist ein Fehler aufgetreten",
-			JOptionPane.YES_NO_OPTION,
-			JOptionPane.ERROR_MESSAGE,
-			null,     //do not use a custom Icon
-			options,  //the titles of buttons
-			options[0]
-		); //default button title
-		
-		if(n == 0)
-		{
-			//Spiel neu starten
+
+		Object[] options = { "Neues Spiel", "Programm beenden" };
+		int n = JOptionPane.showOptionDialog(this.board, msg,
+				"Es ist ein Fehler aufgetreten", JOptionPane.YES_NO_OPTION,
+				JOptionPane.ERROR_MESSAGE, null, // do not use a custom Icon
+				options, // the titles of buttons
+				options[0]); // default button title
+
+		if (n == 0) {
+			// Spiel neu starten
+			// Event beenden
+			this.eventFinished();
+
 			this.board.dispose();
 			this.controller.exitGame();
-		}
-		else
-		{
-			//Programm beenden
+		} else {
+			// Programm beenden
+			// Event beenden
+			this.eventFinished();
+
 			this.board.dispose();
 			this.destroyGUI();
 			System.exit(1);
 		}
-		
+
 	}
-	public void eventFinished()
-	{
-		this.eventInProgress = false;
+
+	public void eventFinished() {
 		
-		if(!this.eventList.isEmpty())
-			this.handleInternBackgammonEvent();
+		this.handleNormalEventList();
+
 	}
 
 	public Image getPossibleMove() {
-		return new ImageIcon(getClass().getResource(
-				"/img/possibleMoves.png")).getImage();
+		return new ImageIcon(getClass().getResource("/img/possibleMoves.png"))
+				.getImage();
 	}
 }

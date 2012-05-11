@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Calendar;
+import java.util.ConcurrentModificationException;
 import java.util.Random;
 import java.util.Vector;
 
@@ -27,8 +28,7 @@ public class ImageBoard extends JPanel {
 	private Vector<BPosition> PositionMatrix;
 	private Vector<BChecker> checker;
 	private Vector<BDice> dice;
-	private CheckerMoveAnimationManager checkerAnimation;
-	private DiceMoveAnimationManager diceAnimation;
+	private AnimationManager animationManager;
 	private Thread thread = null;
 	private String info = "";
 	private BDice dDice = null; //DoubleDice
@@ -42,8 +42,8 @@ public class ImageBoard extends JPanel {
 		this.checker = new Vector<BChecker>();
 		this.dice = new Vector<BDice>();
 		this.PositionMatrix = getPoisitionMatrix();
-		this.checkerAnimation = new CheckerMoveAnimationManager(this);
-		this.diceAnimation = new DiceMoveAnimationManager(this);
+		this.animationManager = new AnimationManager(this);
+		initBoard();
 	}
 
 	public ImageBoard(String img) {
@@ -65,10 +65,21 @@ public class ImageBoard extends JPanel {
 	}
 	public void destroyThreads()
 	{
-		this.checkerAnimation.destroyThread();
-		this.diceAnimation.destroyThread();
+		this.animationManager.destroyThread();
+		
 	}
-	private BChecker addChecker(int player, int point, int index) {
+	private void initBoard()
+	{
+		for(int i = 0; i < 15; i++)
+		{
+			this.addChecker(1, 25, i);
+		}
+		for(int i = 0; i < 15; i++)
+		{
+			this.addChecker(2, 26, i);
+		}
+	}
+	public BChecker addChecker(int player, int point, int index) {
 		BChecker tmp = null;
 
 		if (point <= 23)
@@ -87,9 +98,10 @@ public class ImageBoard extends JPanel {
 
 		g.drawImage(img, 0, 0, null);
 		
+		this.drawPossibleMoves(g);
 		this.drawChecker(g);
 		this.drawDice(g);
-		this.drawPossibleMoves(g);
+		
 		
 		//Info zeichnen
 		if(!this.info.isEmpty())
@@ -100,16 +112,24 @@ public class ImageBoard extends JPanel {
 
 	private void drawPossibleMoves(Graphics g) {
 		
-		for (Move move : this.possibleMoves) {
+		if(this.possibleMoves.isEmpty())
+			return;
 		
-		//Position bestimmen
-		int x = this.PositionMatrix.get(move.getToPoint()).getX();
-		int y = this.PositionMatrix.get(move.getToPoint()).getY() + ImageBoard.getIndex(move.getToPoint(), move.getToIndex());
+		try {
+			for (Move move : this.possibleMoves) {
 			
-			g.drawImage(this.view.getPossibleMove(),
-					x - 25, y - 25, null);
+			//Position bestimmen
+			int x = this.PositionMatrix.get(move.getToPoint()).getX();
+			int y = this.PositionMatrix.get(move.getToPoint()).getY() + ImageBoard.getIndex(move.getToPoint(), move.getToIndex());
+				
+				g.drawImage(this.view.getPossibleMove(),
+						x - 25, y - 25, null);
+			}
 		}
-		
+		catch (ConcurrentModificationException concEx)
+		{
+			this.repaint();
+		}
 	}
 
 	private void drawInfo(Graphics g) {
@@ -165,7 +185,7 @@ public class ImageBoard extends JPanel {
 		return this.checker;
 	}
 
-	private BChecker findChecker(int point, int index) {
+	public BChecker findChecker(int point, int index) {
 		for (BChecker checker : this.checker) {
 			if (checker.getPoint() == point && checker.getIndex() == index)
 				return checker;
@@ -174,24 +194,8 @@ public class ImageBoard extends JPanel {
 	}
 
 	public void moveChecker(Move move) {
-		// BChecker bChecker, int toPoint, int toIndex)
-		
-		//System.out.println(Integer.toString(move.getToPoint()));
-		
-		BChecker tmp = findChecker(move.getFromPoint(), move.getFromIndex());
 
-		if (tmp == null) {
-			tmp = this.addChecker(move.getID(), move.getFromPoint(),
-					move.getFromIndex());
-		}
-
-		// Reihenfolge herstellen, damit der gerade gezeichnete Checker immer
-		// oben ist.
-		this.checker.remove(tmp);
-		this.checker.add(tmp);
-
-		this.checkerAnimation.addMoveAnimation(tmp, move.getToPoint(),
-				move.getToIndex());
+		this.animationManager.addCheckerAnimation(move);
 	}
 
 	private void drawChecker(Graphics g) {
@@ -208,7 +212,7 @@ public class ImageBoard extends JPanel {
 				
 			Image img = this.view.getDice( this.getDices().get(i).getPlayer(), this.getDices().get(i).getRValue());
 
-	        g.drawImage(img, this.getDices().get(i).getX() - 24, this.getDices().get(i).getY() - 24, this);
+	        g.drawImage(img, (int) this.getDices().get(i).getX() - 24, (int) this.getDices().get(i).getY() - 24, this);
 	        
 	        
 	        //is used?
@@ -216,7 +220,7 @@ public class ImageBoard extends JPanel {
 	        {
 	        	Image used =  new ImageIcon(getClass().getResource("/img/diceused.png")).getImage();
 
-		        g.drawImage(used, this.getDices().get(i).getX() - 24, this.getDices().get(i).getY() - 24, this);
+		        g.drawImage(used, (int) (this.getDices().get(i).getX()) - 24, (int)(this.getDices().get(i).getY()) - 24, this);
 	        }
 	        	
 		}
@@ -309,6 +313,13 @@ public class ImageBoard extends JPanel {
 
 		return tmp;
 	}
+	public static Vector<PHitBox> getBarHitBox() {
+		Vector<PHitBox> tmp = new Vector<PHitBox>();
+
+		tmp.add(new PHitBox(467, 505, 22, 578));
+
+		return tmp;
+	}
 
 	private BPosition getDoubleDicePosition(int player) {
 
@@ -329,12 +340,20 @@ public class ImageBoard extends JPanel {
 	public BPosition getDicePosition(int player, int dice) {
 		if (player == 1 && dice == 1) {
 			return new BPosition(620, 300);
-		} else if (player == 2 && dice == 1) {
-			return new BPosition(200, 300);
 		} else if (player == 1 && dice == 2) {
-			return new BPosition(730, 300);
+			return new BPosition(670, 300);
+		} else if (player == 1 && dice == 3) {
+			return new BPosition(720, 300);
+		} else if (player == 1 && dice == 4) {
+			return new BPosition(770, 300);
+		} else if (player == 2 && dice == 1) {
+			return new BPosition(150, 300);
+		} else if (player == 2 && dice == 2) {
+			return new BPosition(200, 300);
+		} else if (player == 2 && dice == 3) {
+			return new BPosition(250, 300);
 		} else {
-			return new BPosition(310, 300);
+			return new BPosition(300, 300);
 		}
 	}
 
@@ -387,12 +406,12 @@ public class ImageBoard extends JPanel {
 			case 9:
 			case 10:
 			case 11:
-				return (((index)%5)*42+63);
+				return ((index-8)*42);
 			case 12:
 			case 13:
-				return((index%5)*42)+63;
+				return ((index-11)*42)+21;
 			case 14:
-				return (((index)%5)*42+105);
+				return ((index-12)*42);
 		}
 		return 0;
 	}
@@ -425,13 +444,13 @@ public class ImageBoard extends JPanel {
 		return result;
 	}
 
-	public BChecker getHighestChecker(int point) {
+	public BChecker getHighestChecker(int point, int player) {
 		BChecker result = null;
 
 		for (BChecker c : this.checker) {
 			if (result == null)
 				result = c;
-			if (c.getPoint() == point && c.getIndex() >= result.getIndex())
+			if (c.getPoint() == point && c.getIndex() >= result.getIndex() && (c.getPlayer() == player || player == 0))
 				result = c;
 		}
 		return result;
@@ -440,10 +459,6 @@ public class ImageBoard extends JPanel {
 	public void setFocus(BChecker tmp) {
 		this.checker.remove(tmp);
 		this.checker.add(tmp);
-	}
-
-	public CheckerMoveAnimationManager getCheckerAnimation() {
-		return this.checkerAnimation;
 	}
 
 	public void addDice(int player, Integer value, int dice) {
@@ -464,7 +479,7 @@ public class ImageBoard extends JPanel {
 			
 		}
 		
-		this.diceAnimation.addMoveAnimation(tmp, p.getX(), p.getY());
+		this.animationManager.addDiceAnimation(tmp, p.getX(), p.getY());
 		
 		this.repaint();
 	}
@@ -489,15 +504,18 @@ public class ImageBoard extends JPanel {
 		return view;
 	}
 
-	public DiceMoveAnimationManager getDiceAnimation() {
-		return this.diceAnimation;
+	public AnimationManager getAnimation() {
+		return this.animationManager;
 	}
 
 	public void setDoubleDice(int playerID, Integer i) {
 		this.dDice = new BDice(playerID, i);
 		
 	}
-
+	public BDice getDoubleDice()
+	{
+		return this.dDice;
+	}
 	public void setPossibleMoves(Vector<Move> possibleMoves2) {
 		
 		//Leere Liste, pack alle moves in die Liste

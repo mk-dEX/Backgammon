@@ -17,4 +17,6 @@ public interface IDataModel {
 	public void offerAccepted(boolean didAccept);
 	
 	public boolean gameStarted();
+
+	public int getCurrentPlayerID();
 }

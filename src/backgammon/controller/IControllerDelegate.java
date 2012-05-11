@@ -24,5 +24,8 @@ public interface IControllerDelegate {
 	/*DiceEvent ; playerID = 0 == spiel beendet*/
 	public void offerAccepted(boolean didAccept);
 	
+	//getCurrentPlayerId
+	public int getCurrentPlayerID();
+	
 	public boolean gameStarted();
 }

@@ -26,8 +26,6 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 	@Override
 	public void mouseClicked(MouseEvent f) {
 
-		//Anzeigen der möglichen Züge
-		
 		Boolean found = false;
 
 		for (BDice dice : this.parent.getDices()) {
@@ -43,6 +41,18 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 			this.parent.repaint();
 
 			this.parent.getView().getController().initNextPlayerMove();
+		}
+		
+		if (this.parent.getDoubleDice().getX() - 24 <= f.getX() && this.parent.getDoubleDice().getX() + 24 >= f.getX()
+				&& this.parent.getDoubleDice().getY() - 24 <= f.getY()
+				&& this.parent.getDoubleDice().getY() + 24 >= f.getY()) {
+			// Doppelwürfel geklickt.
+			//Prüfen und dann anzeigen.
+			
+			//if(this.parent.getView().getController().startDoubleOffer(this.parent.getView().getController().getCurrentPlayerID()))
+			//{
+				//falls ok, dann anzeigen.
+			//}
 		}
 	}
 
@@ -63,8 +73,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 		// System.out.println("Press");
 		
 		//Falls noch animiert wird, Checker sperren
-		if(this.parent.getCheckerAnimation().isAnimating() ||
-		   this.parent.getDiceAnimation().isAnimating())
+		if(this.parent.getAnimation().isAnimating())
 			{
 				ImageBoardMouseListener.checker = null;
 				return;
@@ -93,8 +102,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 	public void mouseReleased(MouseEvent f) {
 		
 		//Falls noch animiert wird, Checker sperren
-		if(this.parent.getCheckerAnimation().isAnimating() ||
-		   this.parent.getDiceAnimation().isAnimating())
+		if(this.parent.getAnimation().isAnimating())
 			{
 				ImageBoardMouseListener.checker = null;
 				return;
@@ -127,8 +135,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 	public void mouseDragged(MouseEvent e) {
 
 		//Falls noch animiert wird, Checker sperren
-		if(this.parent.getCheckerAnimation().isAnimating() ||
-		   this.parent.getDiceAnimation().isAnimating())
+		if(this.parent.getAnimation().isAnimating())
 			{
 				ImageBoardMouseListener.checker = null;
 				return;
@@ -179,7 +186,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 			// Kontroller Bescheid sagen.
 			// System.out.println("Point: " + Integer.toString(Point));
 			ImageBoardMouseListener.checker = this.parent
-					.getHighestChecker(Point);
+					.getHighestChecker(Point,this.parent.getView().getController().getCurrentPlayerID());
 
 			if (ImageBoardMouseListener.checker != null)
 				return true;
@@ -211,7 +218,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 				int index = this.parent.getHighestIndex(i);
 				if (ImageBoardMouseListener.checker.getPoint() != i)
 				{	
-					this.parent.getCheckerAnimation().addMoveAnimation(
+					this.parent.getAnimation().addCheckerAnimation(
 							ImageBoardMouseListener.checker, i, index + 1);
 					ImageBoardMouseListener.checker.setPointIndex(i, index+1);
 				}
@@ -234,7 +241,7 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 				int index = this.parent.getHighestIndex(point);
 				if (ImageBoardMouseListener.checker.getPoint() != point)
 				{	
-					this.parent.getCheckerAnimation().addMoveAnimation(
+					this.parent.getAnimation().addCheckerAnimation(
 							ImageBoardMouseListener.checker, point, index + 1);
 					ImageBoardMouseListener.checker.setPointIndex(point, index+1);
 				}
@@ -242,10 +249,33 @@ public class ImageBoardMouseListener extends MouseMotionAdapter implements
 			i++;
 		}
 		//ende OUT POSITION
+		//START BAR POSITION
+		tmp = ImageBoard.getBarHitBox();
+		i = 0;
+		for (PHitBox h : tmp) {
+			if (f.getX() >= h.getX1() && f.getX() <= h.getX2()
+					&& f.getY() >= h.getY1() && f.getY() <= h.getY2()) 
+			{
+				// Hitbox gefunden, also point und Index setzen.
+				found = true;
+				// System.out.println("Hitbox gefunden");
+				int point = 24;
+				
+				int index = this.parent.getHighestIndex(point);
+				if (ImageBoardMouseListener.checker.getPoint() != point)
+				{	
+					this.parent.getAnimation().addCheckerAnimation(
+							ImageBoardMouseListener.checker, point, index + 1);
+					ImageBoardMouseListener.checker.setPointIndex(point, index+1);
+				}
+			}
+			i++;
+		}
+		//ende BAR POSITION
 		// keine Hitbox getroffen, also zurücksetzen.
 		if (!found)
 		{
-			this.parent.getCheckerAnimation().addMoveAnimation(
+			this.parent.getAnimation().addCheckerAnimation(
 					ImageBoardMouseListener.checker,
 					ImageBoardMouseListener.checker.getPoint(),
 					ImageBoardMouseListener.checker.getIndex());
