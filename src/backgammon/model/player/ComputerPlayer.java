@@ -52,7 +52,7 @@ public class ComputerPlayer extends HumanPlayer {
 		return toPoint == ((playerID == 1) ? (IBackgammonBoard.OUT_PLAYER1_INDEX) : (IBackgammonBoard.OUT_PLAYER2_INDEX));
 	}
 	
-	public Vector<Move> move() {
+	public Vector<Move> move(Vector<Move> possibleMoves) {
 		
 		Move bestMove = null;
 		Vector<Move> moveResults = new Vector<Move>();
@@ -60,7 +60,6 @@ public class ComputerPlayer extends HumanPlayer {
 		Vector<Move> aggressiveMoves = new Vector<Move>();
 		Vector<Move> passiveMoves = new Vector<Move>();
 		
-		Vector<Move> possibleMoves = this.rootDataController.getPossiblePlayerMoves(this);
 		int playerID = 0;
 		for (Move possibleMove : possibleMoves) {
 			
