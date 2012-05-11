@@ -301,7 +301,8 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 		// System.out.println("Test1");
 
 		if (e.getSource() == this.newGame) {
-
+			
+			this.hist.getList().clear();
 			this.board.dispose();
 			this.controller.exitGame();
 		}
@@ -429,10 +430,10 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 			if (n == 0) {
 				// annehmen
-				this.eventFinished();
-
+				this.hist.getList().clear();
 				this.board.dispose();
 				this.controller.exitGame();
+				this.eventFinished();
 			}
 
 		}

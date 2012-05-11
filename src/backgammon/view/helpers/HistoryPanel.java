@@ -2,6 +2,7 @@ package backgammon.view.helpers;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -10,6 +11,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
+import backgammon.event.BackgammonEvent;
 import backgammon.model.player.Move;
 import backgammon.view.BackgammonViewGUI;
 
@@ -45,5 +47,8 @@ public class HistoryPanel extends JFrame{
 			return;
 		
 		this.m1.addElement("["+move.getID()+"] "+move.getFromPoint()+","+move.getFromIndex()+" >>> "+move.getToPoint()+","+move.getToIndex());
+	}
+	public DefaultListModel getList() {
+		return m1;
 	}
 }
