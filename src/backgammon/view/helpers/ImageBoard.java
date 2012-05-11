@@ -98,8 +98,9 @@ public class ImageBoard extends JPanel {
 
 		g.drawImage(img, 0, 0, null);
 		
-		this.drawPossibleMoves(g);
+		
 		this.drawChecker(g);
+		this.drawPossibleMoves(g);
 		this.drawDice(g);
 		
 		
