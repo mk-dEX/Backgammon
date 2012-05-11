@@ -669,8 +669,8 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	protected void handleComputerMove() {
 		
-		System.out.println("Beginnt Berechnung");
-		
+
+		System.out.println("Berechnung startet");
 		while (!this.getPossibleMovesOfCurrentPlayer().isEmpty()) {
 			System.out.println("Durchgang Berechnung1");
 			Vector<Move> computerPlayerMoveAndResulting = ((ComputerPlayer)this.currentPlayer).move();

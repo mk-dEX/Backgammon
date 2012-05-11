@@ -55,6 +55,7 @@ public class ControllerDelegate implements IControllerDelegate {
 	
 	@Override
 	public boolean startMove(int playerID, int fromPoint) {
+		if (model == null) return false;
 		return this.model.startMove(playerID, fromPoint);
 	}
 
