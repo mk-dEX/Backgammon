@@ -27,7 +27,7 @@ public class AnimationManager implements Runnable{
 
 	private AnimationEntry dice;
 	private int diceDuration = 1500;
-	private final int pause = 20;
+	private final int pause = 25;
 	private final int Rpause = 240;
 	private Thread thread;
 	private long startTime;

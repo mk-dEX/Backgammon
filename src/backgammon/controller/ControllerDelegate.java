@@ -49,7 +49,8 @@ public class ControllerDelegate implements IControllerDelegate {
 
 	@Override
 	public void initNextPlayerMove() {
-		this.model.initNextPlayerMove();
+		if(this.model != null)
+			this.model.initNextPlayerMove();
 	}
 	
 	@Override

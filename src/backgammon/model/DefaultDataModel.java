@@ -668,10 +668,17 @@ public class DefaultDataModel implements IDataController, IDataModel {
 //	KI Move
 	
 	protected void handleComputerMove() {
+		
+		System.out.println("Beginnt Berechnung");
+		
 		while (!this.getPossibleMovesOfCurrentPlayer().isEmpty()) {
+			System.out.println("Durchgang Berechnung1");
 			Vector<Move> computerPlayerMoveAndResulting = ((ComputerPlayer)this.currentPlayer).move();
+			System.out.println("Durchgang Berechnung2");
 			this.executeResultingMoves(computerPlayerMoveAndResulting, computerPlayerMoveAndResulting.elementAt(0), false);
+			System.out.println("Durchgang Berechnung3");
 		}
+		System.out.println("Berechnung fertig");
 		
 		CheckerMoveResultEvent computerDidFinishEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE, null);
 		this.pushEvent(computerDidFinishEvent);

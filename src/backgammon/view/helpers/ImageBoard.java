@@ -200,11 +200,17 @@ public class ImageBoard extends JPanel {
 	}
 
 	private void drawChecker(Graphics g) {
-		for (BChecker checker : this.checker) {
-			BPosition tmp = null;
-			tmp = checker.getCoords();
-			g.drawImage(this.view.getChecker(checker.getPlayer()),
+		try
+		{
+			for (BChecker checker : this.checker) {
+				BPosition tmp = null;
+				tmp = checker.getCoords();
+				g.drawImage(this.view.getChecker(checker.getPlayer()),
 					tmp.getX() - 25, tmp.getY() - 25, null);
+			}
+		} catch (ConcurrentModificationException e) {
+			
+			this.repaint();
 		}
 	}
 
