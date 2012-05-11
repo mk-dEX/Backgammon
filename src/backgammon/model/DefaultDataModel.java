@@ -300,6 +300,9 @@ public class DefaultDataModel implements IDataController, IDataModel {
 					System.out.println("move -> null");
 				}
 			}
+			else {
+				System.out.println("sending event");
+			}
 		}
 	}
 	
