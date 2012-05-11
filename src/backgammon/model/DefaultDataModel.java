@@ -805,13 +805,11 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	@Override
-	public void startDoubleOffer(int playerID) {
-		
+	public boolean startDoubleOffer(int playerID) {
+				
 		Player requestingPlayer = this.getPlayer(playerID);
 		
-		if (requestingPlayer != this.playerWithDouble) {
-			//TODO
-		}
+		return requestingPlayer == this.playerWithDouble || this.playerWithDouble == null;
 	}
 	
 	@Override

@@ -63,8 +63,8 @@ public class ControllerDelegate implements IControllerDelegate {
 	}
 
 	@Override
-	public void startDoubleOffer(int playerID) {
-		this.model.startDoubleOffer(playerID);
+	public boolean startDoubleOffer(int playerID) {
+		return this.model.startDoubleOffer(playerID);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public interface IControllerDelegate {
 	public void endMove(CheckerMoveEvent moveEvent);
 	
 	/*DiceEvent*/
-	public void startDoubleOffer(int playerID);
+	public boolean startDoubleOffer(int playerID);
 	/*DiceEvent ; playerID = 0 == spiel beendet*/
 	public void offerAccepted(boolean didAccept);
 	
