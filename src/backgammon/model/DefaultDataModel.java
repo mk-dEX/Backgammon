@@ -7,6 +7,7 @@ import backgammon.event.BackgammonEvent;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
+import backgammon.event.DiceEvent.diceType;
 import backgammon.event.ExceptionEvent;
 import backgammon.event.InfoEvent;
 import backgammon.event.PossiblePlayerMovesEvent;
@@ -809,15 +810,25 @@ public class DefaultDataModel implements IDataController, IDataModel {
 				
 		Player requestingPlayer = this.getPlayer(playerID);
 		
-		return requestingPlayer == this.playerWithDouble || this.playerWithDouble == null;
+		return requestingPlayer != null && (requestingPlayer == this.playerWithDouble || this.playerWithDouble == null);
 	}
 	
 	@Override
 	public void offerAccepted(boolean didAccept) {
+		int playerID = this.getPlayerID(this.playerWithDouble);
 		if (didAccept) {
 			this.doubleValue *= 2;
+			this.playerWithDouble = this.currentPlayer;
+			
+			DiceResult doubleResult = new DiceResult();
+			doubleResult.add(this.doubleValue);
+			
+			DiceEvent doubleDiceEvent = new DiceEvent(diceType.DOUBLE_DICE, playerID, doubleResult);
+			this.pushEvent(doubleDiceEvent);
 		}
-		//TODO
+		else {
+			this.checkWin(true, playerID);
+		}
 	}	
 
 	public boolean gameStarted() {
