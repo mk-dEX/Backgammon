@@ -36,29 +36,19 @@ public class HistoryPanel extends JFrame{
 		this.setVisible(false); 
 
 		this.JList1 = new JList(m1);
-		this.JList1.setPreferredSize(new Dimension(140, 580));
-		this.add(this.JList1,BorderLayout.WEST);
+		this.JList1.setPreferredSize(new Dimension(260, 550));
+		this.add(this.JList1,BorderLayout.NORTH);
 
-		this.JList2 = new JList(m2);
-		this.JList2.setPreferredSize(new Dimension(140, 580));
-		this.add(this.JList2, BorderLayout.EAST);
-		
 		this.load = new JButton("Lade Spielzug");
 		this.load.setPreferredSize(new Dimension(125, 25));
 		this.add(load, BorderLayout.SOUTH);
-		
-		
-		
+			
 	}
 	public void addListEntry(Move move)
 	{
-		if(move.getID() == 1)
-		{
-			this.m1.addElement("SFSSF");
-		}
-		else
-		{
-			this.m2.addElement("SFSSF");
-		}
+		if(move == null)
+			return;
+		
+		this.m1.addElement("["+move.getID()+"] "+move.getFromPoint()+","+move.getFromIndex()+" >>> "+move.getToPoint()+","+move.getToIndex());
 	}
 }
