@@ -18,13 +18,10 @@ public class HistoryPanel extends JFrame{
 
 	private JList JList1;
 	private DefaultListModel m1 = new DefaultListModel();
-	private BackgammonViewGUI parent;
 	private JButton load;
 	
 	public HistoryPanel(BackgammonViewGUI backgammonViewGUI)
 	{
-		this.parent = backgammonViewGUI;
-		
 		this.setTitle("History");
 		this.setSize(300,600);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -34,12 +31,12 @@ public class HistoryPanel extends JFrame{
 
 		this.JList1 = new JList(m1);
 		this.JList1.setPreferredSize(new Dimension(260, 550));
-		this.add(this.JList1,BorderLayout.NORTH);
 		JScrollPane pane = new JScrollPane(this.JList1);
 		
 		this.load = new JButton("Lade Spielzug");
 		this.load.setPreferredSize(new Dimension(125, 25));
-		this.add(pane, BorderLayout.SOUTH);
+		this.add(load,BorderLayout.SOUTH);
+		this.add(pane, BorderLayout.CENTER);
 			
 	}
 	public void addListEntry(Move move)
