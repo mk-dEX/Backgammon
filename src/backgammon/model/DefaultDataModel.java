@@ -720,6 +720,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	public void initGameCheckers() {
 		this.initCheckersOfPlayer(1);
 		this.initCheckersOfPlayer(2);
+		
+		DiceResult doubleInitResult = new DiceResult();
+		doubleInitResult.add(64);
+		DiceEvent doubleInitEvent = new DiceEvent(diceType.DOUBLE_DICE, 0, doubleInitResult);
+		this.pushEvent(doubleInitEvent);
+		
 		this.initialized = true;
 	}
 	
