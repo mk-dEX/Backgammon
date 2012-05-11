@@ -815,15 +815,18 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	@Override
 	public void offerAccepted(boolean didAccept) {
-		int playerID = this.getPlayerID(this.playerWithDouble);
+		int playerID = this.getPlayerID(this.currentPlayer);
 		if (didAccept) {
 			this.doubleValue *= 2;
-			this.playerWithDouble = this.currentPlayer;
+			
+			Player otherPlayer = (playerID == 1) ? (this.player2) : (this.player1);
+			
+			this.playerWithDouble = otherPlayer;
 			
 			DiceResult doubleResult = new DiceResult();
 			doubleResult.add(this.doubleValue);
 			
-			DiceEvent doubleDiceEvent = new DiceEvent(diceType.DOUBLE_DICE, playerID, doubleResult);
+			DiceEvent doubleDiceEvent = new DiceEvent(diceType.DOUBLE_DICE, this.getPlayerID(otherPlayer), doubleResult);
 			this.pushEvent(doubleDiceEvent);
 		}
 		else {
