@@ -246,7 +246,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 				this.executeResultingMove(oneResultingMove, addMove, isDebugMove);
 			}
 			
-			this.checkWin(false, 0);
+			this.checkWin(false);
 		}
 		else {
 			CheckerMoveResultEvent failureMoveEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, originalMove);
@@ -490,10 +490,8 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return possibleMoves;
 	}
 	
-	protected void checkWin(boolean forceWin, int playerID) {
-		
-		//TODO bei double nicht angenommen automatisch verloren
-		
+	protected void checkWin(boolean forceWin) {
+				
 		if (this.currentPlayer == null) {
 			return;
 		}
@@ -502,7 +500,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		int outCheckerCountPlayer1 = this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER1_INDEX).getCheckerCount();
 		int outCheckerCountPlayer2 = this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER2_INDEX).getCheckerCount();
 		int currentPlayerOutCheckerCount = (currentPlayerID == 1) ? (outCheckerCountPlayer1) : (outCheckerCountPlayer2);
-		if (currentPlayerOutCheckerCount == 15) {
+		if (forceWin || currentPlayerOutCheckerCount == 15) {
 			
 			String playerName = this.currentPlayer.getName();
 			int points = 1;
@@ -830,7 +828,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			this.pushEvent(doubleDiceEvent);
 		}
 		else {
-			this.checkWin(true, playerID);
+			this.checkWin(true);
 		}
 	}	
 
