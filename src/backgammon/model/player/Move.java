@@ -1,14 +1,35 @@
 package backgammon.model.player;
 
+/**
+ * Kapselung eines Zuges mit einem Spielstein
+ */
 public class Move {
 
+	/**
+	 * Die ID des Spielers, der zieht
+	 */
 	protected int id;
 	
+	/**
+	 * Der Point, von dem aus gezogen wurde
+	 */
 	protected int fromPoint;
+	/**
+	 * Der Point, zu dem gezogen wird
+	 */
 	protected int toPoint;
+	/**
+	 * Die Position des Spielsteins innerhalb des Points, von dem gezogen wurde
+	 */
 	protected int fromIndex;
+	/**
+	 * Die Position des Spielsteins innerhalb des Points, zu dem gezogen wird
+	 */
 	protected int toIndex;
 	
+	/**
+	 * Der Ausgangspunkt soll auf den Zielpunkt gesetzt werden
+	 */
 	protected boolean equalize = false;
 	
 	public Move(int id, int fromX, int fromY ,int toX, int toY) {
@@ -35,6 +56,9 @@ public class Move {
 		this.toIndex = newToIndex;
 	}
 	
+	/**
+	 * @return true wenn Zugquelle == Zugziel. Sonst false
+	 */
 	public boolean isSetMove() {
 		return (this.fromPoint == this.toPoint);
 	}
@@ -58,6 +82,10 @@ public class Move {
 	public int getToIndex() {
 		return this.toIndex;
 	}
+	
+	/**
+	 * Der Zug wird in die entgegengesetzte Richtung durchgeführt
+	 */
 	public void invertDirection()
 	{
 		int tmp = this.fromIndex;
