@@ -28,21 +28,54 @@ import backgammon.model.player.HumanPlayer;
 import backgammon.model.player.Move;
 import backgammon.model.player.Player;
 
+/**
+ * Das Datenmodell für ein Standard-Backgammon-Spiel
+ */
 public class DefaultDataModel implements IDataController, IDataModel {
 
+	/**
+	 * Die zugeordenete Listener-Klasse
+	 */
 	protected IModelEventListener listener;
+	/**
+	 * Die aktuellen Spieleinstellungen
+	 */
 	protected GameSettings settings;
 
+	/**
+	 * Spieler 1
+	 */
 	protected Player player1;
+	/**
+	 * Spieler 2
+	 */
 	protected Player player2;
+	/**
+	 * Der aktuelle Spieler
+	 */
 	protected Player currentPlayer;
+	/**
+	 * Der Spieler, der den Doppelwürfel besitzt
+	 */
 	protected Player playerWithDouble;
+	/**
+	 * Der aktuelle Wert der Doppelwürfels
+	 */
 	protected int doubleValue = 1;
 	
+	/**
+	 * Das Spielfeld
+	 */
 	protected IBackgammonBoard gameBoard;
 	
+	/**
+	 * Der Zugverlauf
+	 */
 	protected Vector<HistoryMove> moveHistory = new Vector<HistoryMove>();
 
+	/**
+	 * true wenn die Spielsteine platziert wurden. Sonst false
+	 */
 	protected boolean initialized = false;
 	
 	public DefaultDataModel(GameSettings currentSettings) {
@@ -72,6 +105,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 // 	Privates
 	
 	//init
+	/**
+	 * Initialisiert die Spielsteine des Spielers
+	 * @param playerID
+	 */
 	protected void initCheckersOfPlayer(int playerID) {
 		
 		Move tempRegisteredMove;
@@ -117,6 +154,13 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	
 	//get
+	/**
+	 * Ermittelt das Würfelergebnis des aktuellen Spielers
+	 * @param currentPlayer
+	 * @param initial Beim ersten Wurf ist initial true. Beide Spieler dürfen dann ein mal würfeln
+	 * @return Der {@link DiceResult}
+	 * @throws Exception
+	 */
 	protected DiceResult getDiceResult(Player currentPlayer, boolean initial) throws Exception {
 		
 		if (!initial && currentPlayer == null) {
@@ -145,6 +189,11 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return diceResults;
 	}
 	
+	/**
+	 * Ermitteln der zu einem {@link Player} Objekt zugeordneten ID
+	 * @param player
+	 * @return Die ID des Spielers
+	 */
 	protected int getPlayerID(Player player) {
 		if (player.equals(this.player1))
 			return 1;
@@ -154,20 +203,35 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			return 0;
 	}
 	
+	/**
+	 * Ermitteln des zu einer ID zugeordneten {@link Player} Objekts
+	 * @param playerID
+	 * @return
+	 */
 	protected Player getPlayer(int playerID) {
 		if (playerID == 1) return this.player1;
 		if (playerID == 2) return this.player2;
 		return null;
 	}
 	
+	/**
+	 * @param requestedPlayer
+	 * @return true wenn der angefragte Spieler gerade an der Reihe ist. Sonst false
+	 */
 	protected boolean isCurrentPlayer(Player requestedPlayer) {
 		return (requestedPlayer != null && requestedPlayer.equals(this.currentPlayer));
 	}
 	
+	/**
+	 * @return true wenn der Spieler, der gerade an der Reihe ist, noch Züge machen kann. Sonst false
+	 */
 	protected boolean currentPlayerHasMovesLeft() {
 		return (this.currentPlayer.getCurrentDiceResult().isEmpty() == false);
 	}
 	
+	/**
+	 * @return Alles {@link Move}s des Spielers, der gerade an der Reihe ist
+	 */
 	protected Vector<Move> getPossibleMovesOfCurrentPlayer() {
 		
 		boolean hasMovesLeft;
@@ -182,6 +246,9 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return possibleMoves;
 	}
 	
+	/**
+	 * @return Die ermittelte Distanz, die für einen Zug zurückgelegt werden muss
+	 */
 	protected int getDistanceForMove(Move move) {
 		
 		int distance = 0;
@@ -221,6 +288,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	
 	//push
+	/**
+	 * Führt alle übergebenen {@link Move}s im Datenmodell aus und gibt diese an die View-Klasse weiter
+	 * @param resultingMoves Die durchzuführenden {@link Move}s
+	 * @param originalMove Der ursprüngliche {@link Move}
+	 * @param isDebugMove Wenn true, dann wird das aktuelle Würfelergebnis nicht miteinbezogen
+	 */
 	protected void executeResultingMoves(Vector<Move> resultingMoves, Move originalMove, boolean isDebugMove) {
 		
 		if (resultingMoves.isEmpty() == false) {
@@ -254,6 +327,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		}
 	}
 	
+	/**
+	 * Führt den übergebenen {@link Move} im Datenmodell aus und gibt diesen an die View-Klasse weiter
+	 * @param singleMove Der durchzuführende {@link Move}
+	 * @param addMoveToEvent wenn true, dann wird der {@link Move} im Event gespeichert
+	 * @param isDebugMove Wenn true, dann wird das aktuelle Würfelergebnis nicht miteinbezogen
+	 */
 	protected void executeResultingMove(Move singleMove, boolean addMoveToEvent, boolean isDebugMove) {
 		
 		Move theMove = singleMove;
@@ -279,6 +358,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		this.pushEvent(singleMoveResult);
 	}
 	
+	/**
+	 * Das Event wird an die View-Klasse übergeben
+	 * @param event Ein {@link BackgammonEvent}
+	 */
 	protected void pushEvent(BackgammonEvent event) {
 		if (this.listener == null) {
 			System.out.println("Sending event to GUI failed");
@@ -309,7 +392,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	
 //	Board Connection
-	
+
 	public Vector<Move> getMoveResults(Player player, Move originalMove, boolean isDebugMove) {
 		
 		Vector<Move> moveResults = new Vector<Move>();
@@ -379,6 +462,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return moveResults;
 	}
 	
+	/**
+	 * Führt den {@link Move} m im Datenmodell durch
+	 * @param player Der Spieler, der den {@link Move} ausführt
+	 * @param m Der {@link Move}
+	 * @return Der durchgeführte {@link Move} wenn die Durchführung erfolgreich war, sonst null
+	 */
 	protected Move commitMove(Player player, Move m) {
 		
 		Move move = m;
@@ -413,6 +502,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return move;
 	}
 	
+	/**
+	 * Ermittelt alle möglichen {@link Move}s für den Spieler
+	 * @param player
+	 * @param playerID
+	 * @return Die möglichen {@link Move}s
+	 */
 	protected Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {
 		
 		Vector<Move> possibleMoves = new Vector<Move>();
@@ -493,6 +588,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return possibleMoves;
 	}
 	
+	/**
+	 * Überprüft, ob der aktuelle Spieler das Spiel gewonnen hat
+	 * @param forceWin Erzwingt einen Spielgewinn, wenn der andere Spieler ein Verdopplunsangebot ablehnt
+	 */
 	protected void checkWin(boolean forceWin) {
 				
 		if (this.currentPlayer == null) {
@@ -544,6 +643,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 //	Checks
 	
+	/**
+	 * Überprüft, ob ein Zug von {@link Point} zu {@link Point} möglich ist
+	 * @param player
+	 * @param move
+	 * @return
+	 */
 	protected boolean checkInnerFieldMove(Player player, Move move) {
 		
 		int fromPoint = move.getFromPoint();
@@ -570,6 +675,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return false;
 	}
 	
+	/**
+	 * Überprüft, ob ein Zug von {@link Bar} zu {@link Point} möglich ist
+	 * @param player
+	 * @param move
+	 * @return
+	 */
 	protected boolean checkBarFieldMove(Player player, Move move) {
 		
 		int toPoint = move.getToPoint();
@@ -589,6 +700,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return false;
 	}
 
+	/**
+	 * Überprüft, ob ein Zug von {@link Point} zu {@link Out} möglich ist
+	 * @param player
+	 * @param move
+	 * @return
+	 */
 	protected boolean checkFieldOutMove(Player player, Move move) {
 		
 		int fromPoint = move.getFromPoint();
@@ -622,6 +739,14 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return false;
 	}
 	
+	/**
+	 * Überprüft, ob die Distanz für einen Zug mithilfe des Würfelergebnisses des Spielers durchgeführt werden kann
+	 * @param player
+	 * @param playerID
+	 * @param startIndex
+	 * @param distance
+	 * @return
+	 */
 	protected boolean checkDistanceSteps(Player player, int playerID, int startIndex, int distance) {
 		
 		int currentIndex = startIndex;
@@ -669,6 +794,9 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 //	KI Move
 	
+	/**
+	 * Führt den {@link Move} eines computergesteuerten Spielers aus
+	 */
 	protected void handleComputerMove() {
 
 		Vector<Move> possibleMoves = this.getPossibleMovesOfCurrentPlayer();
