@@ -4,17 +4,35 @@ import java.util.Vector;
 
 import backgammon.model.player.DiceResult;
 
+/**
+ * Enthält Informationen bezüglich eines Würfelergebnisses
+ */
 public class DiceEvent extends BackgammonEvent {
 
+	/**
+	 * Die möglichen Ereignisarten
+	 */
 	public static enum diceType {
 		DICE,
 		DOUBLE_DICE,
 		NUMBERS_USED
 	}
 	
+	/**
+	 * Der aktuelle {@link diceType}
+	 */
 	private diceType type;
+	/**
+	 * Die ID des Spielers, der gewürfelt hat
+	 */
 	private int playerID;
+	/**
+	 * Der {@link DiceResult}
+	 */
 	private DiceResult diceResult;
+	/**
+	 * Die Augenzahlen, die für den Wurf benutzt wurden
+	 */
 	private Vector<Integer> numbersUsed;
 	
 	public DiceEvent(diceType type, int playerID, DiceResult diceResult) {
