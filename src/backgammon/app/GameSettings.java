@@ -1,32 +1,77 @@
 package backgammon.app;
 
+/**
+ * {@link GameSettings} kapselt die Einstellungsdaten für das Spiel
+ */
 public class GameSettings {
 
+	/**
+	 * Der Spielmodus, in dem das Spiel gestartet werden soll
+	 */
 	public static enum gameMode {
 		STANDARD,
 		TRIC_TRAC,
 		WURFZABEL
 	}
 	
+	/**
+	 * Der Modus des gewählten Spielers.
+	 * HUMAN = Mensch
+	 * PASSIVE = Computer spielt passiv
+	 * AGGRESSIVE = Computer spielt offensiv
+	 */
 	public static enum KIMode {
 		HUMAN,
 		PASSIVE,
 		AGGRESSIVE
 	}
 	
+	/**
+	 * Der Name des ersten Spielers
+	 */
 	private String namePlayer1;
+	/**
+	 * Der Name des zweiten Spielers
+	 */
 	private String namePlayer2;
 	
+	/**
+	 * Dateipfad zur Grafikdatei des Spielbretts
+	 */
 	private String pathBoard;
+	/**
+	 * Dateipfad zur Grafikdatei der Checker von Spieler 1
+	 */
 	private String pathCheckerPlayer1;
+	/**
+	 * Dateipfad zur Grafikdatei der Checker von Spieler 2
+	 */
 	private String pathCheckerPlayer2;
+	/**
+	 * Dateipfad zur Grafikdatei der Würfel von Spieler 1
+	 */
 	private String pathDicePlayer1;
+	/**
+	 * Dateipfad zur Grafikdatei der Würfel von Spieler 2
+	 */
 	private String pathDicePlayer2;
+	/**
+	 * Dateipfad zur Grafikdatei des Doppelwürfels
+	 */
 	private String pathDiceDouble;
 	
+	/**
+	 * Der gewählte {@link gameMode}
+	 */
 	private gameMode selectedGameMode;
 	
+	/**
+	 * Der gewählte {@link KIMode} von Spieler 1
+	 */
 	private KIMode selectedKIModePlayer1;
+	/**
+	 * Der gewählte {@link KIMode} von Spieler 2
+	 */
 	private KIMode selectedKIModePlayer2;
 	
 	

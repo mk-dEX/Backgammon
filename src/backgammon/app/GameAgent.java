@@ -4,10 +4,13 @@ import backgammon.view.BackgammonViewSettings;
 import backgammon.app.GameSettings;
 import backgammon.controller.ControllerDelegate;
 
+/**
+ * Eine {@link GameAgent} Instanz startet die Eingabe der Spieleinstellungen und anschlie§end das Spiel
+ */
 public class GameAgent {
 	
 	/**
-	 * Calls startUpdateSettings
+	 * Startet den Einstellungsdialog bei Erzeugung eines {@link GameAgent} Objekts
 	 */
 	public GameAgent() {
 		
@@ -15,7 +18,7 @@ public class GameAgent {
 	}
 	
 	/**
-	 * Shows {@link BackgammonViewSettings}.
+	 * Startet den Einstellungsdialog
 	 */
 	public void startUpdateSettings() {
 		
@@ -23,8 +26,8 @@ public class GameAgent {
 	}
 	
 	/**
-	 * Creates new ControllerDelegate instance to start a new game.
-	 * @param newSettings The {@link GameSettings} initialized by the {@link BackgammonViewSettings} UI
+	 * Erzeugt einen Controller, der den Ablauf des eigentlich Spiels steuert
+	 * @param newSettings Die {@link GameSettings}, die mittels Einstellungsdialog initialisiert wurden
 	 */
 	public void updateSettings(GameSettings newSettings) {
 		
