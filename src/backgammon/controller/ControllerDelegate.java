@@ -7,15 +7,36 @@ import backgammon.model.DefaultDataModel;
 import backgammon.model.interfaces.IDataModel;
 import backgammon.view.BackgammonViewGUI;
 
+/**
+ * Kontrolliert Events der View Klassen und gibt diese an das Datenmodell weiter
+ */
 public class ControllerDelegate implements IControllerDelegate {
 	
 	private final String workingTitle = "Backgammon v1.0";
 	
+	/**
+	 * Der {@link GameAgent}, von dem der Controller gestartet wurde
+	 */
 	private GameAgent rootController;
+	/**
+	 * Die aktuellen Spieleinstellungen
+	 */
 	private GameSettings gameSettings;
+	/**
+	 * Das Dateninterface
+	 */
 	private IDataModel model;
+	/**
+	 * Die View Klasse zur Darstellung des Spielablaufs
+	 */
 	private BackgammonViewGUI gameView;
 	
+	/**
+	 * Initialisiert Datenmodell und Views, verknüpft diese über ein Event-Listener Interface und initialisiert das Spielfeld im Datenmodell
+	 * mit der Anfangsformation der Spielsteine
+	 * @param aRootController Der {@link GameAgent}, von dem der Controller gestartet wurde
+	 * @param currentSettings Die aktuellen Spieleinstellungen
+	 */
 	public ControllerDelegate(GameAgent aRootController, GameSettings currentSettings) {
 		
 		this.rootController = aRootController;
