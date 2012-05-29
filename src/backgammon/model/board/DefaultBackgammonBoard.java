@@ -5,10 +5,22 @@ import backgammon.model.interfaces.IBackgammonBoard;
 import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.player.Player;
 
+/**
+ * Ein Backgammon-Spielfeld
+ */
 public class DefaultBackgammonBoard implements IBackgammonBoard {
 	
+	/**
+	 * Die 24 {@link Point}s des Spielfeldes
+	 */
 	private ICheckerList[] points = new Point[IBackgammonBoard.BAR_INDEX];
+	/**
+	 * Die {@link Bar} des Spielfeldes
+	 */
 	private ICheckerList bar;
+	/**
+	 * Die 2 {@link Out}-Felder des Spielfeldes
+	 */
 	private ICheckerList[] outs = new Out[2];
 	
 	public DefaultBackgammonBoard(Player player1, Player player2) {
@@ -20,6 +32,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		this.outs[1] = new Out();
 	}
 
+	@Override
 	public ICheckerList getFieldOnBoard(int index) {
 		if (0 <= index && index < IBackgammonBoard.BAR_INDEX) {
 			return this.points[index];
@@ -37,6 +50,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		return null;
 	}
 		
+	@Override
 	public boolean allCheckersInHouse(Player player, int playerID) {
 		
 		int beginIndex = (playerID == 1) ? (IBackgammonBoard.BAR_INDEX - 6) : (0);
@@ -52,6 +66,7 @@ public class DefaultBackgammonBoard implements IBackgammonBoard {
 		return ((countHouse + countOut) == IBackgammonBoard.NUMBER_OF_CHECKERS_PER_PLAYER);
 	}
 	
+	@Override
 	public Vector<Integer> playerHasBlots(Player player) {
 		Vector<Integer> blots = new Vector<Integer>();
 		

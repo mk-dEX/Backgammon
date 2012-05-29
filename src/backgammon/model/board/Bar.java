@@ -3,11 +3,26 @@ package backgammon.model.board;
 import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.player.Player;
 
+/**
+ * Die Bar des Backgammon-Spielfeldes
+ */
 public class Bar implements ICheckerList {
 	
+	/**
+	 * Spieler 1
+	 */
 	private Player player1;
+	/**
+	 * Spieler 2
+	 */
 	private Player player2;
+	/**
+	 * Anzahl Spielsteine von Spieler 1
+	 */
 	private int sizeOfPlayer1Checkers = 0;
+	/**
+	 * Anzahl Spielsteine von Spieler 2
+	 */
 	private int sizeOfPlayer2Checkers = 0;
 	
 	public Bar(Player player1, Player player2) {
