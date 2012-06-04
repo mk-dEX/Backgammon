@@ -11,7 +11,12 @@ public class HistoryMove extends Move {
 	 */
 	private int historyPlayerID;
 	
-	public HistoryMove(Move moveToBeStored, int playerIDOfCurrentPlayer) {
+	/**
+	 * Das zum Zeitpunkt des Zuges aktuelle WŸrfelergebnis
+	 */
+	private DiceResult historyDiceResult;
+	
+	public HistoryMove(Move moveToBeStored, int playerIDOfCurrentPlayer, DiceResult currentResult) {
 		super(	moveToBeStored.getID(),
 				moveToBeStored.getFromPoint(),
 				moveToBeStored.getFromIndex(),
@@ -19,6 +24,11 @@ public class HistoryMove extends Move {
 				moveToBeStored.getToIndex());
 		
 		this.historyPlayerID = playerIDOfCurrentPlayer;
+		this.historyDiceResult = currentResult;
+	}
+	
+	public DiceResult getHistoryDiceResult() {
+		return this.historyDiceResult;
 	}
 	
 	public int getHistoryPlayerID() {

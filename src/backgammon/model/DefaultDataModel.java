@@ -339,7 +339,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
 		
 		if (this.currentPlayer != null) {
-			HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
+			HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer), this.currentPlayer.getCurrentDiceResult());
 			this.moveHistory.add(currentMoveHistoryItem);			
 			CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
 			this.pushEvent(historyMoveStoredEvent);
@@ -937,14 +937,43 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	@Override
 	public void rewindToMove(int indexOfHistoryMoveElement) {
 		
+		// Der Index muss im lokalen History Array verfügbar sein
 		if (this.moveHistory.size() <= indexOfHistoryMoveElement || indexOfHistoryMoveElement < 0)
 			return;
 		
-		//HistoryMove theHistoryMove = 
+		// Der Rücksprung darf nicht auf ein Ereignis zeigen, währenddessen ein Spielstein geworfen wird
+		HistoryMove theHistoryMove = this.moveHistory.elementAt(indexOfHistoryMoveElement);
+		if (theHistoryMove.getID() != theHistoryMove.getHistoryPlayerID())
+			return;
 		
+		// Schrittweise rückwärts die Moves in umgekehrter Richtung durchführen und aus der History löschen
 		for (int lastItemIndex = this.moveHistory.size() - 1; lastItemIndex > indexOfHistoryMoveElement; lastItemIndex--) {
 			
+			HistoryMove lastHistoryMove = this.moveHistory.elementAt(lastItemIndex);
+			
+			// Vertauschen von fromPoint und toPoint, damit der Move in die entgegengesetzte Richtung durchgeführt wird
+			Move reverseMove = 
+					new Move(lastHistoryMove.getID(),
+							lastHistoryMove.getToPoint(),
+							lastHistoryMove.getToIndex(),
+							lastHistoryMove.getFromPoint(),
+							lastHistoryMove.getFromIndex());
+			reverseMove.setEqual(false);
+			this.commitMove(this.getPlayer(lastHistoryMove.getID()), reverseMove);
 		}
+		
+		// Die aktuellen Spieler von jetzt und aus der Vergangenheit anpassen
+		this.currentPlayer = this.getPlayer(theHistoryMove.getHistoryPlayerID());
+		// Sowie deren Würfelergebnisse
+		this.currentPlayer.setCurrentDiceResult(theHistoryMove.getHistoryDiceResult());
+		
+		// Das Würfelergebnis aus der Vergangenheit wird angezeigt
+		DiceEvent diceResultEvent = new DiceEvent(DiceEvent.diceType.DICE, theHistoryMove.getHistoryPlayerID(), theHistoryMove.getHistoryDiceResult()); 
+		this.pushEvent(diceResultEvent);
+		
+		// Der aktuelle Spieler wird angezeigt
+		ActivePlayerInfoEvent activePlayerEvent = new ActivePlayerInfoEvent(this.currentPlayer, this.currentPlayer.isHuman());
+		this.pushEvent(activePlayerEvent);
 	}
 	
 	@Override
