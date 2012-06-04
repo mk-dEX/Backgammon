@@ -41,6 +41,12 @@ public interface IDataModel {
 	public void endMove(CheckerMoveEvent moveEvent);
 	
 	/**
+	 * Spult zu einem angegebenen Zug zurück
+	 * @param numberOfHistoryMoveElement Index des ausgewählten Elements in der History aller bisher durchgeführten Züge
+	 */
+	public void rewindToMove(int numberOfHistoryMoveElement);
+	
+	/**
 	 * Ein Spieler schlägt eine Verdoppelung ("Double") vor
 	 * @param playerID Die ID des Spielers, der die Verdoppelung vorschlägt
 	 * @return true wenn die Verdoppelung möglich ist. Sonst false

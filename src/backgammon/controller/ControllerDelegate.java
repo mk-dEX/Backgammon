@@ -84,6 +84,11 @@ public class ControllerDelegate implements IControllerDelegate {
 	public void endMove(CheckerMoveEvent moveEvent) {
 		this.model.endMove(moveEvent);
 	}
+	
+	@Override
+	public void rewindToMove(int numberOfHistoryMoveElement) {
+		this.model.rewindToMove(numberOfHistoryMoveElement);
+	}
 
 	@Override
 	public boolean startDoubleOffer(int playerID) {

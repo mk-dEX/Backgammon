@@ -338,19 +338,19 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		Move theMove = singleMove;
 		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
 		
+		if (this.currentPlayer != null) {
+			HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
+			this.moveHistory.add(currentMoveHistoryItem);			
+			CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
+			this.pushEvent(historyMoveStoredEvent);
+		}
+		
 		theMove = this.commitMove( thePlayer, theMove );
 		
 		CheckerMoveResultEvent singleMoveResult;
 		if (theMove != null) {
 			CheckerMoveResultEvent.moveResult moveResult = (initialized || isDebugMove) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
 			singleMoveResult = new CheckerMoveResultEvent(moveResult, (addMoveToEvent) ? (theMove) : (null));
-			
-			if (this.currentPlayer != null) {
-				HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
-				this.moveHistory.add(currentMoveHistoryItem);
-				CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
-				this.pushEvent(historyMoveStoredEvent);
-			}
 			
 		} else {
 			singleMoveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, theMove);
@@ -368,24 +368,6 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		}
 		else {
 			this.listener.handleBackgammonEvent(event);
-			
-			if (event.getClass().equals(CheckerMoveResultEvent.class)) {
-				Move eventMove = ((CheckerMoveResultEvent)event).getMove();
-				if (eventMove != null) {
-					int playerID = eventMove.getID();
-					int fromPoint = eventMove.getFromPoint();
-					int fromIndex = eventMove.getFromIndex();
-					int toPoint = eventMove.getToPoint();
-					int toIndex = eventMove.getToIndex();
-					System.out.println("["+playerID+"] "+fromPoint+","+fromIndex+"->"+toPoint+","+toIndex);
-				
-				} else {
-					System.out.println("move -> null");
-				}
-			}
-			else {
-				System.out.println("sending event");
-			}
 		}
 	}
 	
@@ -950,6 +932,13 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		
 		PossiblePlayerMovesEvent possibleMovesEvent = new PossiblePlayerMovesEvent(new Vector<Move>());
 		this.pushEvent(possibleMovesEvent);
+	}
+	
+	@Override
+	public void rewindToMove(int numberOfHistoryMoveElement) {
+		
+		
+		
 	}
 	
 	@Override
