@@ -44,7 +44,7 @@ public interface IDataModel {
 	 * Spult zu einem angegebenen Zug zurück
 	 * @param numberOfHistoryMoveElement Index des ausgewählten Elements in der History aller bisher durchgeführten Züge
 	 */
-	public void rewindToMove(int numberOfHistoryMoveElement);
+	public void rewindToMove(int indexOfHistoryMoveElement);
 	
 	/**
 	 * Ein Spieler schlägt eine Verdoppelung ("Double") vor

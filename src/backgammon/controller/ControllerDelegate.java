@@ -86,8 +86,8 @@ public class ControllerDelegate implements IControllerDelegate {
 	}
 	
 	@Override
-	public void rewindToMove(int numberOfHistoryMoveElement) {
-		this.model.rewindToMove(numberOfHistoryMoveElement);
+	public void rewindToMove(int indexOfHistoryMoveElement) {
+		this.model.rewindToMove(indexOfHistoryMoveElement);
 	}
 
 	@Override
