@@ -937,8 +937,14 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	@Override
 	public void rewindToMove(int indexOfHistoryMoveElement) {
 		
-		if (this.moveHistory.size() <= numberOfHistoryMoveElement || numberOfHistoryMoveElement < 0)
+		if (this.moveHistory.size() <= indexOfHistoryMoveElement || indexOfHistoryMoveElement < 0)
+			return;
 		
+		//HistoryMove theHistoryMove = 
+		
+		for (int lastItemIndex = this.moveHistory.size() - 1; lastItemIndex > indexOfHistoryMoveElement; lastItemIndex--) {
+			
+		}
 	}
 	
 	@Override
