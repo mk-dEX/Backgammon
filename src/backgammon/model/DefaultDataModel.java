@@ -29,7 +29,7 @@ import backgammon.model.player.Move;
 import backgammon.model.player.Player;
 
 /**
- * Das Datenmodell fŸr ein Standard-Backgammon-Spiel
+ * Das Datenmodell fï¿½r ein Standard-Backgammon-Spiel
  */
 public class DefaultDataModel implements IDataController, IDataModel {
 
@@ -55,11 +55,11 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	 */
 	protected Player currentPlayer;
 	/**
-	 * Der Spieler, der den DoppelwŸrfel besitzt
+	 * Der Spieler, der den Doppelwï¿½rfel besitzt
 	 */
 	protected Player playerWithDouble;
 	/**
-	 * Der aktuelle Wert der DoppelwŸrfels
+	 * Der aktuelle Wert der Doppelwï¿½rfels
 	 */
 	protected int doubleValue = 1;
 	
@@ -155,9 +155,9 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	//get
 	/**
-	 * Ermittelt das WŸrfelergebnis des aktuellen Spielers
+	 * Ermittelt das Wï¿½rfelergebnis des aktuellen Spielers
 	 * @param currentPlayer
-	 * @param initial Beim ersten Wurf ist initial true. Beide Spieler dŸrfen dann ein mal wŸrfeln
+	 * @param initial Beim ersten Wurf ist initial true. Beide Spieler dï¿½rfen dann ein mal wï¿½rfeln
 	 * @return Der {@link DiceResult}
 	 * @throws Exception
 	 */
@@ -223,7 +223,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * @return true wenn der Spieler, der gerade an der Reihe ist, noch ZŸge machen kann. Sonst false
+	 * @return true wenn der Spieler, der gerade an der Reihe ist, noch Zï¿½ge machen kann. Sonst false
 	 */
 	protected boolean currentPlayerHasMovesLeft() {
 		return (this.currentPlayer.getCurrentDiceResult().isEmpty() == false);
@@ -247,7 +247,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * @return Die ermittelte Distanz, die fŸr einen Zug zurŸckgelegt werden muss
+	 * @return Die ermittelte Distanz, die fï¿½r einen Zug zurï¿½ckgelegt werden muss
 	 */
 	protected int getDistanceForMove(Move move) {
 		
@@ -289,10 +289,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	//push
 	/**
-	 * FŸhrt alle Ÿbergebenen {@link Move}s im Datenmodell aus und gibt diese an die View-Klasse weiter
-	 * @param resultingMoves Die durchzufŸhrenden {@link Move}s
-	 * @param originalMove Der ursprŸngliche {@link Move}
-	 * @param isDebugMove Wenn true, dann wird das aktuelle WŸrfelergebnis nicht miteinbezogen
+	 * Fï¿½hrt alle ï¿½bergebenen {@link Move}s im Datenmodell aus und gibt diese an die View-Klasse weiter
+	 * @param resultingMoves Die durchzufï¿½hrenden {@link Move}s
+	 * @param originalMove Der ursprï¿½ngliche {@link Move}
+	 * @param isDebugMove Wenn true, dann wird das aktuelle Wï¿½rfelergebnis nicht miteinbezogen
 	 */
 	protected void executeResultingMoves(Vector<Move> resultingMoves, Move originalMove, boolean isDebugMove) {
 		
@@ -328,10 +328,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * FŸhrt den Ÿbergebenen {@link Move} im Datenmodell aus und gibt diesen an die View-Klasse weiter
-	 * @param singleMove Der durchzufŸhrende {@link Move}
+	 * Fï¿½hrt den ï¿½bergebenen {@link Move} im Datenmodell aus und gibt diesen an die View-Klasse weiter
+	 * @param singleMove Der durchzufï¿½hrende {@link Move}
 	 * @param addMoveToEvent wenn true, dann wird der {@link Move} im Event gespeichert
-	 * @param isDebugMove Wenn true, dann wird das aktuelle WŸrfelergebnis nicht miteinbezogen
+	 * @param isDebugMove Wenn true, dann wird das aktuelle Wï¿½rfelergebnis nicht miteinbezogen
 	 */
 	protected void executeResultingMove(Move singleMove, boolean addMoveToEvent, boolean isDebugMove) {
 		
@@ -359,7 +359,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * Das Event wird an die View-Klasse Ÿbergeben
+	 * Das Event wird an die View-Klasse ï¿½bergeben
 	 * @param event Ein {@link BackgammonEvent}
 	 */
 	protected void pushEvent(BackgammonEvent event) {
@@ -445,10 +445,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * FŸhrt den {@link Move} m im Datenmodell durch
-	 * @param player Der Spieler, der den {@link Move} ausfŸhrt
+	 * Fï¿½hrt den {@link Move} m im Datenmodell durch
+	 * @param player Der Spieler, der den {@link Move} ausfï¿½hrt
 	 * @param m Der {@link Move}
-	 * @return Der durchgefŸhrte {@link Move} wenn die DurchfŸhrung erfolgreich war, sonst null
+	 * @return Der durchgefï¿½hrte {@link Move} wenn die Durchfï¿½hrung erfolgreich war, sonst null
 	 */
 	protected Move commitMove(Player player, Move m) {
 		
@@ -485,10 +485,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * Ermittelt alle mšglichen {@link Move}s fŸr den Spieler
+	 * Ermittelt alle mï¿½glichen {@link Move}s fï¿½r den Spieler
 	 * @param player
 	 * @param playerID
-	 * @return Die mšglichen {@link Move}s
+	 * @return Die mï¿½glichen {@link Move}s
 	 */
 	protected Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {
 		
@@ -571,7 +571,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * †berprŸft, ob der aktuelle Spieler das Spiel gewonnen hat
+	 * ï¿½berprï¿½ft, ob der aktuelle Spieler das Spiel gewonnen hat
 	 * @param forceWin Erzwingt einen Spielgewinn, wenn der andere Spieler ein Verdopplunsangebot ablehnt
 	 */
 	protected void checkWin(boolean forceWin) {
@@ -626,7 +626,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 //	Checks
 	
 	/**
-	 * †berprŸft, ob ein Zug von {@link Point} zu {@link Point} mšglich ist
+	 * ï¿½berprï¿½ft, ob ein Zug von {@link Point} zu {@link Point} mï¿½glich ist
 	 * @param player
 	 * @param move
 	 * @return
@@ -658,7 +658,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * †berprŸft, ob ein Zug von {@link Bar} zu {@link Point} mšglich ist
+	 * ï¿½berprï¿½ft, ob ein Zug von {@link Bar} zu {@link Point} mï¿½glich ist
 	 * @param player
 	 * @param move
 	 * @return
@@ -683,7 +683,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 
 	/**
-	 * †berprŸft, ob ein Zug von {@link Point} zu {@link Out} mšglich ist
+	 * ï¿½berprï¿½ft, ob ein Zug von {@link Point} zu {@link Out} mï¿½glich ist
 	 * @param player
 	 * @param move
 	 * @return
@@ -722,7 +722,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	/**
-	 * †berprŸft, ob die Distanz fŸr einen Zug mithilfe des WŸrfelergebnisses des Spielers durchgefŸhrt werden kann
+	 * ï¿½berprï¿½ft, ob die Distanz fï¿½r einen Zug mithilfe des Wï¿½rfelergebnisses des Spielers durchgefï¿½hrt werden kann
 	 * @param player
 	 * @param playerID
 	 * @param startIndex
@@ -777,7 +777,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 //	KI Move
 	
 	/**
-	 * FŸhrt den {@link Move} eines computergesteuerten Spielers aus
+	 * Fï¿½hrt den {@link Move} eines computergesteuerten Spielers aus
 	 */
 	protected void handleComputerMove() {
 
@@ -937,21 +937,21 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	@Override
 	public void rewindToMove(int indexOfHistoryMoveElement) {
 		
-		// Der Index muss im lokalen History Array verfŸgbar sein
+		// Der Index muss im lokalen History Array verfï¿½gbar sein
 		if (this.moveHistory.size() <= indexOfHistoryMoveElement || indexOfHistoryMoveElement < 0)
 			return;
 		
-		// Der RŸcksprung darf nicht auf ein Ereignis zeigen, wŠhrenddessen ein Spielstein geworfen wird
+		// Der Rï¿½cksprung darf nicht auf ein Ereignis zeigen, wï¿½hrenddessen ein Spielstein geworfen wird
 		HistoryMove theHistoryMove = this.moveHistory.elementAt(indexOfHistoryMoveElement);
 		if (theHistoryMove.getID() != theHistoryMove.getHistoryPlayerID())
 			return;
 		
-		// Schrittweise rŸckwŠrts die Moves in umgekehrter Richtung durchfŸhren und aus der History lšschen
+		// Schrittweise rï¿½ckwï¿½rts die Moves in umgekehrter Richtung durchfï¿½hren und aus der History lï¿½schen
 		for (int lastItemIndex = this.moveHistory.size() - 1; lastItemIndex > indexOfHistoryMoveElement; lastItemIndex--) {
 			
 			HistoryMove lastHistoryMove = this.moveHistory.elementAt(lastItemIndex);
 			
-			// Vertauschen von fromPoint und toPoint, damit der Move in die entgegengesetzte Richtung durchgefŸhrt wird
+			// Vertauschen von fromPoint und toPoint, damit der Move in die entgegengesetzte Richtung durchgefï¿½hrt wird
 			Move reverseMove = 
 					new Move(lastHistoryMove.getID(),
 							lastHistoryMove.getToPoint(),
@@ -960,14 +960,16 @@ public class DefaultDataModel implements IDataController, IDataModel {
 							lastHistoryMove.getFromIndex());
 			reverseMove.setEqual(false);
 			this.commitMove(this.getPlayer(lastHistoryMove.getID()), reverseMove);
+			
+			this.moveHistory.remove(this.moveHistory.size() - 1);
 		}
 		
 		// Die aktuellen Spieler von jetzt und aus der Vergangenheit anpassen
 		this.currentPlayer = this.getPlayer(theHistoryMove.getHistoryPlayerID());
-		// Sowie deren WŸrfelergebnisse
+		// Sowie deren Wï¿½rfelergebnisse
 		this.currentPlayer.setCurrentDiceResult(theHistoryMove.getHistoryDiceResult());
 		
-		// Das WŸrfelergebnis aus der Vergangenheit wird angezeigt
+		// Das Wï¿½rfelergebnis aus der Vergangenheit wird angezeigt
 		DiceEvent diceResultEvent = new DiceEvent(DiceEvent.diceType.DICE, theHistoryMove.getHistoryPlayerID(), theHistoryMove.getHistoryDiceResult()); 
 		this.pushEvent(diceResultEvent);
 		
