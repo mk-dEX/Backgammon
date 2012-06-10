@@ -3,9 +3,18 @@ package backgammon.model.board;
 import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.player.Player;
 
+/**
+ * Ein Point eines Backgammon-Spielfeldes
+ */
 public class Point implements ICheckerList {
 	
+	/**
+	 * Der Spieler, der mehr als einen Spielstein auf diesem {@link Point} platziert hat
+	 */
 	private Player owner;
+	/**
+	 * Anzahl Spielsteine, die auf diesem {@link Point} platziert sind
+	 */
 	private int size = 0;
 	
 	public int addChecker(Player player) {

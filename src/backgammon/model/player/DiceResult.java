@@ -2,11 +2,18 @@ package backgammon.model.player;
 
 import java.util.Vector;
 
+/**
+ * Enthält ein Würfelergebnis sowie alle daraus resultierenden Augenzahlen 
+ */
 public class DiceResult extends Vector<Integer> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	//Handle move request
+	/**
+	 * Entfernt alle Augenzahlen aus dem Ergebnis oder einer Kombination, die für eine Gesamtaugenzahl verwendet werden
+	 * @param distance Die Gesamtaugenzahl
+	 * @return Die Zahlen, die aus dem Ergebnis entfernt wurden
+	 */
 	public Vector<Integer> makeMove(Integer distance) {
 		
 		Vector<Integer> removedValues = new Vector<Integer>();
@@ -25,7 +32,9 @@ public class DiceResult extends Vector<Integer> {
 	}
 	
 	
-	//All distances
+	/**
+	 * @return Alle durch die Augenzahl oder deren Kombination möglichen Zugdistanzen
+	 */
 	public Vector<Integer> getPossibleMoveDistances() {
 		
 		Vector<Integer> numbers = new Vector<Integer>();
@@ -55,10 +64,18 @@ public class DiceResult extends Vector<Integer> {
 	}
 	
 	
-	//Available?
+	/**
+	 * @param distance Die gesuchte Distanz
+	 * @return true wenn das Würfelergebnis die Distanz direkt enthält. Sonst false
+	 */
 	public boolean baseResultContainsDistance(Integer distance) {
 		return this.contains(distance);
 	}
+	
+	/**
+	 * @param distance Die gesuchte Distanz
+	 * @return Die entsprechende Augenzahl des Würfelergebnisses, wenn es die Distanz enthält oder größer ist. Sonst false
+	 */
 	public Integer baseResultContainsDistanceOrGreater(Integer distance) {
 		
 		for (Integer number : this) {
@@ -69,9 +86,19 @@ public class DiceResult extends Vector<Integer> {
 		
 		return 0;
 	}
+	
+	/**
+	 * @param distance Die gesuchte Distanz
+	 * @return true wenn eine Kombination des Würfelergebnisses die Distanz enthält. Sonst false
+	 */
 	public boolean composedResultContainsDistance(Integer distance) {
 		return this.getPossibleMoveDistances().contains(distance);
 	}
+	
+	/**
+	 * @param distance Die gesuchte Distanz
+	 * @return Die entsprechende Augenzahl des Würfelergebnisses oder einer Kombination, wenn eine davon die Distanz enthält oder größer ist. Sonst false
+	 */
 	public Integer composedResultContainsDistanceOrGreater(Integer distance) {
 		
 		for (Integer number : this.getPossibleMoveDistances()) {
@@ -83,7 +110,11 @@ public class DiceResult extends Vector<Integer> {
 		return 0;
 	}
 	
-	
+	/**
+	 * Entfernt alle Augenzahlen aus dem Würfelergebnis, die für eine Distanz verwendet werden
+	 * @param distance Die gesuchte Distanz
+	 * @return Die Augenzahlen, die entfernt wurden
+	 */
  	private Vector<Integer> removeComposedDistance(Integer distance) {
 		
  		Vector<Integer> numbersToBeRemoved = getNumbersForComposedDistance(distance);
@@ -94,6 +125,10 @@ public class DiceResult extends Vector<Integer> {
  		return numbersToBeRemoved;
 	}
  	
+ 	/**
+ 	 * @param distance Die gesuchte Distanz
+ 	 * @return Alle Augenzahlen, die für die Distanz notwendig sind
+ 	 */
 	@SuppressWarnings("unchecked")
 	private Vector<Integer> getNumbersForComposedDistance(Integer distance) {
 		Vector<Integer> theNumbers = new Vector<Integer>();

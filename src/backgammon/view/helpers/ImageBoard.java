@@ -98,8 +98,9 @@ public class ImageBoard extends JPanel {
 
 		g.drawImage(img, 0, 0, null);
 		
-		this.drawPossibleMoves(g);
+		
 		this.drawChecker(g);
+		this.drawPossibleMoves(g);
 		this.drawDice(g);
 		
 		
@@ -202,15 +203,13 @@ public class ImageBoard extends JPanel {
 		try
 		{
 			for (BChecker checker : this.checker) {
-		
 				BPosition tmp = null;
 				tmp = checker.getCoords();
 				g.drawImage(this.view.getChecker(checker.getPlayer()),
-						tmp.getX() - 25, tmp.getY() - 25, null);
+					tmp.getX() - 25, tmp.getY() - 25, null);
 			}
-		}
-		catch(ConcurrentModificationException e)
-		{
+		} catch (ConcurrentModificationException e) {
+			
 			this.repaint();
 		}
 	}
@@ -237,7 +236,7 @@ public class ImageBoard extends JPanel {
 		if(this.dDice != null)
 		{
 			Image used =  new ImageIcon(getClass().getResource("/img/double"+this.dDice.getValue()+".png")).getImage();
-
+			this.dDice.setCoords(this.getDoubleDicePosition(this.dDice.getPlayer()).getX(), this.getDoubleDicePosition(this.dDice.getPlayer()).getY());
 	        g.drawImage(used, this.getDoubleDicePosition(this.dDice.getPlayer()).getX() - 24, this.getDoubleDicePosition(this.dDice.getPlayer()).getY() - 24, this);
 		}
 	}

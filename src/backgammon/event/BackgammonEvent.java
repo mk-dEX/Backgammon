@@ -1,7 +1,13 @@
 package backgammon.event;
 
+/**
+ * Abstraktes Event, das von einer View-Klasse behandelt wird
+ */
 public abstract class BackgammonEvent {
 	
+	/**
+	 * Die mšglichen Eventtypen
+	 */
 	public enum type {
 		ACTIVE_PLAYER_INFO,
 		CHECKER_MOVE,
@@ -12,6 +18,9 @@ public abstract class BackgammonEvent {
 		POSSIBLE_MOVES
 	}
 	
+	/**
+	 * Der Typ des abgeleiteten Events
+	 */
 	protected BackgammonEvent.type eventType;
 	public BackgammonEvent.type getEventType() {
 		return this.eventType;

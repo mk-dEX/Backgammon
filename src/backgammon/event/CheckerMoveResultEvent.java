@@ -2,9 +2,14 @@ package backgammon.event;
 
 import backgammon.model.player.Move;
 
-
+/**
+ * Enthält Informationen über das Ergebnis eines {@link Move}s
+ */
 public class CheckerMoveResultEvent extends CheckerMoveEvent {
 
+	/**
+	 * Die möglichen Zugarten
+	 */
 	public static enum moveResult {
 		INIT,
 		CORRECT_MOVE,
@@ -13,6 +18,9 @@ public class CheckerMoveResultEvent extends CheckerMoveEvent {
 		COMPUTER_DID_FINISH_MOVE
 	};
 	
+	/**
+	 * Der aktuelle {@link moveResult}
+	 */
 	private moveResult result;
 	
 	public CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult resultOfTheMove, Move move) {

@@ -7,6 +7,7 @@ import backgammon.event.BackgammonEvent;
 import backgammon.event.CheckerMoveEvent;
 import backgammon.event.CheckerMoveResultEvent;
 import backgammon.event.DiceEvent;
+import backgammon.event.DiceEvent.diceType;
 import backgammon.event.ExceptionEvent;
 import backgammon.event.InfoEvent;
 import backgammon.event.PossiblePlayerMovesEvent;
@@ -27,21 +28,54 @@ import backgammon.model.player.HumanPlayer;
 import backgammon.model.player.Move;
 import backgammon.model.player.Player;
 
+/**
+ * Das Datenmodell f�r ein Standard-Backgammon-Spiel
+ */
 public class DefaultDataModel implements IDataController, IDataModel {
 
+	/**
+	 * Die zugeordenete Listener-Klasse
+	 */
 	protected IModelEventListener listener;
+	/**
+	 * Die aktuellen Spieleinstellungen
+	 */
 	protected GameSettings settings;
 
+	/**
+	 * Spieler 1
+	 */
 	protected Player player1;
+	/**
+	 * Spieler 2
+	 */
 	protected Player player2;
+	/**
+	 * Der aktuelle Spieler
+	 */
 	protected Player currentPlayer;
+	/**
+	 * Der Spieler, der den Doppelw�rfel besitzt
+	 */
 	protected Player playerWithDouble;
-	protected int doubleValue = 2;
+	/**
+	 * Der aktuelle Wert der Doppelw�rfels
+	 */
+	protected int doubleValue = 1;
 	
+	/**
+	 * Das Spielfeld
+	 */
 	protected IBackgammonBoard gameBoard;
 	
+	/**
+	 * Der Zugverlauf
+	 */
 	protected Vector<HistoryMove> moveHistory = new Vector<HistoryMove>();
 
+	/**
+	 * true wenn die Spielsteine platziert wurden. Sonst false
+	 */
 	protected boolean initialized = false;
 	
 	public DefaultDataModel(GameSettings currentSettings) {
@@ -71,6 +105,10 @@ public class DefaultDataModel implements IDataController, IDataModel {
 // 	Privates
 	
 	//init
+	/**
+	 * Initialisiert die Spielsteine des Spielers
+	 * @param playerID
+	 */
 	protected void initCheckersOfPlayer(int playerID) {
 		
 		Move tempRegisteredMove;
@@ -116,6 +154,13 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	
 	//get
+	/**
+	 * Ermittelt das W�rfelergebnis des aktuellen Spielers
+	 * @param currentPlayer
+	 * @param initial Beim ersten Wurf ist initial true. Beide Spieler d�rfen dann ein mal w�rfeln
+	 * @return Der {@link DiceResult}
+	 * @throws Exception
+	 */
 	protected DiceResult getDiceResult(Player currentPlayer, boolean initial) throws Exception {
 		
 		if (!initial && currentPlayer == null) {
@@ -144,6 +189,11 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return diceResults;
 	}
 	
+	/**
+	 * Ermitteln der zu einem {@link Player} Objekt zugeordneten ID
+	 * @param player
+	 * @return Die ID des Spielers
+	 */
 	protected int getPlayerID(Player player) {
 		if (player.equals(this.player1))
 			return 1;
@@ -153,20 +203,35 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			return 0;
 	}
 	
+	/**
+	 * Ermitteln des zu einer ID zugeordneten {@link Player} Objekts
+	 * @param playerID
+	 * @return
+	 */
 	protected Player getPlayer(int playerID) {
 		if (playerID == 1) return this.player1;
 		if (playerID == 2) return this.player2;
 		return null;
 	}
 	
+	/**
+	 * @param requestedPlayer
+	 * @return true wenn der angefragte Spieler gerade an der Reihe ist. Sonst false
+	 */
 	protected boolean isCurrentPlayer(Player requestedPlayer) {
 		return (requestedPlayer != null && requestedPlayer.equals(this.currentPlayer));
 	}
 	
+	/**
+	 * @return true wenn der Spieler, der gerade an der Reihe ist, noch Z�ge machen kann. Sonst false
+	 */
 	protected boolean currentPlayerHasMovesLeft() {
 		return (this.currentPlayer.getCurrentDiceResult().isEmpty() == false);
 	}
 	
+	/**
+	 * @return Alles {@link Move}s des Spielers, der gerade an der Reihe ist
+	 */
 	protected Vector<Move> getPossibleMovesOfCurrentPlayer() {
 		
 		boolean hasMovesLeft;
@@ -181,6 +246,9 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return possibleMoves;
 	}
 	
+	/**
+	 * @return Die ermittelte Distanz, die f�r einen Zug zur�ckgelegt werden muss
+	 */
 	protected int getDistanceForMove(Move move) {
 		
 		int distance = 0;
@@ -220,6 +288,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 	
 	//push
+	/**
+	 * F�hrt alle �bergebenen {@link Move}s im Datenmodell aus und gibt diese an die View-Klasse weiter
+	 * @param resultingMoves Die durchzuf�hrenden {@link Move}s
+	 * @param originalMove Der urspr�ngliche {@link Move}
+	 * @param isDebugMove Wenn true, dann wird das aktuelle W�rfelergebnis nicht miteinbezogen
+	 */
 	protected void executeResultingMoves(Vector<Move> resultingMoves, Move originalMove, boolean isDebugMove) {
 		
 		if (resultingMoves.isEmpty() == false) {
@@ -245,7 +319,7 @@ public class DefaultDataModel implements IDataController, IDataModel {
 				this.executeResultingMove(oneResultingMove, addMove, isDebugMove);
 			}
 			
-			this.checkWin(false, 0);
+			this.checkWin(false);
 		}
 		else {
 			CheckerMoveResultEvent failureMoveEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, originalMove);
@@ -253,10 +327,23 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		}
 	}
 	
+	/**
+	 * F�hrt den �bergebenen {@link Move} im Datenmodell aus und gibt diesen an die View-Klasse weiter
+	 * @param singleMove Der durchzuf�hrende {@link Move}
+	 * @param addMoveToEvent wenn true, dann wird der {@link Move} im Event gespeichert
+	 * @param isDebugMove Wenn true, dann wird das aktuelle W�rfelergebnis nicht miteinbezogen
+	 */
 	protected void executeResultingMove(Move singleMove, boolean addMoveToEvent, boolean isDebugMove) {
 		
 		Move theMove = singleMove;
 		Player thePlayer = (theMove.getID() == 1) ? (this.player1) : (this.player2);			
+		
+		if (this.currentPlayer != null) {
+			HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer), this.currentPlayer.getCurrentDiceResult());
+			this.moveHistory.add(currentMoveHistoryItem);			
+			CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
+			this.pushEvent(historyMoveStoredEvent);
+		}
 		
 		theMove = this.commitMove( thePlayer, theMove );
 		
@@ -265,47 +352,29 @@ public class DefaultDataModel implements IDataController, IDataModel {
 			CheckerMoveResultEvent.moveResult moveResult = (initialized || isDebugMove) ? (CheckerMoveResultEvent.moveResult.CORRECT_MOVE) : (CheckerMoveResultEvent.moveResult.INIT);
 			singleMoveResult = new CheckerMoveResultEvent(moveResult, (addMoveToEvent) ? (theMove) : (null));
 			
-			if (this.currentPlayer != null) {
-				HistoryMove currentMoveHistoryItem = new HistoryMove(theMove, this.getPlayerID(this.currentPlayer));
-				this.moveHistory.add(currentMoveHistoryItem);
-				CheckerMoveResultEvent historyMoveStoredEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.HISTORY_MOVE, currentMoveHistoryItem);
-				this.pushEvent(historyMoveStoredEvent);
-			}
-			
 		} else {
 			singleMoveResult = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.ILLEGAL_MOVE, theMove);
 		}
 		this.pushEvent(singleMoveResult);
 	}
 	
+	/**
+	 * Das Event wird an die View-Klasse �bergeben
+	 * @param event Ein {@link BackgammonEvent}
+	 */
 	protected void pushEvent(BackgammonEvent event) {
 		if (this.listener == null) {
 			System.out.println("Sending event to GUI failed");
 		}
 		else {
 			this.listener.handleBackgammonEvent(event);
-			
-			if (event.getClass().equals(CheckerMoveResultEvent.class)) {
-				Move eventMove = ((CheckerMoveResultEvent)event).getMove();
-				if (eventMove != null) {
-					int playerID = eventMove.getID();
-					int fromPoint = eventMove.getFromPoint();
-					int fromIndex = eventMove.getFromIndex();
-					int toPoint = eventMove.getToPoint();
-					int toIndex = eventMove.getToIndex();
-					System.out.println("["+playerID+"] "+fromPoint+","+fromIndex+"->"+toPoint+","+toIndex);
-				
-				} else {
-					System.out.println("move -> null");
-				}
-			}
 		}
 	}
 	
 	
 	
 //	Board Connection
-	
+
 	public Vector<Move> getMoveResults(Player player, Move originalMove, boolean isDebugMove) {
 		
 		Vector<Move> moveResults = new Vector<Move>();
@@ -375,6 +444,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return moveResults;
 	}
 	
+	/**
+	 * F�hrt den {@link Move} m im Datenmodell durch
+	 * @param player Der Spieler, der den {@link Move} ausf�hrt
+	 * @param m Der {@link Move}
+	 * @return Der durchgef�hrte {@link Move} wenn die Durchf�hrung erfolgreich war, sonst null
+	 */
 	protected Move commitMove(Player player, Move m) {
 		
 		Move move = m;
@@ -409,6 +484,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return move;
 	}
 	
+	/**
+	 * Ermittelt alle m�glichen {@link Move}s f�r den Spieler
+	 * @param player
+	 * @param playerID
+	 * @return Die m�glichen {@link Move}s
+	 */
 	protected Vector<Move> getPossiblePlayerMoves(Player player, int playerID) {
 		
 		Vector<Move> possibleMoves = new Vector<Move>();
@@ -489,10 +570,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return possibleMoves;
 	}
 	
-	protected void checkWin(boolean forceWin, int playerID) {
-		
-		//TODO bei double nicht angenommen automatisch verloren
-		
+	/**
+	 * �berpr�ft, ob der aktuelle Spieler das Spiel gewonnen hat
+	 * @param forceWin Erzwingt einen Spielgewinn, wenn der andere Spieler ein Verdopplunsangebot ablehnt
+	 */
+	protected void checkWin(boolean forceWin) {
+				
 		if (this.currentPlayer == null) {
 			return;
 		}
@@ -501,7 +584,9 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		int outCheckerCountPlayer1 = this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER1_INDEX).getCheckerCount();
 		int outCheckerCountPlayer2 = this.gameBoard.getFieldOnBoard(IBackgammonBoard.OUT_PLAYER2_INDEX).getCheckerCount();
 		int currentPlayerOutCheckerCount = (currentPlayerID == 1) ? (outCheckerCountPlayer1) : (outCheckerCountPlayer2);
-		if (currentPlayerOutCheckerCount == 15) {
+		if (forceWin || currentPlayerOutCheckerCount == 15) {
+			
+			System.out.println(currentPlayerID + " hat " + currentPlayerOutCheckerCount + " Checker");
 			
 			String playerName = this.currentPlayer.getName();
 			int points = 1;
@@ -540,6 +625,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 //	Checks
 	
+	/**
+	 * �berpr�ft, ob ein Zug von {@link Point} zu {@link Point} m�glich ist
+	 * @param player
+	 * @param move
+	 * @return
+	 */
 	protected boolean checkInnerFieldMove(Player player, Move move) {
 		
 		int fromPoint = move.getFromPoint();
@@ -566,6 +657,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return false;
 	}
 	
+	/**
+	 * �berpr�ft, ob ein Zug von {@link Bar} zu {@link Point} m�glich ist
+	 * @param player
+	 * @param move
+	 * @return
+	 */
 	protected boolean checkBarFieldMove(Player player, Move move) {
 		
 		int toPoint = move.getToPoint();
@@ -585,6 +682,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return false;
 	}
 
+	/**
+	 * �berpr�ft, ob ein Zug von {@link Point} zu {@link Out} m�glich ist
+	 * @param player
+	 * @param move
+	 * @return
+	 */
 	protected boolean checkFieldOutMove(Player player, Move move) {
 		
 		int fromPoint = move.getFromPoint();
@@ -618,6 +721,14 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		return false;
 	}
 	
+	/**
+	 * �berpr�ft, ob die Distanz f�r einen Zug mithilfe des W�rfelergebnisses des Spielers durchgef�hrt werden kann
+	 * @param player
+	 * @param playerID
+	 * @param startIndex
+	 * @param distance
+	 * @return
+	 */
 	protected boolean checkDistanceSteps(Player player, int playerID, int startIndex, int distance) {
 		
 		int currentIndex = startIndex;
@@ -665,11 +776,24 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	
 //	KI Move
 	
+	/**
+	 * F�hrt den {@link Move} eines computergesteuerten Spielers aus
+	 */
 	protected void handleComputerMove() {
-		while (this.currentPlayerHasMovesLeft()) {
-			Vector<Move> computerPlayerMoveAndResulting = ((ComputerPlayer)this.currentPlayer).move();
+
+		Vector<Move> possibleMoves = this.getPossibleMovesOfCurrentPlayer();
+
+		System.out.println("Berechnung startet");
+		while (!possibleMoves.isEmpty()) {
+			System.out.println("Durchgang Berechnung1");
+			Vector<Move> computerPlayerMoveAndResulting = ((ComputerPlayer)this.currentPlayer).move(possibleMoves);
+			System.out.println("Durchgang Berechnung2");
 			this.executeResultingMoves(computerPlayerMoveAndResulting, computerPlayerMoveAndResulting.elementAt(0), false);
+			System.out.println("Durchgang Berechnung3");
+			
+			possibleMoves = this.getPossibleMovesOfCurrentPlayer();
 		}
+		System.out.println("Berechnung fertig");
 		
 		CheckerMoveResultEvent computerDidFinishEvent = new CheckerMoveResultEvent(CheckerMoveResultEvent.moveResult.COMPUTER_DID_FINISH_MOVE, null);
 		this.pushEvent(computerDidFinishEvent);
@@ -700,11 +824,6 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		DiceEvent diceResultEvent = new DiceEvent(DiceEvent.diceType.DICE, 0, diceResult); 
 		this.pushEvent(diceResultEvent);
 		
-		DiceResult tempDoubleDiceResult = new DiceResult();
-		tempDoubleDiceResult.add(new Integer(2));
-		DiceEvent doubleDiceEvent = new DiceEvent(DiceEvent.diceType.DOUBLE_DICE, 0, tempDoubleDiceResult);
-		this.pushEvent(doubleDiceEvent);
-		
 		// get current player from dice result
 		this.currentPlayer = (diceResult.elementAt(0) > diceResult.elementAt(1)) ? (this.player1) : (this.player2);
 		this.currentPlayer.setCurrentDiceResult(diceResult);
@@ -721,6 +840,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	public void initGameCheckers() {
 		this.initCheckersOfPlayer(1);
 		this.initCheckersOfPlayer(2);
+		
+		DiceResult doubleInitResult = new DiceResult();
+		doubleInitResult.add(64);
+		DiceEvent doubleInitEvent = new DiceEvent(diceType.DOUBLE_DICE, 0, doubleInitResult);
+		this.pushEvent(doubleInitEvent);
+		
 		this.initialized = true;
 	}
 	
@@ -745,7 +870,12 @@ public class DefaultDataModel implements IDataController, IDataModel {
 		if (nextMove) {
 			
 			DiceResult diceResult = null;
-			try { diceResult = this.getDiceResult(this.currentPlayer, false); } 
+			try { 
+				do {
+					diceResult = this.getDiceResult(this.currentPlayer, false);
+				} while (this.getPlayerID(this.currentPlayer) == 1 &&  diceResult.elementAt(0).equals(diceResult.elementAt(1)));
+				
+			} 
 			catch (Exception e) { 
 				ExceptionEvent diceFailEvent = new ExceptionEvent(ExceptionEvent.errorType.DICE_ROLL_DID_FAIL, e);
 				this.pushEvent(diceFailEvent);
@@ -805,28 +935,90 @@ public class DefaultDataModel implements IDataController, IDataModel {
 	}
 	
 	@Override
-	public void startDoubleOffer(int playerID) {
+	public void rewindToMove(int indexOfHistoryMoveElement) {
 		
+		// Der Index muss im lokalen History Array verf�gbar sein
+		if (this.moveHistory.size() <= indexOfHistoryMoveElement || indexOfHistoryMoveElement < 0)
+			return;
+		
+		// Der R�cksprung darf nicht auf ein Ereignis zeigen, w�hrenddessen ein Spielstein geworfen wird
+		HistoryMove theHistoryMove = this.moveHistory.elementAt(indexOfHistoryMoveElement);
+		if (theHistoryMove.getID() != theHistoryMove.getHistoryPlayerID())
+			return;
+		
+		// Schrittweise r�ckw�rts die Moves in umgekehrter Richtung durchf�hren und aus der History l�schen
+		for (int lastItemIndex = this.moveHistory.size() - 1; lastItemIndex > indexOfHistoryMoveElement; lastItemIndex--) {
+			
+			HistoryMove lastHistoryMove = this.moveHistory.elementAt(lastItemIndex);
+			
+			// Vertauschen von fromPoint und toPoint, damit der Move in die entgegengesetzte Richtung durchgef�hrt wird
+			Move reverseMove = 
+					new Move(lastHistoryMove.getID(),
+							lastHistoryMove.getToPoint(),
+							lastHistoryMove.getToIndex(),
+							lastHistoryMove.getFromPoint(),
+							lastHistoryMove.getFromIndex());
+			reverseMove.setEqual(false);
+			this.commitMove(this.getPlayer(lastHistoryMove.getID()), reverseMove);
+			
+			this.moveHistory.remove(this.moveHistory.size() - 1);
+		}
+		
+		// Die aktuellen Spieler von jetzt und aus der Vergangenheit anpassen
+		this.currentPlayer = this.getPlayer(theHistoryMove.getHistoryPlayerID());
+		// Sowie deren W�rfelergebnisse
+		this.currentPlayer.setCurrentDiceResult(theHistoryMove.getHistoryDiceResult());
+		
+		// Das W�rfelergebnis aus der Vergangenheit wird angezeigt
+		DiceEvent diceResultEvent = new DiceEvent(DiceEvent.diceType.DICE, theHistoryMove.getHistoryPlayerID(), theHistoryMove.getHistoryDiceResult()); 
+		this.pushEvent(diceResultEvent);
+		
+		// Der aktuelle Spieler wird angezeigt
+		ActivePlayerInfoEvent activePlayerEvent = new ActivePlayerInfoEvent(this.currentPlayer, this.currentPlayer.isHuman());
+		this.pushEvent(activePlayerEvent);
+	}
+	
+	@Override
+	public boolean startDoubleOffer(int playerID) {
+				
 		Player requestingPlayer = this.getPlayer(playerID);
 		
-		if (requestingPlayer != this.playerWithDouble) {
-			//TODO
-		}
+		return requestingPlayer != null && (requestingPlayer == this.playerWithDouble || this.playerWithDouble == null);
 	}
 	
 	@Override
 	public void offerAccepted(boolean didAccept) {
+		int playerID = this.getPlayerID(this.currentPlayer);
 		if (didAccept) {
 			this.doubleValue *= 2;
+			
+			Player otherPlayer = (playerID == 1) ? (this.player2) : (this.player1);
+			
+			this.playerWithDouble = otherPlayer;
+			
+			DiceResult doubleResult = new DiceResult();
+			doubleResult.add(this.doubleValue);
+			
+			DiceEvent doubleDiceEvent = new DiceEvent(diceType.DOUBLE_DICE, this.getPlayerID(otherPlayer), doubleResult);
+			this.pushEvent(doubleDiceEvent);
 		}
-		//TODO
+		else {
+			this.checkWin(true);
+		}
 	}	
 
 	public boolean gameStarted() {
 		return this.currentPlayer != null;
 	}
 	
-
+	@Override
+	public int getCurrentPlayerID() {
+		if(this.currentPlayer == null)
+			return 0;
+		return this.getPlayerID(this.currentPlayer);
+	}
+	
+	
 	
 //	IDataController
 	
@@ -837,13 +1029,5 @@ public class DefaultDataModel implements IDataController, IDataModel {
 
 	public IBackgammonBoard getBoard() {
 		return this.gameBoard;
-	}
-
-
-	@Override
-	public int getCurrentPlayerID() {
-		if(this.currentPlayer == null)
-			return 0;
-		return this.getPlayerID(this.currentPlayer);
 	}
 }

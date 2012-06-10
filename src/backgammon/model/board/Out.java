@@ -3,8 +3,14 @@ package backgammon.model.board;
 import backgammon.model.interfaces.ICheckerList;
 import backgammon.model.player.Player;
 
+/**
+ * Der Out-Bereich eines Backgammon-Spielfeldes
+ */
 public class Out implements ICheckerList {
 
+	/**
+	 * Anzahl Spielsteine, die auf diesem {@link Out}-Feld platziert wurden
+	 */
 	private int size = 15;
 	
 	@Override
