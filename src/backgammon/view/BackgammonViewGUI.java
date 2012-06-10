@@ -498,19 +498,19 @@ public class BackgammonViewGUI implements IModelEventListener, ActionListener {
 
 		if (n == 0) {
 			// Spiel neu starten
-			// Event beenden
-			this.eventFinished();
-
+			
 			this.board.dispose();
 			this.controller.exitGame();
-		} else {
-			// Programm beenden
 			// Event beenden
 			this.eventFinished();
-
+						
+		} else {
+			// Programm beenden
 			this.board.dispose();
 			this.destroyGUI();
 			System.exit(1);
+			// Event beenden
+			this.eventFinished();
 		}
 
 	}

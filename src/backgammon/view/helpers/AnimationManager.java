@@ -142,6 +142,9 @@ public class AnimationManager implements Runnable{
 		this.toIndex = tmp.toIndex;
 		this.toPoint = tmp.toPoint;
 
+		this.board.getChecker().remove(tmp2);
+		this.board.getChecker().add(tmp2);
+		
 		this.calculatePositions();
 
 		this.thread = new Thread(this);
@@ -289,7 +292,7 @@ public class AnimationManager implements Runnable{
 		this.board.repaint();
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
